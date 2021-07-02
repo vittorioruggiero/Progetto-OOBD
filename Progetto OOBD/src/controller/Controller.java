@@ -4,9 +4,10 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 import dbConfig.DBConnection;
+import gui.HomeFrame;
 
 public class Controller {
-
+	private HomeFrame homeFrame;
 	DBConnection dbconn;
 	Connection connection;
 	
@@ -22,5 +23,7 @@ public class Controller {
 		catch (SQLException exception) {
             System.out.println("SQLException: " + exception.getMessage());
         }
+		this.homeFrame = new HomeFrame();
+		this.homeFrame.setVisible(true);
 	}
 }
