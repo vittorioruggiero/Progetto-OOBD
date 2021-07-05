@@ -18,7 +18,7 @@ public class nazionaleDAOPostgresImpl implements nazionaleDAO {
 	private PreparedStatement deleteNazionalePS;
 	private PreparedStatement updateNazionalePS;
 	
-	public nazionaleDAOPostgresImpl(Connection connection, Statement statement) throws SQLException {
+	public nazionaleDAOPostgresImpl(Connection connection) throws SQLException {
 		this.connection = connection;
 		insertNazionalePS = connection.prepareStatement("INSERT INTO Nazionale VALUES (?, ?)");
 		deleteNazionalePS = connection.prepareStatement("DELETE FROM Nazionale WHERE nome = ?");

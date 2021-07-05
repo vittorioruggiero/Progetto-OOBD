@@ -6,6 +6,9 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
+import controller.Controller;
+
 import javax.swing.JLabel;
 import java.awt.Font;
 import javax.swing.JButton;
@@ -13,10 +16,13 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
 public class HomeFrame extends JFrame {
-
+	private Controller controller;
 	private JPanel contentPane;
 
-	public HomeFrame() {
+	public HomeFrame(Controller controller) {
+		setTitle("HomeFrame");
+		this.controller = controller;
+		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 169);
 		contentPane = new JPanel();
@@ -40,6 +46,11 @@ public class HomeFrame extends JFrame {
 		contentPane.add(atletiButton);
 		
 		JButton nazionaliButton = new JButton("Nazionali");
+		nazionaliButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				controller.apriNazionaleFrame();
+			}
+		});
 		nazionaliButton.setFont(new Font("SansSerif", Font.PLAIN, 14));
 		nazionaliButton.setBounds(176, 39, 110, 27);
 		contentPane.add(nazionaliButton);
