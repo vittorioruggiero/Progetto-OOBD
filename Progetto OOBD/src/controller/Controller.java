@@ -17,6 +17,7 @@ import java.util.List;
 public class Controller {
 	private HomeFrame homeFrame;
 	private NazionaleFrame nazionaleFrame;
+	private List<Nazionale> listaNazionali;
 	private nazionaleDAOPostgresImpl nazionaleDAO;
 	DBConnection dbconn;
 	Connection connection;
@@ -43,7 +44,6 @@ public class Controller {
 	}
 	
 	public void apriNazionaleFrame() {
-		List<Nazionale> listaNazionali = new ArrayList<Nazionale>();
 		try {
 			nazionaleDAO = new nazionaleDAOPostgresImpl(connection);
 			listaNazionali = nazionaleDAO.getAllNazionali("nome");
@@ -55,5 +55,22 @@ public class Controller {
 		nazionaleFrame.setNazionali(listaNazionali);
 		homeFrame.setVisible(false);
 		nazionaleFrame.setVisible(true);
+	}
+	
+	public void inserisciNazionale(Nazionale nazionale) {
+		nazionaleDAO.insertNazionale(nazionale);
+	}
+	
+	public void rimuoviNazionali(String nome) {
+		nazionaleDAO.deleteNazionale(nome);
+	}
+	
+	public void modificaNazionale(Nazionale nazionale, String vecchioNome) {
+		nazionaleDAO.updateNazionale(nazionale, vecchioNome);
+	}
+	
+	public void setNazionaliOrdinate(String nomeColonna) {
+		listaNazionali = nazionaleDAO.getAllNazionali(nomeColonna);
+		nazionaleFrame.setNazionali(listaNazionali);
 	}
 }

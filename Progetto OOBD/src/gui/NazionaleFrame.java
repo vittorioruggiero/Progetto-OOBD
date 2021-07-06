@@ -4,6 +4,8 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.Font;
 import java.util.List;
 
@@ -20,6 +22,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.JTextField;
 import javax.swing.JComboBox;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class NazionaleFrame extends JFrame {
 	private Controller controller;
@@ -27,6 +31,7 @@ public class NazionaleFrame extends JFrame {
 	private JTable table;
 	private JTextField nomeTF;
 	private JTextField valoreGettoneTF;
+	private JComboBox<String> ordinaComboBox;
 
 	public NazionaleFrame(Controller controller) {
 		setTitle("NazionaleFrame");
@@ -75,6 +80,17 @@ public class NazionaleFrame extends JFrame {
 					}
 					}
 			);
+		DefaultTableModel model = (DefaultTableModel) table.getModel();
+		
+		//GESTIONE DEI VALORI DELLA RIGA CLICCATA
+		table.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				nomeTF.setText((String) model.getValueAt(table.getSelectedRow(), 0));
+				valoreGettoneTF.setText(String.valueOf(model.getValueAt(table.getSelectedRow(), 1)));
+			}
+		});
+		
 		scrollPane.setViewportView(table);
 		
 		JLabel nomeLabel = new JLabel("Nome");
@@ -100,16 +116,62 @@ public class NazionaleFrame extends JFrame {
 		valoreGettoneTF.setColumns(10);
 		
 		JButton inserisciButton = new JButton("Inserisci");
+		
+		//GESTIONE DELL'INSERIMENTO DELLE RIGHE
+		inserisciButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if(!nomeTF.getText().equals("") && !valoreGettoneTF.getText().equals("")) {
+					String nome = nomeTF.getText();
+					double valoreGettone = Double.parseDouble(valoreGettoneTF.getText());
+					if(valoreGettone<=0) JOptionPane.showMessageDialog(null, "Il valore del gettone deve essere maggiore di 0", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
+					else {
+						Nazionale nazionale = new Nazionale(nome, valoreGettone);
+						controller.inserisciNazionale(nazionale);
+						ricaricaNazionali();
+					}
+				}
+			}
+		});
+		
 		inserisciButton.setFont(new Font("SansSerif", Font.PLAIN, 14));
 		inserisciButton.setBounds(243, 199, 93, 19);
 		contentPane.add(inserisciButton);
 		
+		//GESTIONE DELLA RIMOZIONE DELLE RIGHE
 		JButton rimuoviButton = new JButton("Rimuovi");
+		rimuoviButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				int selectedRows[] = table.getSelectedRows();
+				if(selectedRows.length > 0) {
+					for(int i = selectedRows.length - 1; i>=0; i--) {
+						String nome = (String) model.getValueAt(selectedRows[i], 0);
+						controller.rimuoviNazionali(nome);
+						ricaricaNazionali();
+					}
+				}
+			}
+		});
 		rimuoviButton.setFont(new Font("SansSerif", Font.PLAIN, 14));
 		rimuoviButton.setBounds(243, 226, 93, 19);
 		contentPane.add(rimuoviButton);
 		
+		//GESTIONE DELLA MODIFICA DELLE RIGHE
 		JButton modificaButton = new JButton("Modifica");
+		modificaButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if(table.getSelectedRow()!=-1 && !nomeTF.getText().equals("") && !valoreGettoneTF.getText().equals("")) {
+					String nome = nomeTF.getText();
+					double valoreGettone = Double.parseDouble(valoreGettoneTF.getText());
+					if(valoreGettone<=0) JOptionPane.showMessageDialog(null, "Il valore del gettone deve essere maggiore di 0", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
+					else {
+						Nazionale nazionale = new Nazionale(nome, valoreGettone);
+						String vecchioNome = (String) model.getValueAt(table.getSelectedRow(), 0);
+						controller.modificaNazionale(nazionale, vecchioNome);
+						ricaricaNazionali();
+					}
+				}
+			}
+		});
 		modificaButton.setFont(new Font("SansSerif", Font.PLAIN, 14));
 		modificaButton.setBounds(243, 255, 93, 19);
 		contentPane.add(modificaButton);
@@ -119,9 +181,16 @@ public class NazionaleFrame extends JFrame {
 		ordinaLabel.setBounds(243, 284, 93, 19);
 		contentPane.add(ordinaLabel);
 		
-		JComboBox ordinaComboBox = new JComboBox();
+		ordinaComboBox = new JComboBox<String>();
 		ordinaComboBox.setBounds(243, 306, 93, 19);
+		ordinaComboBox.addItem("Nome");
+		ordinaComboBox.addItem("ValoreGettone");
 		contentPane.add(ordinaComboBox);
+		ordinaComboBox.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				ricaricaNazionali();
+			}
+		});
 		
 	}
 	
@@ -130,5 +199,14 @@ public class NazionaleFrame extends JFrame {
 		model.addColumn("Nome");
 		model.addColumn("Valore gettone");
 		for(int i=0; i<listaNazionali.size(); i++) model.addRow(new Object[] {listaNazionali.get(i).getNome(), listaNazionali.get(i).getValoreGettone()});
+	}
+	
+	public void ricaricaNazionali() {
+		DefaultTableModel model = (DefaultTableModel) this.table.getModel();
+		table.setEnabled(false);
+		model.setRowCount(0);
+		model.setColumnCount(0);
+		controller.setNazionaliOrdinate((String) ordinaComboBox.getSelectedItem());
+		table.setEnabled(true);
 	}
 }

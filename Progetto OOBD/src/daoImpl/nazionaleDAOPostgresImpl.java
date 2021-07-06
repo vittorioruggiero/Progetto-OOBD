@@ -59,7 +59,7 @@ public class nazionaleDAOPostgresImpl implements nazionaleDAO {
 	}
 	
 	@Override
-	public void deleteElemento(String nome) {
+	public void deleteNazionale(String nome) {
 		try {
 			deleteNazionalePS.setString(1, nome);
 			deleteNazionalePS.executeUpdate();
