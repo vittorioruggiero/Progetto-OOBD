@@ -10,7 +10,7 @@ public interface nazionaleDAO {
 
 	void insertNazionale(Nazionale nazionale);
 
-	void deleteElemento(String nome);
+	void deleteNazionale(String nome);
 
 	void updateNazionale(Nazionale nuovaNazionale, String vecchioNome);
 
