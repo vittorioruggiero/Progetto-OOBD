@@ -20,6 +20,7 @@ public class HomeFrame extends JFrame {
 	private JPanel contentPane;
 
 	public HomeFrame(Controller controller) {
+		setResizable(false);
 		setTitle("HomeFrame");
 		this.controller = controller;
 		

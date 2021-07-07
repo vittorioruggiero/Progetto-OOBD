@@ -61,8 +61,8 @@ public class Controller {
 		nazionaleDAO.insertNazionale(nazionale);
 	}
 	
-	public void rimuoviNazionali(String nome) {
-		nazionaleDAO.deleteNazionale(nome);
+	public void rimuoviNazionali(Nazionale nazionale) {
+		nazionaleDAO.deleteNazionale(nazionale);
 	}
 	
 	public void modificaNazionale(Nazionale nazionale, String vecchioNome) {
