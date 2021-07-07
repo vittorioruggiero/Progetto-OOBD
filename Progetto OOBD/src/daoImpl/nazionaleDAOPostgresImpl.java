@@ -21,7 +21,7 @@ public class nazionaleDAOPostgresImpl implements nazionaleDAO {
 	public nazionaleDAOPostgresImpl(Connection connection) throws SQLException {
 		this.connection = connection;
 		insertNazionalePS = connection.prepareStatement("INSERT INTO Nazionale VALUES (?, ?)");
-		deleteNazionalePS = connection.prepareStatement("DELETE FROM Nazionale WHERE nome = ?");
+		deleteNazionalePS = connection.prepareStatement("DELETE FROM Nazionale WHERE nome = ? AND valoreGettone = ?");
 		updateNazionalePS = connection.prepareStatement("UPDATE Nazionale SET nome = ?, valoreGettone = ? WHERE nome = ?");
 	}
 	
@@ -59,9 +59,10 @@ public class nazionaleDAOPostgresImpl implements nazionaleDAO {
 	}
 	
 	@Override
-	public void deleteNazionale(String nome) {
+	public void deleteNazionale(Nazionale nazionale) {
 		try {
-			deleteNazionalePS.setString(1, nome);
+			deleteNazionalePS.setString(1, nazionale.getNome());
+			deleteNazionalePS.setDouble(2, nazionale.getValoreGettone());
 			deleteNazionalePS.executeUpdate();
 		}
 			catch (SQLException exception) {

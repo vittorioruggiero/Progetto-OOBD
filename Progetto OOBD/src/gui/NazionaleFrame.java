@@ -34,6 +34,7 @@ public class NazionaleFrame extends JFrame {
 	private JComboBox<String> ordinaComboBox;
 
 	public NazionaleFrame(Controller controller) {
+		setResizable(false);
 		setTitle("NazionaleFrame");
 		this.controller = controller;
 		
@@ -46,7 +47,7 @@ public class NazionaleFrame extends JFrame {
 		
 		JLabel nazionaliLabel = new JLabel("Nazionali");
 		nazionaliLabel.setFont(new Font("SansSerif", Font.BOLD, 14));
-		nazionaliLabel.setBounds(219, 23, 73, 13);
+		nazionaliLabel.setBounds(232, 21, 73, 13);
 		contentPane.add(nazionaliLabel);
 		
 		JButton indietroButton = new JButton("Indietro");
@@ -66,7 +67,7 @@ public class NazionaleFrame extends JFrame {
 		
 		table = new JTable();
 		table.setFont(new Font("SansSerif", Font.PLAIN, 14));
-		table.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		table.setModel(new DefaultTableModel(
 				new Object[][] {
 				},
@@ -123,8 +124,14 @@ public class NazionaleFrame extends JFrame {
 				if(!nomeTF.getText().equals("") && !valoreGettoneTF.getText().equals("")) {
 					String nome = nomeTF.getText();
 					double valoreGettone = Double.parseDouble(valoreGettoneTF.getText());
-					if(valoreGettone<=0) JOptionPane.showMessageDialog(null, "Il valore del gettone deve essere maggiore di 0", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
+					if(valoreGettone<=0) JOptionPane.showMessageDialog(NazionaleFrame.this, "Il valore del gettone deve essere maggiore di 0", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
 					else {
+						for(int i = 0; i<table.getRowCount(); i++) {
+							if(nome.equals(model.getValueAt(i, 0))) {
+								JOptionPane.showMessageDialog(NazionaleFrame.this, "La nazionale " +nome+ " è già presente", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
+								return;
+							}
+						}
 						Nazionale nazionale = new Nazionale(nome, valoreGettone);
 						controller.inserisciNazionale(nazionale);
 						ricaricaNazionali();
@@ -141,14 +148,11 @@ public class NazionaleFrame extends JFrame {
 		JButton rimuoviButton = new JButton("Rimuovi");
 		rimuoviButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				int selectedRows[] = table.getSelectedRows();
-				if(selectedRows.length > 0) {
-					for(int i = selectedRows.length - 1; i>=0; i--) {
-						String nome = (String) model.getValueAt(selectedRows[i], 0);
-						controller.rimuoviNazionali(nome);
-						ricaricaNazionali();
-					}
-				}
+				String nome = nomeTF.getText();
+				double valoreGettone = Double.parseDouble(valoreGettoneTF.getText());
+				Nazionale nazionale = new Nazionale(nome, valoreGettone);
+				controller.rimuoviNazionali(nazionale);
+				ricaricaNazionali();
 			}
 		});
 		rimuoviButton.setFont(new Font("SansSerif", Font.PLAIN, 14));
@@ -162,8 +166,14 @@ public class NazionaleFrame extends JFrame {
 				if(table.getSelectedRow()!=-1 && !nomeTF.getText().equals("") && !valoreGettoneTF.getText().equals("")) {
 					String nome = nomeTF.getText();
 					double valoreGettone = Double.parseDouble(valoreGettoneTF.getText());
-					if(valoreGettone<=0) JOptionPane.showMessageDialog(null, "Il valore del gettone deve essere maggiore di 0", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
+					if(valoreGettone<=0) JOptionPane.showMessageDialog(NazionaleFrame.this, "Il valore del gettone deve essere maggiore di 0", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
 					else {
+						for(int i = 0; i<table.getRowCount(); i++) {
+							if(i!=table.getSelectedRow() && nome.equals(model.getValueAt(i, 0))) {
+								JOptionPane.showMessageDialog(NazionaleFrame.this, "La nazionale " +nome+ " è già presente", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
+								return;
+							}
+						}
 						Nazionale nazionale = new Nazionale(nome, valoreGettone);
 						String vecchioNome = (String) model.getValueAt(table.getSelectedRow(), 0);
 						controller.modificaNazionale(nazionale, vecchioNome);
