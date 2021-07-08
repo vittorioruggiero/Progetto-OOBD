@@ -133,7 +133,7 @@ public class NazionaleFrame extends JFrame {
 							}
 						}
 						Nazionale nazionale = new Nazionale(nome, valoreGettone);
-						controller.inserisciNazionale(nazionale);
+						controller.inserisci(nazionale);
 						ricaricaNazionali();
 					}
 				}
@@ -151,7 +151,7 @@ public class NazionaleFrame extends JFrame {
 				String nome = nomeTF.getText();
 				double valoreGettone = Double.parseDouble(valoreGettoneTF.getText());
 				Nazionale nazionale = new Nazionale(nome, valoreGettone);
-				controller.rimuoviNazionali(nazionale);
+				controller.rimuovi(nazionale);
 				ricaricaNazionali();
 			}
 		});
@@ -176,7 +176,7 @@ public class NazionaleFrame extends JFrame {
 						}
 						Nazionale nazionale = new Nazionale(nome, valoreGettone);
 						String vecchioNome = (String) model.getValueAt(table.getSelectedRow(), 0);
-						controller.modificaNazionale(nazionale, vecchioNome);
+						controller.modifica(nazionale, vecchioNome);
 						ricaricaNazionali();
 					}
 				}
@@ -216,7 +216,7 @@ public class NazionaleFrame extends JFrame {
 		table.setEnabled(false);
 		model.setRowCount(0);
 		model.setColumnCount(0);
-		controller.setNazionaliOrdinate((String) ordinaComboBox.getSelectedItem());
+		controller.setInOrdine((String) ordinaComboBox.getSelectedItem());
 		table.setEnabled(true);
 	}
 }

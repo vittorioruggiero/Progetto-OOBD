@@ -5,20 +5,22 @@ import java.sql.SQLException;
 
 import javax.swing.JFrame;
 
-import daoImpl.nazionaleDAOPostgresImpl;
+import daoImpl.NazionaleDAOPostgresImpl;
+import daoImpl.ProcuratoreDAOPostgresImpl;
 import dbConfig.DBConnection;
 import gui.HomeFrame;
 import gui.NazionaleFrame;
 import entity.Nazionale;
+import entity.Procuratore;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class Controller {
 	private HomeFrame homeFrame;
 	private NazionaleFrame nazionaleFrame;
 	private List<Nazionale> listaNazionali;
-	private nazionaleDAOPostgresImpl nazionaleDAO;
+	private NazionaleDAOPostgresImpl nazionaleDAO;
+	private ProcuratoreDAOPostgresImpl procuratoreDAO;
 	DBConnection dbconn;
 	Connection connection;
 	
@@ -45,7 +47,7 @@ public class Controller {
 	
 	public void apriNazionaleFrame() {
 		try {
-			nazionaleDAO = new nazionaleDAOPostgresImpl(connection);
+			nazionaleDAO = new NazionaleDAOPostgresImpl(connection);
 			listaNazionali = nazionaleDAO.getAllNazionali("nome");
 		}
 		catch (SQLException exception) {
@@ -57,19 +59,31 @@ public class Controller {
 		nazionaleFrame.setVisible(true);
 	}
 	
-	public void inserisciNazionale(Nazionale nazionale) {
+	public void inserisci(Nazionale nazionale) {
 		nazionaleDAO.insertNazionale(nazionale);
 	}
 	
-	public void rimuoviNazionali(Nazionale nazionale) {
+	public void inserisci(Procuratore procuratore) {
+		procuratoreDAO.insertProcuratore(procuratore);
+	}
+	
+	public void rimuovi(Nazionale nazionale) {
 		nazionaleDAO.deleteNazionale(nazionale);
 	}
 	
-	public void modificaNazionale(Nazionale nazionale, String vecchioNome) {
+	public void rimuovi(Procuratore procuratore) {
+		procuratoreDAO.deleteProcuratore(procuratore);
+	}
+	
+	public void modifica(Nazionale nazionale, String vecchioNome) {
 		nazionaleDAO.updateNazionale(nazionale, vecchioNome);
 	}
 	
-	public void setNazionaliOrdinate(String nomeColonna) {
+	public void modifica(Procuratore procuratore, String vecchioCodiceFiscale) {
+		procuratoreDAO.updateProcuratore(procuratore, vecchioCodiceFiscale);
+	}
+	
+	public void setInOrdine(String nomeColonna) {
 		listaNazionali = nazionaleDAO.getAllNazionali(nomeColonna);
 		nazionaleFrame.setNazionali(listaNazionali);
 	}

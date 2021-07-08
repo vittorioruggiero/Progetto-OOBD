@@ -8,17 +8,17 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-import dao.nazionaleDAO;
+import dao.NazionaleDAO;
 import entity.Nazionale;
 
-public class nazionaleDAOPostgresImpl implements nazionaleDAO {
+public class NazionaleDAOPostgresImpl implements NazionaleDAO {
 	private Connection connection;
 	private Statement statement;
 	private PreparedStatement insertNazionalePS;
 	private PreparedStatement deleteNazionalePS;
 	private PreparedStatement updateNazionalePS;
 	
-	public nazionaleDAOPostgresImpl(Connection connection) throws SQLException {
+	public NazionaleDAOPostgresImpl(Connection connection) throws SQLException {
 		this.connection = connection;
 		insertNazionalePS = connection.prepareStatement("INSERT INTO Nazionale VALUES (?, ?)");
 		deleteNazionalePS = connection.prepareStatement("DELETE FROM Nazionale WHERE nome = ? AND valoreGettone = ?");

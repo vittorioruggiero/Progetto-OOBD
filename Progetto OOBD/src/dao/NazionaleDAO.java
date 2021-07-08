@@ -4,7 +4,7 @@ import java.util.List;
 
 import entity.Nazionale;
 
-public interface nazionaleDAO {
+public interface NazionaleDAO {
 
 	List<Nazionale> getAllNazionali(String nomeColonna);
 
