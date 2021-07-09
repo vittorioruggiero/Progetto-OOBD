@@ -7,6 +7,8 @@ import entity.Sponsor;
 public interface SponsorDAO {
 
 	List<Sponsor> getAllsponsor(String nomeColonna);
+	
+	Sponsor getSponsor(String nomeCercato);
 
 	void insertSponsor(Sponsor sponsor);
 
