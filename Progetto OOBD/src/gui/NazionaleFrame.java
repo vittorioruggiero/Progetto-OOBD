@@ -216,7 +216,7 @@ public class NazionaleFrame extends JFrame {
 		table.setEnabled(false);
 		model.setRowCount(0);
 		model.setColumnCount(0);
-		controller.setInOrdine((String) ordinaComboBox.getSelectedItem());
+		controller.setNazionaliInOrdine((String) ordinaComboBox.getSelectedItem());
 		table.setEnabled(true);
 	}
 }

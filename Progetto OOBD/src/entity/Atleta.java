@@ -8,14 +8,61 @@ public class Atleta {
 	private String cognome;
 	private LocalDate dataNascita;
 	private int presenzeNazionale;
+	private Procuratore procuratore;
+	private Nazionale nazionale;
 	
-	public Atleta(String codiceFiscale, String nome, String cognome, LocalDate dataNascita, int presenzeNazionale) {
+	public Atleta(String codiceFiscale, String nome, String cognome, LocalDate dataNascita, int presenzeNazionale, Procuratore procuratore, Nazionale nazionale) {
 		super();
 		this.codiceFiscale = codiceFiscale;
 		this.nome = nome;
 		this.cognome = cognome;
 		this.dataNascita = dataNascita;
 		this.presenzeNazionale = presenzeNazionale;
+		this.procuratore = procuratore;
+		this.nazionale = nazionale;
+	}
+	
+	public Atleta(String codiceFiscale, String nome, String cognome, LocalDate dataNascita, Procuratore procuratore) {
+		super();
+		this.codiceFiscale = codiceFiscale;
+		this.nome = nome;
+		this.cognome = cognome;
+		this.dataNascita = dataNascita;
+		this.procuratore = procuratore;
+	}
+	
+	public Atleta(String codiceFiscale, String nome, String cognome, LocalDate dataNascita, int presenzeNazionale, Nazionale nazionale) {
+		super();
+		this.codiceFiscale = codiceFiscale;
+		this.nome = nome;
+		this.cognome = cognome;
+		this.dataNascita = dataNascita;
+		this.presenzeNazionale = presenzeNazionale;
+		this.nazionale = nazionale;
+	}
+	
+	public Atleta(String codiceFiscale, String nome, String cognome, LocalDate dataNascita) {
+		super();
+		this.codiceFiscale = codiceFiscale;
+		this.nome = nome;
+		this.cognome = cognome;
+		this.dataNascita = dataNascita;
+	}
+
+	public Procuratore getProcuratore() {
+		return procuratore;
+	}
+
+	public void setProcuratore(Procuratore procuratore) {
+		this.procuratore = procuratore;
+	}
+
+	public Nazionale getNazionale() {
+		return nazionale;
+	}
+
+	public void setNazionale(Nazionale nazionale) {
+		this.nazionale = nazionale;
 	}
 
 	public String getCodiceFiscale() {

@@ -7,6 +7,8 @@ import entity.Procuratore;
 public interface ProcuratoreDAO {
 
 	List<Procuratore> getAllProcuratori(String nomeColonna);
+	
+	Procuratore getProcuratore(String codiceFiscaleCercato);
 
 	void insertProcuratore(Procuratore procuratore);
 
