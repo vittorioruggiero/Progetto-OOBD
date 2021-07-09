@@ -7,6 +7,8 @@ import entity.Atleta;
 public interface AtletaDAO {
 
 	List<Atleta> getAllAtleti(String nomeColonna);
+	
+	Atleta getAtleta(String codiceFiscaleCercato);
 
 	void insertAtleta(Atleta atleta);
 
