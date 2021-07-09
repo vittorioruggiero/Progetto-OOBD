@@ -7,6 +7,7 @@ import javax.swing.JFrame;
 
 import daoImpl.AtletaDAOPostgresImpl;
 import daoImpl.ClubDAOPostgresImpl;
+import daoImpl.ContrattoDAOPostgresImpl;
 import daoImpl.NazionaleDAOPostgresImpl;
 import daoImpl.ProcuratoreDAOPostgresImpl;
 import daoImpl.SponsorDAOPostgresImpl;
@@ -15,6 +16,7 @@ import gui.HomeFrame;
 import gui.NazionaleFrame;
 import entity.Atleta;
 import entity.Club;
+import entity.Contratto;
 import entity.Nazionale;
 import entity.Procuratore;
 import entity.Sponsor;
@@ -29,11 +31,13 @@ public class Controller {
 	private List<Atleta> listaAtleti;
 	private List<Club> listaClub;
 	private List<Sponsor> listaSponsor;
+	private List<Contratto> listaContratti;
 	private NazionaleDAOPostgresImpl nazionaleDAO;
 	private ProcuratoreDAOPostgresImpl procuratoreDAO;
 	private AtletaDAOPostgresImpl atletaDAO;
 	private ClubDAOPostgresImpl clubDAO;
 	private SponsorDAOPostgresImpl sponsorDAO;
+	private ContrattoDAOPostgresImpl contrattoDAO;
 	DBConnection dbconn;
 	Connection connection;
 	
@@ -92,6 +96,10 @@ public class Controller {
 		sponsorDAO.insertSponsor(sponsor);
 	}
 	
+	public void inserisci(Contratto contratto) {
+		contrattoDAO.insertContratto(contratto);
+	}
+	
 	public void rimuovi(Nazionale nazionale) {
 		nazionaleDAO.deleteNazionale(nazionale);
 	}
@@ -110,6 +118,10 @@ public class Controller {
 	
 	public void rimuovi(Sponsor sponsor) {
 		sponsorDAO.deleteSponsor(sponsor);
+	}
+	
+	public void rimuovi(Contratto contratto) {
+		contrattoDAO.deleteContratto(contratto);
 	}
 	
 	public void modifica(Nazionale nazionale, String vecchioNome) {
@@ -132,36 +144,57 @@ public class Controller {
 		sponsorDAO.updateSponsor(sponsor, vecchioNome);
 	}
 	
+	public void modifica(Contratto contratto, Contratto vecchioContrtato) {
+		contrattoDAO.updateContratto(contratto, vecchioContrtato);
+	}
+	
 	public void setNazionaliInOrdine(String nomeColonna) {
 		listaNazionali = nazionaleDAO.getAllNazionali(nomeColonna);
 		nazionaleFrame.setNazionali(listaNazionali);
 	}
 	
-//	public void setProcuratoriInOrdine(String codiceFiscale) {
-//		listaProcuratori = procuratoreDAO.getAllProcuratori(codiceFiscale);
+//	public void setProcuratoriInOrdine(String nomeColonna) {
+//		listaProcuratori = procuratoreDAO.getAllProcuratori(nomeColonna);
 //		procuratoreFrame.setProcuratori(listaProcuratori);
 //	}
 	
-//	public void setAtletiInOrdine(String codiceFiscale) {
-//		listaAtleti = atletaDAO.getAllAtleti(codiceFiscale);
+//	public void setAtletiInOrdine(String nomeColonna) {
+//		listaAtleti = atletaDAO.getAllAtleti(nomeColonna);
 //		atletaFrame.setAtleti(listaAtleti);
 //	}
 	
-//	public void setClubInOrdine(String nome) {
-//		listaClub = clubDAO.getAllClub(nome);
+//	public void setClubInOrdine(String nomeColonna) {
+//		listaClub = clubDAO.getAllClub(nomeColonna);
 //		clubFrame.setClub(listaClub);
 //	}
 	
-//	public void setSponsorInOrdine(String nome) {
-//		listaSponsor = sponsorDAO.getAllsponsor(nome);
+//	public void setSponsorInOrdine(String nomeColonna) {
+//		listaSponsor = sponsorDAO.getAllsponsor(nomeColonna);
 //		sponsorFrame.setSponsor(listaSponsor);
+//	}
+	
+//	public void setContrattiInOrdine(String nomeColonna, String scelta) {
+//		listaContratti = contrattoDAO.getAllContratti(nomeColonna, scelta);
+//		contrattoFrame.setCotratti(listaContratti);
 //	}
 	
 	public Procuratore cercaProcuratore(String codiceFiscaleCercato) {
 		return procuratoreDAO.getProcuratore(codiceFiscaleCercato);
 	}
 	
-	public Nazionale cercaNazionale(String nome) {
-		return nazionaleDAO.getNazionale(nome);
+	public Atleta cercaAtleta(String codiceFiscaleCercato) {
+		return atletaDAO.getAtleta(codiceFiscaleCercato);
+	}
+	
+	public Nazionale cercaNazionale(String nomeCercato) {
+		return nazionaleDAO.getNazionale(nomeCercato);
+	}
+	
+	public Club cercaClub(String nomeCercato) {
+		return clubDAO.getClub(nomeCercato);
+	}
+	
+	public Sponsor cercaSponsor(String nomeCercato) {
+		return sponsorDAO.getSponsor(nomeCercato);
 	}
 }

@@ -47,6 +47,26 @@ public class SponsorDAOPostgresImpl implements SponsorDAO {
 	}
 	
 	@Override
+	public Sponsor getSponsor(String nomeCercato) {
+		Sponsor sponsor = null;
+		try {
+			this.statement = this.connection.createStatement();
+			ResultSet resultSet = this.statement.executeQuery("SELECT * FROM Sponsor WHERE sponsor = " + nomeCercato);
+			
+			if(resultSet.next()) {
+				String nome = resultSet.getString("nome");
+				String stato = resultSet.getString("stato");
+				sponsor = new Sponsor(nome, stato);
+			}
+			resultSet.close();
+		}
+		catch (SQLException exception) {
+			System.out.println("SQLException: " + exception.getMessage());
+		}
+		return sponsor;
+	}
+	
+	@Override
 	public void insertSponsor(Sponsor sponsor) {
 		try {
 			insertSponsorPS.setString(1, sponsor.getNome());

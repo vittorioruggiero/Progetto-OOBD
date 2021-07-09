@@ -27,8 +27,8 @@ public class AtletaDAOPostgresImpl implements AtletaDAO {
 		this.connection = connection;
 		this.controller = controller;
 		insertAtletaPS = connection.prepareStatement("INSERT INTO Atleta VALUES (?, ?, ?, ?, ?, ?, ?)");
-		deleteAtletaPS = connection.prepareStatement("DELETE FROM Atleta WHERE codiceFiscale = ? AND nome = ? AND cognome = ? AND dataNascita = ? AND nazionale = ? AND presenzeNazionale = ? AND procuratore = ?");
-		updateAtletaPS = connection.prepareStatement("UPDATE Atleta SET codiceFiscale = ?, nome = ?, cognome = ?, dataNascita = ?, nazionale = ?, presenzeNazionale = ?, procuratore = ? WHERE codiceFiscale = ?");
+		deleteAtletaPS = connection.prepareStatement("DELETE FROM Atleta WHERE codiceFiscale = ? AND nome = ? AND cognome = ? AND dataNascita = ? AND nazionale = ? AND presenzeNazionale = ? AND codicefiscaleprocuratore = ?");
+		updateAtletaPS = connection.prepareStatement("UPDATE Atleta SET codiceFiscale = ?, nome = ?, cognome = ?, dataNascita = ?, nazionale = ?, presenzeNazionale = ?, codicefiscaleprocuratore = ? WHERE codiceFiscale = ?");
 	}
 	
 	@Override
@@ -39,14 +39,26 @@ public class AtletaDAOPostgresImpl implements AtletaDAO {
 			ResultSet resultSet = this.statement.executeQuery("SELECT * FROM Atleta ORDER BY " + nomeColonna);
 			
 			while(resultSet.next()) {
+				Atleta atleta;
 				String codiceFiscale = resultSet.getString("codiceFiscale");
 				String nome = resultSet.getString("nome");
 				String cognome = resultSet.getString("cognome");
 				LocalDate dataNascita = resultSet.getDate("dataNascita").toLocalDate();
-				int presenzeNazionale = resultSet.getInt("presenzeNazionale");
-				Procuratore procuratore = controller.cercaProcuratore(resultSet.getString("procuratore"));
-				Nazionale nazionale = controller.cercaNazionale(resultSet.getString("nazionale"));
-				Atleta atleta = new Atleta(codiceFiscale, nome, cognome, dataNascita, presenzeNazionale, procuratore, nazionale);
+				Procuratore procuratore;
+				if (resultSet.getString("codicefiscaleprocuratore")!=null)
+					procuratore = controller.cercaProcuratore(resultSet.getString("codicefiscaleprocuratore"));
+				else
+					procuratore = null;
+				Nazionale nazionale;
+				if (resultSet.getString("nazionale")!=null) {
+					nazionale = controller.cercaNazionale(resultSet.getString("nazionale"));
+					int presenzeNazionale = resultSet.getInt("presenzeNazionale");
+					atleta = new Atleta(codiceFiscale, nome, cognome, dataNascita, presenzeNazionale, procuratore, nazionale);
+				}
+				else {
+					nazionale = null;
+					atleta = new Atleta(codiceFiscale, nome, cognome, dataNascita, procuratore);
+				}
 				listaAtleti.add(atleta);
 			}
 			resultSet.close();
@@ -55,6 +67,42 @@ public class AtletaDAOPostgresImpl implements AtletaDAO {
 			System.out.println("SQLException: " + exception.getMessage());
 		}
 		return listaAtleti;
+	}
+	
+	@Override
+	public Atleta getAtleta(String codiceFiscaleCercato) {
+		Atleta atleta = null;
+		try {
+			this.statement = this.connection.createStatement();
+			ResultSet resultSet = this.statement.executeQuery("SELECT * FROM Atleta WHERE codiceFiscale = " + codiceFiscaleCercato);
+			
+			if(resultSet.next()) {
+				String codiceFiscale = resultSet.getString("codiceFiscale");
+				String nome = resultSet.getString("nome");
+				String cognome = resultSet.getString("cognome");
+				LocalDate dataNascita = resultSet.getDate("dataNascita").toLocalDate();
+				Procuratore procuratore;
+				if (resultSet.getString("codicefiscaleprocuratore")!=null)
+					procuratore = controller.cercaProcuratore(resultSet.getString("codicefiscaleprocuratore"));
+				else
+					procuratore = null;
+				Nazionale nazionale;
+				if (resultSet.getString("nazionale")!=null) {
+					nazionale = controller.cercaNazionale(resultSet.getString("nazionale"));
+					int presenzeNazionale = resultSet.getInt("presenzeNazionale");
+					atleta = new Atleta(codiceFiscale, nome, cognome, dataNascita, presenzeNazionale, procuratore, nazionale);
+				}
+				else {
+					nazionale = null;
+					atleta = new Atleta(codiceFiscale, nome, cognome, dataNascita, procuratore);
+				}
+			}
+			resultSet.close();
+		}
+		catch (SQLException exception) {
+			System.out.println("SQLException: " + exception.getMessage());
+		}
+		return atleta;
 	}
 	
 	@Override
