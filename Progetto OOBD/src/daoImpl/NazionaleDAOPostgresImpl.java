@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,6 +45,26 @@ public class NazionaleDAOPostgresImpl implements NazionaleDAO {
 			System.out.println("SQLException: " + exception.getMessage());
 		}
 		return listaNazionali;
+	}
+	
+	@Override
+	public Nazionale getNazionale(String nomeCercato) {
+		Nazionale nazionale = null;
+		try {
+			this.statement = this.connection.createStatement();
+			ResultSet resultSet = this.statement.executeQuery("SELECT * FROM Nazionale WHERE nome = " + nomeCercato);
+			
+			if(resultSet.next()) {
+				String nome = resultSet.getString("nome");
+				double valoreGettone = resultSet.getDouble("valoreGettone");
+				nazionale = new Nazionale(nome, valoreGettone);
+			}
+			resultSet.close();
+		}
+		catch (SQLException exception) {
+			System.out.println("SQLException: " + exception.getMessage());
+		}
+		return nazionale;
 	}
 	
 	@Override

@@ -50,6 +50,28 @@ public class ProcuratoreDAOPostgresImpl implements ProcuratoreDAO {
 	}
 	
 	@Override
+	public Procuratore getProcuratore(String codiceFiscaleCercato) {
+		Procuratore procuratore = null;
+		try {
+			this.statement = this.connection.createStatement();
+			ResultSet resultSet = this.statement.executeQuery("SELECT * FROM Procuratore WHERE codiceFiscale = " + codiceFiscaleCercato);
+			
+			if(resultSet.next()) {
+				String codiceFiscale = resultSet.getString("codiceFiscale");
+				String nome = resultSet.getString("nome");
+				String cognome = resultSet.getString("cognome");
+				LocalDate dataNascita = resultSet.getDate("dataNascita").toLocalDate();
+				procuratore = new Procuratore(codiceFiscale, nome, cognome, dataNascita);
+			}
+			resultSet.close();
+		}
+		catch (SQLException exception) {
+			System.out.println("SQLException: " + exception.getMessage());
+		}
+		return procuratore;
+	}
+	
+	@Override
 	public void insertProcuratore(Procuratore procuratore) {
 		try {
 			insertProcuratorePS.setString(1, procuratore.getCodiceFiscale());
