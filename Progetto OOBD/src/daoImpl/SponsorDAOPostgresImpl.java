@@ -20,9 +20,9 @@ public class SponsorDAOPostgresImpl implements SponsorDAO {
 	
 	public SponsorDAOPostgresImpl(Connection connection) throws SQLException {
 		this.connection = connection;
-		insertSponsorPS = connection.prepareStatement("INSERT INTO Sponsor VALUES (?)");
-		deleteSponsorPS = connection.prepareStatement("DELETE FROM Sponsor WHERE nome = ?");
-		updateSponsorPS = connection.prepareStatement("UPDATE Sponsor SET nome = ? WHERE nome = ?");
+		insertSponsorPS = connection.prepareStatement("INSERT INTO Sponsor VALUES (?, ?)");
+		deleteSponsorPS = connection.prepareStatement("DELETE FROM Sponsor WHERE nome = ? AND stato = ?");
+		updateSponsorPS = connection.prepareStatement("UPDATE Sponsor SET nome = ?, stato = ? WHERE nome = ?");
 	}
 	
 	@Override
@@ -34,7 +34,8 @@ public class SponsorDAOPostgresImpl implements SponsorDAO {
 			
 			while(resultSet.next()) {
 				String nome = resultSet.getString("nome");
-				Sponsor sponsor = new Sponsor(nome);
+				String stato = resultSet.getString("stato");
+				Sponsor sponsor = new Sponsor (nome, stato);
 				listaSponsor.add(sponsor);
 			}
 			resultSet.close();
@@ -49,6 +50,7 @@ public class SponsorDAOPostgresImpl implements SponsorDAO {
 	public void insertSponsor(Sponsor sponsor) {
 		try {
 			insertSponsorPS.setString(1, sponsor.getNome());
+			insertSponsorPS.setString(2, sponsor.getStato());
 			insertSponsorPS.executeUpdate();
 		}
 			catch (SQLException exception) {
@@ -60,6 +62,7 @@ public class SponsorDAOPostgresImpl implements SponsorDAO {
 	public void deleteSponsor(Sponsor sponsor) {
 		try {
 			deleteSponsorPS.setString(1, sponsor.getNome());
+			deleteSponsorPS.setString(2, sponsor.getStato());
 			deleteSponsorPS.executeUpdate();
 		}
 			catch (SQLException exception) {
@@ -68,10 +71,11 @@ public class SponsorDAOPostgresImpl implements SponsorDAO {
 	}
 	
 	@Override
-	public void updateSponsor(Sponsor nuovaSponsor, String vecchioNome) {
+	public void updateSponsor(Sponsor nuovoSponsor, String vecchioNome) {
 		try {
-			updateSponsorPS.setString(1, nuovaSponsor.getNome());
-			updateSponsorPS.setString(2, vecchioNome);
+			updateSponsorPS.setString(1, nuovoSponsor.getNome());
+			updateSponsorPS.setString(2, nuovoSponsor.getStato());
+			updateSponsorPS.setString(3, vecchioNome);
 			updateSponsorPS.executeUpdate();
 		}
 		catch (SQLException exception) {

@@ -23,7 +23,7 @@ public class ProcuratoreDAOPostgresImpl implements ProcuratoreDAO {
 		this.connection = connection;
 		insertProcuratorePS = connection.prepareStatement("INSERT INTO Procuratore VALUES (?, ?, ?, ?)");
 		deleteProcuratorePS = connection.prepareStatement("DELETE FROM Procuratore WHERE codiceFiscale = ? AND nome = ? AND cognome = ? AND dataNascita = ?");
-		updateProcuratorePS = connection.prepareStatement("UPDATE Procuratore SET codiceFiscale = ? AND nome = ? AND cognome = ? AND dataNascita = ? WHERE codiceFiscale = ?");
+		updateProcuratorePS = connection.prepareStatement("UPDATE Procuratore SET codiceFiscale = ?, nome = ?, cognome = ?, dataNascita = ? WHERE codiceFiscale = ?");
 	}
 	
 	@Override

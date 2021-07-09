@@ -28,7 +28,7 @@ public class AtletaDAOPostgresImpl implements AtletaDAO {
 		this.controller = controller;
 		insertAtletaPS = connection.prepareStatement("INSERT INTO Atleta VALUES (?, ?, ?, ?, ?, ?, ?)");
 		deleteAtletaPS = connection.prepareStatement("DELETE FROM Atleta WHERE codiceFiscale = ? AND nome = ? AND cognome = ? AND dataNascita = ? AND nazionale = ? AND presenzeNazionale = ? AND procuratore = ?");
-		updateAtletaPS = connection.prepareStatement("UPDATE Atleta SET codiceFiscale = ? AND nome = ? AND cognome = ? AND dataNascita = ? AND nazionale = ? AND presenzeNazionale = ? AND procuratore = ? WHERE codiceFiscale = ?");
+		updateAtletaPS = connection.prepareStatement("UPDATE Atleta SET codiceFiscale = ?, nome = ?, cognome = ?, dataNascita = ?, nazionale = ?, presenzeNazionale = ?, procuratore = ? WHERE codiceFiscale = ?");
 	}
 	
 	@Override
