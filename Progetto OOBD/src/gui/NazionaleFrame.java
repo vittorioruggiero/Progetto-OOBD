@@ -14,6 +14,8 @@ import javax.swing.table.DefaultTableModel;
 
 import controller.Controller;
 import entity.Nazionale;
+import exception.DuplicatoException;
+import exception.GettoneNonValidoException;
 
 import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
@@ -121,20 +123,23 @@ public class NazionaleFrame extends JFrame {
 		//GESTIONE DELL'INSERIMENTO DELLE RIGHE
 		inserisciButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if(!nomeTF.getText().equals("") && !valoreGettoneTF.getText().equals("")) {
+				if(nomeTF.getText().length()>0 && valoreGettoneTF.getText().length()>0) {
+					Nazionale nazionale;
 					String nome = nomeTF.getText();
 					double valoreGettone = Double.parseDouble(valoreGettoneTF.getText());
-					if(valoreGettone<=0) JOptionPane.showMessageDialog(NazionaleFrame.this, "Il valore del gettone deve essere maggiore di 0", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
-					else {
-						for(int i = 0; i<table.getRowCount(); i++) {
-							if(nome.equals(model.getValueAt(i, 0))) {
-								JOptionPane.showMessageDialog(NazionaleFrame.this, "La nazionale " +nome+ " è già presente", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
-								return;
-							}
-						}
-						Nazionale nazionale = new Nazionale(nome, valoreGettone);
+					try {
+						for(int i = 0; i<table.getRowCount(); i++)
+							if(nome.equals(model.getValueAt(i, 0))) throw new DuplicatoException();
+						if(valoreGettone<=0) throw new GettoneNonValidoException();
+						nazionale = new Nazionale(nome, valoreGettone);
 						controller.inserisci(nazionale);
 						ricaricaNazionali();
+					}
+					catch (GettoneNonValidoException exception) {
+						JOptionPane.showMessageDialog(NazionaleFrame.this, "Il valore del gettone deve essere maggiore di 0", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
+					}
+					catch (DuplicatoException exception) {
+						JOptionPane.showMessageDialog(NazionaleFrame.this, "La nazionale " +nome+ " è già presente", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
 					}
 				}
 			}
@@ -163,21 +168,24 @@ public class NazionaleFrame extends JFrame {
 		JButton modificaButton = new JButton("Modifica");
 		modificaButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if(table.getSelectedRow()!=-1 && !nomeTF.getText().equals("") && !valoreGettoneTF.getText().equals("")) {
+				if(table.getSelectedRow()!=-1 && nomeTF.getText().length()>0 && valoreGettoneTF.getText().length()>0) {
+					Nazionale nazionale;
 					String nome = nomeTF.getText();
 					double valoreGettone = Double.parseDouble(valoreGettoneTF.getText());
-					if(valoreGettone<=0) JOptionPane.showMessageDialog(NazionaleFrame.this, "Il valore del gettone deve essere maggiore di 0", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
-					else {
-						for(int i = 0; i<table.getRowCount(); i++) {
-							if(i!=table.getSelectedRow() && nome.equals(model.getValueAt(i, 0))) {
-								JOptionPane.showMessageDialog(NazionaleFrame.this, "La nazionale " +nome+ " è già presente", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
-								return;
-							}
-						}
-						Nazionale nazionale = new Nazionale(nome, valoreGettone);
+					try {
+						for(int i = 0; i<table.getRowCount(); i++) 
+							if(i!=table.getSelectedRow() && nome.equals(model.getValueAt(i, 0))) throw new DuplicatoException();
+						if(valoreGettone<=0) throw new GettoneNonValidoException();
+						nazionale = new Nazionale(nome, valoreGettone);
 						String vecchioNome = (String) model.getValueAt(table.getSelectedRow(), 0);
 						controller.modifica(nazionale, vecchioNome);
 						ricaricaNazionali();
+					}
+					catch (GettoneNonValidoException exception) {
+						JOptionPane.showMessageDialog(NazionaleFrame.this, "Il valore del gettone deve essere maggiore di 0", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
+					}
+					catch (DuplicatoException exception) {
+						JOptionPane.showMessageDialog(NazionaleFrame.this, "La nazionale " +nome+ " è già presente", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
 					}
 				}
 			}

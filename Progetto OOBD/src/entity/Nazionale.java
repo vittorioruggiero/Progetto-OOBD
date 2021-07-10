@@ -1,5 +1,6 @@
 package entity;
 
+
 public class Nazionale {
 	private String nome;
 	private double valoreGettone;
