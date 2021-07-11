@@ -37,6 +37,11 @@ public class HomeFrame extends JFrame {
 		contentPane.add(selezioneLabel);
 		
 		JButton procuratoriButton = new JButton("Procuratori");
+		procuratoriButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				controller.apriProcuratoreFrame();
+			}
+		});
 		procuratoriButton.setFont(new Font("SansSerif", Font.PLAIN, 14));
 		procuratoriButton.setBounds(56, 39, 110, 27);
 		contentPane.add(procuratoriButton);

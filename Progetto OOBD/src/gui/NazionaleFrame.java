@@ -128,9 +128,9 @@ public class NazionaleFrame extends JFrame {
 					String nome = nomeTF.getText();
 					double valoreGettone = Double.parseDouble(valoreGettoneTF.getText());
 					try {
+						if(valoreGettone<=0) throw new GettoneNonValidoException();
 						for(int i = 0; i<table.getRowCount(); i++)
 							if(nome.equals(model.getValueAt(i, 0))) throw new DuplicatoException();
-						if(valoreGettone<=0) throw new GettoneNonValidoException();
 						nazionale = new Nazionale(nome, valoreGettone);
 						controller.inserisci(nazionale);
 						ricaricaNazionali();
@@ -195,11 +195,12 @@ public class NazionaleFrame extends JFrame {
 		contentPane.add(modificaButton);
 		
 		JLabel ordinaLabel = new JLabel("Ordina per");
-		ordinaLabel.setFont(new Font("SansSerif", Font.PLAIN, 14));
+		ordinaLabel.setFont(new Font("SansSerif", Font.BOLD, 14));
 		ordinaLabel.setBounds(243, 284, 93, 19);
 		contentPane.add(ordinaLabel);
 		
 		ordinaComboBox = new JComboBox<String>();
+		ordinaComboBox.setFont(new Font("SansSerif", Font.PLAIN, 12));
 		ordinaComboBox.setBounds(243, 306, 93, 19);
 		ordinaComboBox.addItem("Nome");
 		ordinaComboBox.addItem("ValoreGettone");

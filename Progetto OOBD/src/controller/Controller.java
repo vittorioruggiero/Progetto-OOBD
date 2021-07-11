@@ -14,6 +14,7 @@ import daoImpl.SponsorDAOPostgresImpl;
 import dbConfig.DBConnection;
 import gui.HomeFrame;
 import gui.NazionaleFrame;
+import gui.ProcuratoreFrame;
 import entity.Atleta;
 import entity.Club;
 import entity.Contratto;
@@ -26,6 +27,7 @@ import java.util.List;
 public class Controller {
 	private HomeFrame homeFrame;
 	private NazionaleFrame nazionaleFrame;
+	private ProcuratoreFrame procuratoreFrame;
 	private List<Nazionale> listaNazionali;
 	private List<Procuratore> listaProcuratori;
 	private List<Atleta> listaAtleti;
@@ -74,6 +76,20 @@ public class Controller {
 		nazionaleFrame.setNazionali(listaNazionali);
 		homeFrame.setVisible(false);
 		nazionaleFrame.setVisible(true);
+	}
+	
+	public void apriProcuratoreFrame() {
+		try {
+			procuratoreDAO = new ProcuratoreDAOPostgresImpl(connection);
+			listaProcuratori = procuratoreDAO.getAllProcuratori("codiceFiscale");
+		}
+		catch (SQLException exception) {
+			System.out.println("SQLException: " + exception.getMessage());
+		}
+		procuratoreFrame = new ProcuratoreFrame(this);
+		procuratoreFrame.setProcuratori(listaProcuratori);
+		homeFrame.setVisible(false);
+		procuratoreFrame.setVisible(true);
 	}
 	
 	public void inserisci(Nazionale nazionale) {
@@ -153,10 +169,10 @@ public class Controller {
 		nazionaleFrame.setNazionali(listaNazionali);
 	}
 	
-//	public void setProcuratoriInOrdine(String nomeColonna) {
-//		listaProcuratori = procuratoreDAO.getAllProcuratori(nomeColonna);
-//		procuratoreFrame.setProcuratori(listaProcuratori);
-//	}
+	public void setProcuratoriInOrdine(String nomeColonna) {
+		listaProcuratori = procuratoreDAO.getAllProcuratori(nomeColonna);
+		procuratoreFrame.setProcuratori(listaProcuratori);
+	}
 	
 //	public void setAtletiInOrdine(String nomeColonna) {
 //		listaAtleti = atletaDAO.getAllAtleti(nomeColonna);
