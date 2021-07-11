@@ -47,6 +47,11 @@ public class HomeFrame extends JFrame {
 		contentPane.add(procuratoriButton);
 		
 		JButton atletiButton = new JButton("Atleti");
+		atletiButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				controller.apriAtletaFrame();
+			}
+		});
 		atletiButton.setFont(new Font("SansSerif", Font.PLAIN, 14));
 		atletiButton.setBounds(56, 76, 110, 27);
 		contentPane.add(atletiButton);

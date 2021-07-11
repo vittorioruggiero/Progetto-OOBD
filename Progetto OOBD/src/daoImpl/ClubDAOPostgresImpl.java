@@ -52,7 +52,7 @@ public class ClubDAOPostgresImpl implements ClubDAO {
 		Club club = null;
 		try {
 			this.statement = this.connection.createStatement();
-			ResultSet resultSet = this.statement.executeQuery("SELECT * FROM Club WHERE club = " + nomeCercato);
+			ResultSet resultSet = this.statement.executeQuery("SELECT * FROM Club WHERE club = '" + nomeCercato +"'");
 			
 			if(resultSet.next()) {
 				String nome = resultSet.getString("nome");

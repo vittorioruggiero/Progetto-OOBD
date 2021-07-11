@@ -52,7 +52,7 @@ public class NazionaleDAOPostgresImpl implements NazionaleDAO {
 		Nazionale nazionale = null;
 		try {
 			this.statement = this.connection.createStatement();
-			ResultSet resultSet = this.statement.executeQuery("SELECT * FROM Nazionale WHERE nome = " + nomeCercato);
+			ResultSet resultSet = this.statement.executeQuery("SELECT * FROM Nazionale WHERE nome = '" + nomeCercato +"'");
 			
 			if(resultSet.next()) {
 				String nome = resultSet.getString("nome");

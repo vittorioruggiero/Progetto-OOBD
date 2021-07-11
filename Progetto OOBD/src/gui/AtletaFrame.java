@@ -20,18 +20,17 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
+import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
 import controller.Controller;
-import entity.Procuratore;
+import entity.Atleta;
 import exception.CodiceFiscaleNonValidoException;
 import exception.DuplicatoException;
-import exception.GettoneNonValidoException;
 import exception.LunghezzaCodiceFiscaleNonValidaException;
-import javax.swing.SwingConstants;
 
-public class ProcuratoreFrame extends JFrame {
+public class AtletaFrame extends JFrame {
 
 	private Controller controller;
 	private JPanel contentPane;
@@ -44,9 +43,9 @@ public class ProcuratoreFrame extends JFrame {
 	JComboBox<Integer> meseComboBox;
 	JComboBox<Integer> giornoComboBox;
 
-	public ProcuratoreFrame(Controller controller) {
+	public AtletaFrame(Controller controller) {
 		setResizable(false);
-		setTitle("ProcuratoreFrame");
+		setTitle("AtletaFrame");
 		this.controller = controller;
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -56,15 +55,15 @@ public class ProcuratoreFrame extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
-		JLabel procuratoriLabel = new JLabel("Procuratori");
-		procuratoriLabel.setFont(new Font("SansSerif", Font.BOLD, 14));
-		procuratoriLabel.setBounds(232, 21, 84, 13);
-		contentPane.add(procuratoriLabel);
+		JLabel atletiLabel = new JLabel("Atleti");
+		atletiLabel.setFont(new Font("SansSerif", Font.BOLD, 14));
+		atletiLabel.setBounds(232, 21, 84, 13);
+		contentPane.add(atletiLabel);
 		
 		JButton indietroButton = new JButton("Indietro");
 		indietroButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				ProcuratoreFrame.this.controller.apriHomeFrame(ProcuratoreFrame.this);
+				AtletaFrame.this.controller.apriHomeFrame(AtletaFrame.this);
 			}
 		});
 		indietroButton.setFont(new Font("SansSerif", Font.PLAIN, 14));
@@ -137,7 +136,7 @@ public class ProcuratoreFrame extends JFrame {
 		inserisciButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if(codiceFiscaleTF.getText().length()>0 && nomeTF.getText().length()>0 && cognomeTF.getText().length()>0 && annoComboBox.getSelectedIndex()!=-1 && meseComboBox.getSelectedIndex()!=-1 && giornoComboBox.getSelectedIndex()!=-1) {
-					Procuratore procuratore;
+					Atleta atleta;
 					String codiceFiscale = codiceFiscaleTF.getText();
 					String nome = nomeTF.getText();
 					String cognome = cognomeTF.getText();
@@ -147,18 +146,18 @@ public class ProcuratoreFrame extends JFrame {
 						if(!codiceFiscale.matches("^[A-Z]{6}[0-9]{2}[A-Z][0-9]{2}[A-Z][0-9]{3}[A-Z]$")) throw new CodiceFiscaleNonValidoException();
 						for(int i = 0; i<table.getRowCount(); i++)
 							if(codiceFiscale.equals(model.getValueAt(i, 0))) throw new DuplicatoException();
-						procuratore = new Procuratore(codiceFiscale, nome, cognome, dataNascita);
-						controller.inserisci(procuratore);
-						ricaricaProcuratori();
+						atleta = new Atleta(codiceFiscale, nome, cognome, dataNascita);
+						controller.inserisci(atleta);
+						ricaricaAtleti();
 					}
 					catch (LunghezzaCodiceFiscaleNonValidaException exception) {
-						JOptionPane.showMessageDialog(ProcuratoreFrame.this, "Il codice fiscale deve contenere esattamente 16 caratteri", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
+						JOptionPane.showMessageDialog(AtletaFrame.this, "Il codice fiscale deve contenere esattamente 16 caratteri", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
 					}
 					catch (CodiceFiscaleNonValidoException exception) {
-						JOptionPane.showMessageDialog(ProcuratoreFrame.this, "Il codice fiscale non è scritto in una forma valida", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
+						JOptionPane.showMessageDialog(AtletaFrame.this, "Il codice fiscale non è scritto in una forma valida", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
 					}
 					catch (DuplicatoException exception) {
-						JOptionPane.showMessageDialog(ProcuratoreFrame.this, "Il procuratore " +codiceFiscale+ " è già presente", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
+						JOptionPane.showMessageDialog(AtletaFrame.this, "Il atleta " +codiceFiscale+ " è già presente", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
 					}
 				}
 			}
@@ -176,9 +175,9 @@ public class ProcuratoreFrame extends JFrame {
 				String nome = nomeTF.getText();
 				String cognome = cognomeTF.getText();
 				LocalDate dataNascita = LocalDate.of((int) annoComboBox.getSelectedItem(), (int) meseComboBox.getSelectedItem(), (int) giornoComboBox.getSelectedItem());
-				Procuratore procuratore = new Procuratore(codiceFiscale, nome, cognome, dataNascita);
-				controller.rimuovi(procuratore);
-				ricaricaProcuratori();
+				Atleta atleta = new Atleta(codiceFiscale, nome, cognome, dataNascita);
+				controller.rimuovi(atleta);
+				ricaricaAtleti();
 			}
 		});
 		rimuoviButton.setFont(new Font("SansSerif", Font.PLAIN, 14));
@@ -190,7 +189,7 @@ public class ProcuratoreFrame extends JFrame {
 		modificaButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if(table.getSelectedRow()!=-1 && codiceFiscaleTF.getText().length()>0 && nomeTF.getText().length()>0 && cognomeTF.getText().length()>0 && annoComboBox.getSelectedIndex()!=-1 && meseComboBox.getSelectedIndex()!=-1 && giornoComboBox.getSelectedIndex()!=-1) {
-					Procuratore procuratore;
+					Atleta atleta;
 					String codiceFiscale = codiceFiscaleTF.getText();
 					String nome = nomeTF.getText();
 					String cognome = cognomeTF.getText();
@@ -200,19 +199,19 @@ public class ProcuratoreFrame extends JFrame {
 						if(!codiceFiscale.matches("^[A-Z]{6}[0-9]{2}[A-Z][0-9]{2}[A-Z][0-9]{3}[A-Z]$")) throw new CodiceFiscaleNonValidoException();
 						for(int i = 0; i<table.getRowCount(); i++)
 							if(i!=table.getSelectedRow() && codiceFiscale.equals(model.getValueAt(i, 0))) throw new DuplicatoException();
-						procuratore = new Procuratore(codiceFiscale, nome, cognome, dataNascita);
+						atleta = new Atleta(codiceFiscale, nome, cognome, dataNascita);
 						String vecchioCodiceFiscale = (String) model.getValueAt(table.getSelectedRow(), 0);
-						controller.modifica(procuratore, vecchioCodiceFiscale);
-						ricaricaProcuratori();
+						controller.modifica(atleta, vecchioCodiceFiscale);
+						ricaricaAtleti();
 					}
 					catch (LunghezzaCodiceFiscaleNonValidaException exception) {
-						JOptionPane.showMessageDialog(ProcuratoreFrame.this, "Il codice fiscale deve contenere esattamente 16 caratteri", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
+						JOptionPane.showMessageDialog(AtletaFrame.this, "Il codice fiscale deve contenere esattamente 16 caratteri", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
 					}
 					catch (CodiceFiscaleNonValidoException exception) {
-						JOptionPane.showMessageDialog(ProcuratoreFrame.this, "Il codice fiscale non è scritto in una forma valida", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
+						JOptionPane.showMessageDialog(AtletaFrame.this, "Il codice fiscale non è scritto in una forma valida", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
 					}
 					catch (DuplicatoException exception) {
-						JOptionPane.showMessageDialog(ProcuratoreFrame.this, "Il procuratore " +codiceFiscale+ " è già presente", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
+						JOptionPane.showMessageDialog(AtletaFrame.this, "Il atleta " +codiceFiscale+ " è già presente", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
 					}
 				}
 			}
@@ -233,6 +232,9 @@ public class ProcuratoreFrame extends JFrame {
 		ordinaComboBox.addItem("Nome");
 		ordinaComboBox.addItem("Cognome");
 		ordinaComboBox.addItem("DataNascita");;
+		ordinaComboBox.addItem("Nazionale");
+		ordinaComboBox.addItem("Presenze in nazionale");
+		ordinaComboBox.addItem("Procuratore");
 		contentPane.add(ordinaComboBox);
 		
 		cognomeTF = new JTextField();
@@ -272,7 +274,7 @@ public class ProcuratoreFrame extends JFrame {
 		
 		ordinaComboBox.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				ricaricaProcuratori();
+				ricaricaAtleti();
 			}
 		});
 		
@@ -312,26 +314,33 @@ public class ProcuratoreFrame extends JFrame {
 		
 	}
 	
-	public void setProcuratori(List<Procuratore> listaProcuratori) {
+	public void setAtleti(List<Atleta> listaAtleti) {
 		DefaultTableModel model = (DefaultTableModel) this.table.getModel();
 		model.addColumn("Codice fiscale");
 		model.addColumn("Nome");
 		model.addColumn("Cognome");
 		model.addColumn("Data di nascita");
-		for(int i=0; i<listaProcuratori.size(); i++) model.addRow(new Object[] {
-				listaProcuratori.get(i).getCodiceFiscale(),
-				listaProcuratori.get(i).getNome(),
-				listaProcuratori.get(i).getCognome(),
-				listaProcuratori.get(i).getDataNascita()
+		model.addColumn("Nazionale");
+		model.addColumn("Presenze in nazionale");
+		model.addColumn("Procuratore");
+		for(int i=0; i<listaAtleti.size(); i++) model.addRow(new Object[] {
+				listaAtleti.get(i).getCodiceFiscale(),
+				listaAtleti.get(i).getNome(), 
+				listaAtleti.get(i).getCognome(),
+				listaAtleti.get(i).getDataNascita(),
+				listaAtleti.get(i).getNazionale().getNome(),
+				listaAtleti.get(i).getPresenzeNazionale(),
+				listaAtleti.get(i).getProcuratore().getCodiceFiscale()
 				});
 	}
 	
-	public void ricaricaProcuratori() {
+	public void ricaricaAtleti() {
 		DefaultTableModel model = (DefaultTableModel) this.table.getModel();
 		table.setEnabled(false);
 		model.setRowCount(0);
 		model.setColumnCount(0);
-		controller.setProcuratoriInOrdine((String) ordinaComboBox.getSelectedItem());
+		controller.setAtletiInOrdine((String) ordinaComboBox.getSelectedItem());
 		table.setEnabled(true);
 	}
+
 }

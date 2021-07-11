@@ -54,8 +54,7 @@ public class ProcuratoreDAOPostgresImpl implements ProcuratoreDAO {
 		Procuratore procuratore = null;
 		try {
 			this.statement = this.connection.createStatement();
-			ResultSet resultSet = this.statement.executeQuery("SELECT * FROM Procuratore WHERE codiceFiscale = " + codiceFiscaleCercato);
-			
+			ResultSet resultSet = this.statement.executeQuery("SELECT * FROM Procuratore WHERE codiceFiscale = '" + codiceFiscaleCercato +"'");
 			if(resultSet.next()) {
 				String codiceFiscale = resultSet.getString("codiceFiscale");
 				String nome = resultSet.getString("nome");
