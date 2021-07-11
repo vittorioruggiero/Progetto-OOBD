@@ -51,7 +51,7 @@ public class SponsorDAOPostgresImpl implements SponsorDAO {
 		Sponsor sponsor = null;
 		try {
 			this.statement = this.connection.createStatement();
-			ResultSet resultSet = this.statement.executeQuery("SELECT * FROM Sponsor WHERE sponsor = " + nomeCercato);
+			ResultSet resultSet = this.statement.executeQuery("SELECT * FROM Sponsor WHERE sponsor = '" + nomeCercato + "'");
 			
 			if(resultSet.next()) {
 				String nome = resultSet.getString("nome");

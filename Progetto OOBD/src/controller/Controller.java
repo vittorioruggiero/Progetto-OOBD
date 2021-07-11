@@ -12,6 +12,7 @@ import daoImpl.NazionaleDAOPostgresImpl;
 import daoImpl.ProcuratoreDAOPostgresImpl;
 import daoImpl.SponsorDAOPostgresImpl;
 import dbConfig.DBConnection;
+import gui.AtletaFrame;
 import gui.HomeFrame;
 import gui.NazionaleFrame;
 import gui.ProcuratoreFrame;
@@ -28,6 +29,7 @@ public class Controller {
 	private HomeFrame homeFrame;
 	private NazionaleFrame nazionaleFrame;
 	private ProcuratoreFrame procuratoreFrame;
+	private AtletaFrame atletaFrame;
 	private List<Nazionale> listaNazionali;
 	private List<Procuratore> listaProcuratori;
 	private List<Atleta> listaAtleti;
@@ -90,6 +92,20 @@ public class Controller {
 		procuratoreFrame.setProcuratori(listaProcuratori);
 		homeFrame.setVisible(false);
 		procuratoreFrame.setVisible(true);
+	}
+	
+	public void apriAtletaFrame() {
+		try {
+			atletaDAO = new AtletaDAOPostgresImpl(connection, this);
+			listaAtleti = atletaDAO.getAllAtleti("codiceFiscale");
+		}
+		catch (SQLException exception) {
+			System.out.println("SQLException: " + exception.getMessage());
+		}
+		atletaFrame = new AtletaFrame(this);
+		atletaFrame.setAtleti(listaAtleti);
+		homeFrame.setVisible(false);
+		atletaFrame.setVisible(true);
 	}
 	
 	public void inserisci(Nazionale nazionale) {
@@ -174,10 +190,10 @@ public class Controller {
 		procuratoreFrame.setProcuratori(listaProcuratori);
 	}
 	
-//	public void setAtletiInOrdine(String nomeColonna) {
-//		listaAtleti = atletaDAO.getAllAtleti(nomeColonna);
-//		atletaFrame.setAtleti(listaAtleti);
-//	}
+	public void setAtletiInOrdine(String nomeColonna) {
+		listaAtleti = atletaDAO.getAllAtleti(nomeColonna);
+		atletaFrame.setAtleti(listaAtleti);
+	}
 	
 //	public void setClubInOrdine(String nomeColonna) {
 //		listaClub = clubDAO.getAllClub(nomeColonna);
@@ -194,23 +210,23 @@ public class Controller {
 //		contrattoFrame.setCotratti(listaContratti);
 //	}
 	
-	public Procuratore cercaProcuratore(String codiceFiscaleCercato) {
-		return procuratoreDAO.getProcuratore(codiceFiscaleCercato);
+	public Procuratore cercaProcuratore(String codiceFiscaleCercato) throws SQLException {
+		return new ProcuratoreDAOPostgresImpl(connection).getProcuratore(codiceFiscaleCercato);
 	}
 	
-	public Atleta cercaAtleta(String codiceFiscaleCercato) {
-		return atletaDAO.getAtleta(codiceFiscaleCercato);
+	public Atleta cercaAtleta(String codiceFiscaleCercato) throws SQLException {
+		return new AtletaDAOPostgresImpl(connection, this).getAtleta(codiceFiscaleCercato);
 	}
 	
-	public Nazionale cercaNazionale(String nomeCercato) {
-		return nazionaleDAO.getNazionale(nomeCercato);
+	public Nazionale cercaNazionale(String nomeCercato) throws SQLException {
+		return new NazionaleDAOPostgresImpl(connection).getNazionale(nomeCercato);
 	}
 	
-	public Club cercaClub(String nomeCercato) {
-		return clubDAO.getClub(nomeCercato);
+	public Club cercaClub(String nomeCercato) throws SQLException {
+		return new ClubDAOPostgresImpl(connection).getClub(nomeCercato);
 	}
 	
-	public Sponsor cercaSponsor(String nomeCercato) {
-		return sponsorDAO.getSponsor(nomeCercato);
+	public Sponsor cercaSponsor(String nomeCercato) throws SQLException {
+		return new SponsorDAOPostgresImpl(connection).getSponsor(nomeCercato);
 	}
 }

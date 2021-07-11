@@ -74,7 +74,7 @@ public class AtletaDAOPostgresImpl implements AtletaDAO {
 		Atleta atleta = null;
 		try {
 			this.statement = this.connection.createStatement();
-			ResultSet resultSet = this.statement.executeQuery("SELECT * FROM Atleta WHERE codiceFiscale = " + codiceFiscaleCercato);
+			ResultSet resultSet = this.statement.executeQuery("SELECT * FROM Atleta WHERE codiceFiscale = '" + codiceFiscaleCercato +"'");
 			
 			if(resultSet.next()) {
 				String codiceFiscale = resultSet.getString("codiceFiscale");
