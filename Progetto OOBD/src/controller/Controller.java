@@ -116,8 +116,8 @@ public class Controller {
 		procuratoreDAO.insertProcuratore(procuratore);
 	}
 	
-	public void inserisci(Atleta atleta) {
-		atletaDAO.insertAtleta(atleta);
+	public void inserisci(Atleta atleta, String nazionale, int presenzeNazionale, String procuratore) {
+		atletaDAO.insertAtleta(atleta, nazionale, presenzeNazionale, procuratore);
 	}
 	
 	public void inserisci(Club club) {

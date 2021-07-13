@@ -1,6 +1,5 @@
-/exception/
-/entity/
+/gui/
 /daoImpl/
-/gui/
+/dao/
 /controller/
-/gui/
+/exception/
