@@ -27,8 +27,8 @@ public class AtletaDAOPostgresImpl implements AtletaDAO {
 		this.connection = connection;
 		this.controller = controller;
 		insertAtletaPS = connection.prepareStatement("INSERT INTO Atleta VALUES (?, ?, ?, ?, ?, ?, ?)");
-		deleteAtletaPS = connection.prepareStatement("DELETE FROM Atleta WHERE codiceFiscale = ? AND nome = ? AND cognome = ? AND dataNascita = ? AND nazionale = ? AND presenzeNazionale = ? AND codicefiscaleprocuratore = ?");
-		updateAtletaPS = connection.prepareStatement("UPDATE Atleta SET codiceFiscale = ?, nome = ?, cognome = ?, dataNascita = ?, nazionale = ?, presenzeNazionale = ?, codicefiscaleprocuratore = ? WHERE codiceFiscale = ?");
+		deleteAtletaPS = connection.prepareStatement("DELETE FROM Atleta WHERE codiceFiscale = ? AND nome = ? AND cognome = ? AND dataNascita = ? AND nazionale = ? AND presenzeNazionale = ? AND procuratore = ?");
+		updateAtletaPS = connection.prepareStatement("UPDATE Atleta SET codiceFiscale = ?, nome = ?, cognome = ?, dataNascita = ?, nazionale = ?, presenzeNazionale = ?, procuratore = ? WHERE codiceFiscale = ?");
 	}
 	
 	@Override
@@ -45,8 +45,8 @@ public class AtletaDAOPostgresImpl implements AtletaDAO {
 				String cognome = resultSet.getString("cognome");
 				LocalDate dataNascita = resultSet.getDate("dataNascita").toLocalDate();
 				Procuratore procuratore;
-				if (resultSet.getString("codicefiscaleprocuratore")!=null)
-					procuratore = controller.cercaProcuratore(resultSet.getString("codicefiscaleprocuratore"));
+				if (resultSet.getString("procuratore")!=null)
+					procuratore = controller.cercaProcuratore(resultSet.getString("procuratore"));
 				else
 					procuratore = null;
 				Nazionale nazionale;
@@ -82,8 +82,8 @@ public class AtletaDAOPostgresImpl implements AtletaDAO {
 				String cognome = resultSet.getString("cognome");
 				LocalDate dataNascita = resultSet.getDate("dataNascita").toLocalDate();
 				Procuratore procuratore;
-				if (resultSet.getString("codicefiscaleprocuratore")!=null)
-					procuratore = controller.cercaProcuratore(resultSet.getString("codicefiscaleprocuratore"));
+				if (resultSet.getString("procuratore")!=null)
+					procuratore = controller.cercaProcuratore(resultSet.getString("procuratore"));
 				else
 					procuratore = null;
 				Nazionale nazionale;
@@ -106,22 +106,22 @@ public class AtletaDAOPostgresImpl implements AtletaDAO {
 	}
 	
 	@Override
-	public void insertAtleta(Atleta atleta) {
+	public void insertAtleta(Atleta atleta, String nazionale, int presenzeNazionale, String procuratore) {
 		try {
 			insertAtletaPS.setString(1, atleta.getCodiceFiscale());
 			insertAtletaPS.setString(2, atleta.getNome());
 			insertAtletaPS.setString(3, atleta.getCognome());
 			insertAtletaPS.setObject(4, atleta.getDataNascita());
-			if (atleta.getNazionale()!=null) {
-				insertAtletaPS.setString(5, atleta.getNazionale().getNome());
-				insertAtletaPS.setInt(6, atleta.getPresenzeNazionale());
+			if (nazionale.length()>0) {
+				insertAtletaPS.setInt(5, presenzeNazionale);
+				insertAtletaPS.setString(6, nazionale);
 			}
 			else {
-				insertAtletaPS.setNull(5, java.sql.Types.VARCHAR);
-				insertAtletaPS.setNull(6, java.sql.Types.INTEGER);
+				insertAtletaPS.setNull(5, java.sql.Types.INTEGER);
+				insertAtletaPS.setNull(6, java.sql.Types.VARCHAR);
 			}
-			if (atleta.getProcuratore()!=null) 
-				insertAtletaPS.setString(7, atleta.getProcuratore().getCodiceFiscale());
+			if (procuratore.length()>0) 
+				insertAtletaPS.setString(7, procuratore);
 			else
 				insertAtletaPS.setNull(7, java.sql.Types.CHAR);
 			insertAtletaPS.executeUpdate();
