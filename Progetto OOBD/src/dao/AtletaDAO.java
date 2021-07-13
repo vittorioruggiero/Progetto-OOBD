@@ -10,7 +10,7 @@ public interface AtletaDAO {
 	
 	Atleta getAtleta(String codiceFiscaleCercato);
 
-	void insertAtleta(Atleta atleta);
+	void insertAtleta(Atleta atleta, String nazionale, int presenzeNazionale, String procuratore);
 
 	void deleteAtleta(Atleta atleta);
 

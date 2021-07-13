@@ -29,6 +29,7 @@ import entity.Atleta;
 import exception.CodiceFiscaleNonValidoException;
 import exception.DuplicatoException;
 import exception.LunghezzaCodiceFiscaleNonValidaException;
+import exception.PresenzeNazionaleMancantiException;
 
 public class AtletaFrame extends JFrame {
 
@@ -42,6 +43,9 @@ public class AtletaFrame extends JFrame {
 	JComboBox<Integer> annoComboBox;
 	JComboBox<Integer> meseComboBox;
 	JComboBox<Integer> giornoComboBox;
+	JComboBox<String> nazionaleComboBox;
+	private JTextField presenzeNazionaleTF;
+	JComboBox<String> procuratoreComboBox;
 
 	public AtletaFrame(Controller controller) {
 		setResizable(false);
@@ -49,7 +53,7 @@ public class AtletaFrame extends JFrame {
 		this.controller = controller;
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 551, 384);
+		setBounds(100, 100, 598, 437);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -57,7 +61,7 @@ public class AtletaFrame extends JFrame {
 		
 		JLabel atletiLabel = new JLabel("Atleti");
 		atletiLabel.setFont(new Font("SansSerif", Font.BOLD, 14));
-		atletiLabel.setBounds(232, 21, 84, 13);
+		atletiLabel.setBounds(272, 20, 50, 14);
 		contentPane.add(atletiLabel);
 		
 		JButton indietroButton = new JButton("Indietro");
@@ -67,12 +71,12 @@ public class AtletaFrame extends JFrame {
 			}
 		});
 		indietroButton.setFont(new Font("SansSerif", Font.PLAIN, 14));
-		indietroButton.setBounds(434, 318, 93, 19);
+		indietroButton.setBounds(472, 369, 93, 19);
 		contentPane.add(indietroButton);
 		
 		//Codice di scrollPane scritto a mano per evitare problemi
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(10, 44, 517, 131);
+		scrollPane.setBounds(10, 44, 574, 131);
 		this.getContentPane().add(scrollPane);
 		
 		table = new JTable();
@@ -103,6 +107,9 @@ public class AtletaFrame extends JFrame {
 				annoComboBox.setSelectedItem((Integer) ((LocalDate) model.getValueAt(table.getSelectedRow(), 3)).getYear());
 				meseComboBox.setSelectedItem((Integer) ((LocalDate) model.getValueAt(table.getSelectedRow(), 3)).getMonthValue());
 				giornoComboBox.setSelectedItem((Integer) ((LocalDate) model.getValueAt(table.getSelectedRow(), 3)).getDayOfMonth());
+				nazionaleComboBox.setSelectedItem(String.valueOf(model.getValueAt(table.getSelectedRow(), 4)));
+				presenzeNazionaleTF.setText(String.valueOf(model.getValueAt(table.getSelectedRow(), 5)));
+				procuratoreComboBox.setSelectedItem(String.valueOf(model.getValueAt(table.getSelectedRow(), 6)));
 			}
 		});
 		
@@ -110,23 +117,23 @@ public class AtletaFrame extends JFrame {
 		
 		JLabel codiceFiscaleLabel = new JLabel("Codice fiscale");
 		codiceFiscaleLabel.setFont(new Font("SansSerif", Font.PLAIN, 14));
-		codiceFiscaleLabel.setBounds(10, 199, 105, 19);
+		codiceFiscaleLabel.setBounds(10, 199, 140, 19);
 		contentPane.add(codiceFiscaleLabel);
 		
 		JLabel nomeLabel = new JLabel("Nome");
 		nomeLabel.setFont(new Font("SansSerif", Font.PLAIN, 14));
-		nomeLabel.setBounds(10, 226, 105, 19);
+		nomeLabel.setBounds(10, 226, 140, 19);
 		contentPane.add(nomeLabel);
 		
 		codiceFiscaleTF = new JTextField();
 		codiceFiscaleTF.setFont(new Font("SansSerif", Font.PLAIN, 14));
-		codiceFiscaleTF.setBounds(125, 199, 150, 19);
+		codiceFiscaleTF.setBounds(160, 199, 150, 19);
 		contentPane.add(codiceFiscaleTF);
 		codiceFiscaleTF.setColumns(10);
 		
 		nomeTF = new JTextField();
 		nomeTF.setFont(new Font("SansSerif", Font.PLAIN, 14));
-		nomeTF.setBounds(125, 225, 150, 20);
+		nomeTF.setBounds(160, 225, 150, 20);
 		contentPane.add(nomeTF);
 		nomeTF.setColumns(10);
 		
@@ -141,13 +148,22 @@ public class AtletaFrame extends JFrame {
 					String nome = nomeTF.getText();
 					String cognome = cognomeTF.getText();
 					LocalDate dataNascita = LocalDate.of((int) annoComboBox.getSelectedItem(), (int) meseComboBox.getSelectedItem(), (int) giornoComboBox.getSelectedItem());
+					String nazionale = (String) nazionaleComboBox.getSelectedItem();
+					int presenzeNazionale = 0;
+					//if(nazionale.length()==0) presenzeNazionale = 0;
+//					if(nazionale.length()>0) presenzeNazionale = Integer.valueOf(presenzeNazionaleTF.getText());
+//					else presenzeNazionale = 0;
+					String procuratore = (String) procuratoreComboBox.getSelectedItem();
+					
 					try {
 						if(codiceFiscale.length()!=16) throw new LunghezzaCodiceFiscaleNonValidaException();
 						if(!codiceFiscale.matches("^[A-Z]{6}[0-9]{2}[A-Z][0-9]{2}[A-Z][0-9]{3}[A-Z]$")) throw new CodiceFiscaleNonValidoException();
 						for(int i = 0; i<table.getRowCount(); i++)
 							if(codiceFiscale.equals(model.getValueAt(i, 0))) throw new DuplicatoException();
+						if(nazionale.length()>0 && presenzeNazionaleTF.getText().length()==0) throw new PresenzeNazionaleMancantiException();
+						if(nazionale.length()>0 && presenzeNazionaleTF.getText().length()>0) presenzeNazionale = Integer.valueOf(presenzeNazionaleTF.getText());
 						atleta = new Atleta(codiceFiscale, nome, cognome, dataNascita);
-						controller.inserisci(atleta);
+						controller.inserisci(atleta, nazionale, presenzeNazionale, procuratore);
 						ricaricaAtleti();
 					}
 					catch (LunghezzaCodiceFiscaleNonValidaException exception) {
@@ -157,14 +173,17 @@ public class AtletaFrame extends JFrame {
 						JOptionPane.showMessageDialog(AtletaFrame.this, "Il codice fiscale non è scritto in una forma valida", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
 					}
 					catch (DuplicatoException exception) {
-						JOptionPane.showMessageDialog(AtletaFrame.this, "Il atleta " +codiceFiscale+ " è già presente", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
+						JOptionPane.showMessageDialog(AtletaFrame.this, "L'atleta " +codiceFiscale+ " è già presente", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
+					}
+					catch (PresenzeNazionaleMancantiException exception) {
+						JOptionPane.showMessageDialog(AtletaFrame.this, "Specificare il numero di presenze nella nazionale scelta", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
 					}
 				}
 			}
 		});
 		
 		inserisciButton.setFont(new Font("SansSerif", Font.PLAIN, 14));
-		inserisciButton.setBounds(297, 199, 93, 19);
+		inserisciButton.setBounds(331, 199, 93, 19);
 		contentPane.add(inserisciButton);
 		
 		//GESTIONE DELLA RIMOZIONE DELLE RIGHE
@@ -181,7 +200,7 @@ public class AtletaFrame extends JFrame {
 			}
 		});
 		rimuoviButton.setFont(new Font("SansSerif", Font.PLAIN, 14));
-		rimuoviButton.setBounds(297, 226, 93, 19);
+		rimuoviButton.setBounds(331, 226, 93, 19);
 		contentPane.add(rimuoviButton);
 		
 		//GESTIONE DELLA MODIFICA DELLE RIGHE
@@ -217,60 +236,103 @@ public class AtletaFrame extends JFrame {
 			}
 		});
 		modificaButton.setFont(new Font("SansSerif", Font.PLAIN, 14));
-		modificaButton.setBounds(297, 255, 93, 19);
+		modificaButton.setBounds(331, 255, 93, 19);
 		contentPane.add(modificaButton);
 		
 		JLabel ordinaLabel = new JLabel("Ordina per");
 		ordinaLabel.setFont(new Font("SansSerif", Font.BOLD, 14));
-		ordinaLabel.setBounds(297, 284, 93, 19);
+		ordinaLabel.setBounds(331, 284, 93, 19);
 		contentPane.add(ordinaLabel);
 		
 		ordinaComboBox = new JComboBox<String>();
 		ordinaComboBox.setFont(new Font("SansSerif", Font.PLAIN, 10));
-		ordinaComboBox.setBounds(297, 305, 93, 19);
+		ordinaComboBox.setBounds(331, 305, 93, 19);
 		ordinaComboBox.addItem("CodiceFiscale");
 		ordinaComboBox.addItem("Nome");
 		ordinaComboBox.addItem("Cognome");
 		ordinaComboBox.addItem("DataNascita");;
 		ordinaComboBox.addItem("Nazionale");
-		ordinaComboBox.addItem("Presenze in nazionale");
+		ordinaComboBox.addItem("PresenzeNazionale");
 		ordinaComboBox.addItem("Procuratore");
 		contentPane.add(ordinaComboBox);
 		
 		cognomeTF = new JTextField();
 		cognomeTF.setFont(new Font("SansSerif", Font.PLAIN, 14));
 		cognomeTF.setColumns(10);
-		cognomeTF.setBounds(125, 255, 150, 20);
+		cognomeTF.setBounds(160, 254, 150, 20);
 		contentPane.add(cognomeTF);
 		
 		JLabel cognomeLabel = new JLabel("Cognome");
 		cognomeLabel.setFont(new Font("SansSerif", Font.PLAIN, 14));
-		cognomeLabel.setBounds(10, 255, 105, 19);
+		cognomeLabel.setBounds(10, 255, 140, 19);
 		contentPane.add(cognomeLabel);
 		
 		JLabel dataNascitaLabel = new JLabel("Data di nascita");
 		dataNascitaLabel.setVerticalAlignment(SwingConstants.TOP);
 		dataNascitaLabel.setFont(new Font("SansSerif", Font.PLAIN, 14));
-		dataNascitaLabel.setBounds(10, 284, 105, 19);
+		dataNascitaLabel.setBounds(10, 286, 140, 19);
 		contentPane.add(dataNascitaLabel);
 		
 		annoComboBox = new JComboBox<Integer>();
 		annoComboBox.setFont(new Font("SansSerif", Font.PLAIN, 14));
-		annoComboBox.setBounds(125, 286, 59, 19);
+		annoComboBox.setBounds(160, 286, 59, 19);
 		for(int i=1950; i<2022; i++) annoComboBox.addItem(i);
 		contentPane.add(annoComboBox);
 		
 		meseComboBox = new JComboBox<Integer>();
 		meseComboBox.setFont(new Font("SansSerif", Font.PLAIN, 14));
-		meseComboBox.setBounds(189, 286, 41, 19);
+		meseComboBox.setBounds(224, 286, 41, 19);
 		for(int i=1; i<13; i++) meseComboBox.addItem(i);
 		contentPane.add(meseComboBox);
 		
 		giornoComboBox = new JComboBox<Integer>();
 		giornoComboBox.setFont(new Font("SansSerif", Font.PLAIN, 14));
-		giornoComboBox.setBounds(234, 286, 41, 19);
+		giornoComboBox.setBounds(269, 286, 41, 19);
 		for(int i=1; i<32; i++) giornoComboBox.addItem(i);
 		contentPane.add(giornoComboBox);
+		
+		presenzeNazionaleTF = new JTextField();
+		presenzeNazionaleTF.setFont(new Font("SansSerif", Font.PLAIN, 14));
+		presenzeNazionaleTF.setColumns(10);
+		presenzeNazionaleTF.setBounds(160, 344, 150, 19);
+		contentPane.add(presenzeNazionaleTF);
+		
+		JLabel nazionaleLabel = new JLabel("Nazionale");
+		nazionaleLabel.setFont(new Font("SansSerif", Font.PLAIN, 14));
+		nazionaleLabel.setBounds(10, 315, 140, 19);
+		contentPane.add(nazionaleLabel);
+		
+		JLabel presenzeNazionaleLabel = new JLabel("Presenze in nazionale");
+		presenzeNazionaleLabel.setFont(new Font("SansSerif", Font.PLAIN, 14));
+		presenzeNazionaleLabel.setBounds(10, 344, 140, 19);
+		contentPane.add(presenzeNazionaleLabel);
+		
+		JLabel procuratoreLabel = new JLabel("Procuratore");
+		procuratoreLabel.setFont(new Font("SansSerif", Font.PLAIN, 14));
+		procuratoreLabel.setBounds(10, 373, 140, 19);
+		contentPane.add(procuratoreLabel);
+		
+		nazionaleComboBox = new JComboBox<String>();
+		nazionaleComboBox.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if(nazionaleComboBox.getSelectedItem().equals("")) {
+					presenzeNazionaleTF.setText("");
+					presenzeNazionaleTF.setEnabled(false);
+				}
+				else presenzeNazionaleTF.setEnabled(true);
+			}
+		});
+		nazionaleComboBox.setFont(new Font("SansSerif", Font.PLAIN, 14));
+		nazionaleComboBox.setBounds(160, 315, 150, 19);
+		nazionaleComboBox.addItem("");
+		nazionaleComboBox.setSelectedItem("");
+		contentPane.add(nazionaleComboBox);
+		
+		procuratoreComboBox = new JComboBox<String>();
+		procuratoreComboBox.setFont(new Font("SansSerif", Font.PLAIN, 12));
+		procuratoreComboBox.setBounds(160, 373, 150, 19);
+		procuratoreComboBox.addItem("");
+		contentPane.add(procuratoreComboBox);
 		
 		ordinaComboBox.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -323,15 +385,65 @@ public class AtletaFrame extends JFrame {
 		model.addColumn("Nazionale");
 		model.addColumn("Presenze in nazionale");
 		model.addColumn("Procuratore");
-		for(int i=0; i<listaAtleti.size(); i++) model.addRow(new Object[] {
-				listaAtleti.get(i).getCodiceFiscale(),
-				listaAtleti.get(i).getNome(), 
-				listaAtleti.get(i).getCognome(),
-				listaAtleti.get(i).getDataNascita(),
-				listaAtleti.get(i).getNazionale().getNome(),
-				listaAtleti.get(i).getPresenzeNazionale(),
-				listaAtleti.get(i).getProcuratore().getCodiceFiscale()
-				});
+		
+		for(int i=0; i<listaAtleti.size(); i++) {
+			if(listaAtleti.get(i).getNazionale()!=null && listaAtleti.get(i).getProcuratore()!=null) {
+				model.addRow(new Object[] {
+						listaAtleti.get(i).getCodiceFiscale(),
+						listaAtleti.get(i).getNome(), 
+						listaAtleti.get(i).getCognome(),
+						listaAtleti.get(i).getDataNascita(),
+						listaAtleti.get(i).getNazionale().getNome(),
+						listaAtleti.get(i).getPresenzeNazionale(),
+						listaAtleti.get(i).getProcuratore().getCodiceFiscale()
+						});
+			}
+			else if(listaAtleti.get(i).getNazionale()!=null && listaAtleti.get(i).getProcuratore()==null) {
+				model.addRow(new Object[] {
+						listaAtleti.get(i).getCodiceFiscale(),
+						listaAtleti.get(i).getNome(), 
+						listaAtleti.get(i).getCognome(),
+						listaAtleti.get(i).getDataNascita(),
+						listaAtleti.get(i).getNazionale().getNome(),
+						listaAtleti.get(i).getPresenzeNazionale(),
+						""
+						});
+			}
+			else if(listaAtleti.get(i).getNazionale()==null && listaAtleti.get(i).getProcuratore()!=null) {
+				model.addRow(new Object[] {
+						listaAtleti.get(i).getCodiceFiscale(),
+						listaAtleti.get(i).getNome(), 
+						listaAtleti.get(i).getCognome(),
+						listaAtleti.get(i).getDataNascita(),
+						"",
+						"",
+						listaAtleti.get(i).getProcuratore().getCodiceFiscale()
+						});
+			}
+			else if(listaAtleti.get(i).getNazionale()==null && listaAtleti.get(i).getProcuratore()==null) {
+				model.addRow(new Object[] {
+						listaAtleti.get(i).getCodiceFiscale(),
+						listaAtleti.get(i).getNome(), 
+						listaAtleti.get(i).getCognome(),
+						listaAtleti.get(i).getDataNascita(),
+						"",
+						"",
+						""
+						});
+			}
+			
+			
+			
+			boolean presente = false;
+			for(int j = 0; j<nazionaleComboBox.getItemCount() && !presente; j++)
+				if(listaAtleti.get(i).getNazionale()!=null && listaAtleti.get(i).getNazionale().getNome().equals(nazionaleComboBox.getItemAt(j))) presente = true;
+			if(listaAtleti.get(i).getNazionale()!=null && !presente) nazionaleComboBox.addItem(listaAtleti.get(i).getNazionale().getNome());
+			
+			presente = false;
+			for(int j = 0; j<procuratoreComboBox.getItemCount() && !presente; j++)
+				if(listaAtleti.get(i).getProcuratore()!=null && listaAtleti.get(i).getProcuratore().getCodiceFiscale().equals(procuratoreComboBox.getItemAt(j))) presente = true;
+			if(listaAtleti.get(i).getProcuratore()!=null && !presente) procuratoreComboBox.addItem(listaAtleti.get(i).getProcuratore().getCodiceFiscale());
+		}
 	}
 	
 	public void ricaricaAtleti() {
@@ -342,5 +454,4 @@ public class AtletaFrame extends JFrame {
 		controller.setAtletiInOrdine((String) ordinaComboBox.getSelectedItem());
 		table.setEnabled(true);
 	}
-
 }
