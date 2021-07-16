@@ -53,7 +53,7 @@ public class AtletaFrame extends JFrame {
 		this.controller = controller;
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 598, 437);
+		setBounds(100, 100, 641, 438);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -71,12 +71,12 @@ public class AtletaFrame extends JFrame {
 			}
 		});
 		indietroButton.setFont(new Font("SansSerif", Font.PLAIN, 14));
-		indietroButton.setBounds(472, 369, 93, 19);
+		indietroButton.setBounds(515, 373, 93, 19);
 		contentPane.add(indietroButton);
 		
 		//Codice di scrollPane scritto a mano per evitare problemi
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(10, 44, 574, 131);
+		scrollPane.setBounds(10, 44, 617, 131);
 		this.getContentPane().add(scrollPane);
 		
 		table = new JTable();
@@ -150,9 +150,6 @@ public class AtletaFrame extends JFrame {
 					LocalDate dataNascita = LocalDate.of((int) annoComboBox.getSelectedItem(), (int) meseComboBox.getSelectedItem(), (int) giornoComboBox.getSelectedItem());
 					String nazionale = (String) nazionaleComboBox.getSelectedItem();
 					int presenzeNazionale = 0;
-					//if(nazionale.length()==0) presenzeNazionale = 0;
-//					if(nazionale.length()>0) presenzeNazionale = Integer.valueOf(presenzeNazionaleTF.getText());
-//					else presenzeNazionale = 0;
 					String procuratore = (String) procuratoreComboBox.getSelectedItem();
 					
 					try {
@@ -161,7 +158,7 @@ public class AtletaFrame extends JFrame {
 						for(int i = 0; i<table.getRowCount(); i++)
 							if(codiceFiscale.equals(model.getValueAt(i, 0))) throw new DuplicatoException();
 						if(nazionale.length()>0 && presenzeNazionaleTF.getText().length()==0) throw new PresenzeNazionaleMancantiException();
-						if(nazionale.length()>0 && presenzeNazionaleTF.getText().length()>0) presenzeNazionale = Integer.valueOf(presenzeNazionaleTF.getText());
+						if(nazionale.length()>0 && presenzeNazionaleTF.getText().length()>0) presenzeNazionale = Integer.valueOf(presenzeNazionaleTF.getText()); 
 						atleta = new Atleta(codiceFiscale, nome, cognome, dataNascita);
 						controller.inserisci(atleta, nazionale, presenzeNazionale, procuratore);
 						ricaricaAtleti();
@@ -194,8 +191,13 @@ public class AtletaFrame extends JFrame {
 				String nome = nomeTF.getText();
 				String cognome = cognomeTF.getText();
 				LocalDate dataNascita = LocalDate.of((int) annoComboBox.getSelectedItem(), (int) meseComboBox.getSelectedItem(), (int) giornoComboBox.getSelectedItem());
+				String nazionale = (String) nazionaleComboBox.getSelectedItem();
+				int presenzeNazionale;
+				if(nazionale.length()>0 && presenzeNazionaleTF.getText().length()>0) presenzeNazionale = Integer.valueOf(presenzeNazionaleTF.getText());
+				else presenzeNazionale = 0;
+				String procuratore = (String) procuratoreComboBox.getSelectedItem();
 				Atleta atleta = new Atleta(codiceFiscale, nome, cognome, dataNascita);
-				controller.rimuovi(atleta);
+				controller.rimuovi(atleta, nazionale, presenzeNazionale, procuratore);
 				ricaricaAtleti();
 			}
 		});
@@ -213,14 +215,20 @@ public class AtletaFrame extends JFrame {
 					String nome = nomeTF.getText();
 					String cognome = cognomeTF.getText();
 					LocalDate dataNascita = LocalDate.of((int) annoComboBox.getSelectedItem(), (int) meseComboBox.getSelectedItem(), (int) giornoComboBox.getSelectedItem());
+					String nazionale = (String) nazionaleComboBox.getSelectedItem();
+					int presenzeNazionale = 0;
+					String procuratore = (String) procuratoreComboBox.getSelectedItem();
+					
 					try {
 						if(codiceFiscale.length()!=16) throw new LunghezzaCodiceFiscaleNonValidaException();
 						if(!codiceFiscale.matches("^[A-Z]{6}[0-9]{2}[A-Z][0-9]{2}[A-Z][0-9]{3}[A-Z]$")) throw new CodiceFiscaleNonValidoException();
 						for(int i = 0; i<table.getRowCount(); i++)
 							if(i!=table.getSelectedRow() && codiceFiscale.equals(model.getValueAt(i, 0))) throw new DuplicatoException();
+						if(nazionale.length()>0 && presenzeNazionaleTF.getText().length()==0) throw new PresenzeNazionaleMancantiException();
+						if(nazionale.length()>0 && presenzeNazionaleTF.getText().length()>0) presenzeNazionale = Integer.valueOf(presenzeNazionaleTF.getText()); 
 						atleta = new Atleta(codiceFiscale, nome, cognome, dataNascita);
 						String vecchioCodiceFiscale = (String) model.getValueAt(table.getSelectedRow(), 0);
-						controller.modifica(atleta, vecchioCodiceFiscale);
+						controller.modifica(atleta, nazionale, presenzeNazionale, procuratore, vecchioCodiceFiscale);
 						ricaricaAtleti();
 					}
 					catch (LunghezzaCodiceFiscaleNonValidaException exception) {
@@ -230,7 +238,10 @@ public class AtletaFrame extends JFrame {
 						JOptionPane.showMessageDialog(AtletaFrame.this, "Il codice fiscale non è scritto in una forma valida", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
 					}
 					catch (DuplicatoException exception) {
-						JOptionPane.showMessageDialog(AtletaFrame.this, "Il atleta " +codiceFiscale+ " è già presente", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
+						JOptionPane.showMessageDialog(AtletaFrame.this, "L'atleta " +codiceFiscale+ " è già presente", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
+					}
+					catch (PresenzeNazionaleMancantiException exception) {
+						JOptionPane.showMessageDialog(AtletaFrame.this, "Specificare il numero di presenze nella nazionale scelta", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
 					}
 				}
 			}
