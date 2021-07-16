@@ -12,8 +12,8 @@ public interface AtletaDAO {
 
 	void insertAtleta(Atleta atleta, String nazionale, int presenzeNazionale, String procuratore);
 
-	void deleteAtleta(Atleta atleta);
+	void deleteAtleta(Atleta atleta, String nazionale, int presenzeNazionale, String procuratore);
 
-	void updateAtleta(Atleta nuovoAtleta, String vecchioCodiceFiscale);
+	void updateAtleta(Atleta nuovoAtleta, String nazionale, int presenzeNazionale, String procuratore, String vecchioCodiceFiscale);
 
 }

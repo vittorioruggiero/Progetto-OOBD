@@ -132,24 +132,24 @@ public class AtletaDAOPostgresImpl implements AtletaDAO {
 	}
 	
 	@Override
-	public void deleteAtleta(Atleta atleta) {
+	public void deleteAtleta(Atleta atleta, String nazionale, int presenzeNazionale, String procuratore) {
 		try {
 			deleteAtletaPS.setString(1, atleta.getCodiceFiscale());
 			deleteAtletaPS.setString(2, atleta.getNome());
 			deleteAtletaPS.setString(3, atleta.getCognome());
 			deleteAtletaPS.setObject(4, atleta.getDataNascita());
-			if (atleta.getNazionale()!=null) {
-				insertAtletaPS.setString(5, atleta.getNazionale().getNome());
-				insertAtletaPS.setInt(6, atleta.getPresenzeNazionale());
+			if (nazionale.length()>0) {
+				deleteAtletaPS.setString(5, nazionale);
+				deleteAtletaPS.setInt(6, presenzeNazionale);
 			}
 			else {
-				insertAtletaPS.setNull(5, java.sql.Types.VARCHAR);
-				insertAtletaPS.setNull(6, java.sql.Types.INTEGER);
+				deleteAtletaPS.setNull(5, java.sql.Types.VARCHAR);
+				deleteAtletaPS.setNull(6, java.sql.Types.INTEGER);
 			}
-			if (atleta.getProcuratore()!=null) 
-				insertAtletaPS.setString(7, atleta.getProcuratore().getCodiceFiscale());
+			if (procuratore.length()>0) 
+				deleteAtletaPS.setString(7, procuratore);
 			else
-				insertAtletaPS.setNull(7, java.sql.Types.CHAR);
+				deleteAtletaPS.setNull(7, java.sql.Types.CHAR);
 			deleteAtletaPS.executeUpdate();
 		}
 			catch (SQLException exception) {
@@ -158,24 +158,24 @@ public class AtletaDAOPostgresImpl implements AtletaDAO {
 	}
 	
 	@Override
-	public void updateAtleta(Atleta nuovoAtleta, String vecchioCodiceFiscale) {
+	public void updateAtleta(Atleta nuovoAtleta, String nazionale, int presenzeNazionale, String procuratore, String vecchioCodiceFiscale) {
 		try {
 			updateAtletaPS.setString(1, nuovoAtleta.getCodiceFiscale());
 			updateAtletaPS.setString(2, nuovoAtleta.getNome());
 			updateAtletaPS.setString(3, nuovoAtleta.getCognome());
 			updateAtletaPS.setObject(4, nuovoAtleta.getDataNascita());
-			if (nuovoAtleta.getNazionale()!=null) {
-				insertAtletaPS.setString(5, nuovoAtleta.getNazionale().getNome());
-				insertAtletaPS.setInt(6, nuovoAtleta.getPresenzeNazionale());
+			if (nazionale.length()>0) {
+				updateAtletaPS.setString(5, nazionale);
+				updateAtletaPS.setInt(6, presenzeNazionale);
 			}
 			else {
-				insertAtletaPS.setNull(5, java.sql.Types.VARCHAR);
-				insertAtletaPS.setNull(6, java.sql.Types.INTEGER);
+				updateAtletaPS.setNull(5, java.sql.Types.VARCHAR);
+				updateAtletaPS.setNull(6, java.sql.Types.INTEGER);
 			}
-			if (nuovoAtleta.getProcuratore()!=null) 
-				insertAtletaPS.setString(7, nuovoAtleta.getProcuratore().getCodiceFiscale());
+			if (procuratore.length()>0) 
+				updateAtletaPS.setString(7, procuratore);
 			else
-				insertAtletaPS.setNull(7, java.sql.Types.CHAR);
+				updateAtletaPS.setNull(7, java.sql.Types.CHAR);
 			updateAtletaPS.setString(8, vecchioCodiceFiscale);
 			updateAtletaPS.executeUpdate();
 		}
