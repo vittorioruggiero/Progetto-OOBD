@@ -1,8 +1,4 @@
-/controller/
 /dao/
 /daoImpl/
-/dbConfig/
-/entity/
-/exception/
+/controller/
 /gui/
-/module-info.class

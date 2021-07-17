@@ -9,6 +9,8 @@ public interface ProcuratoreDAO {
 	List<Procuratore> getAllProcuratori(String nomeColonna);
 	
 	Procuratore getProcuratore(String codiceFiscaleCercato);
+	
+	List<String> getCodiciFiscaliProcuratori();
 
 	void insertProcuratore(Procuratore procuratore);
 

@@ -36,7 +36,8 @@ public class AtletaDAOPostgresImpl implements AtletaDAO {
 		List<Atleta> listaAtleti = new ArrayList<Atleta>();
 		try {
 			this.statement = this.connection.createStatement();
-			ResultSet resultSet = this.statement.executeQuery("SELECT * FROM Atleta ORDER BY " + nomeColonna);
+			if(nomeColonna.equals("DataNascita") || nomeColonna.equals("PresenzeNazionale")) nomeColonna = nomeColonna.concat(" DESC");
+			ResultSet resultSet = this.statement.executeQuery("SELECT * FROM Atleta ORDER BY " + nomeColonna + " NULLS LAST");
 			
 			while(resultSet.next()) {
 				Atleta atleta;
@@ -74,7 +75,7 @@ public class AtletaDAOPostgresImpl implements AtletaDAO {
 		Atleta atleta = null;
 		try {
 			this.statement = this.connection.createStatement();
-			ResultSet resultSet = this.statement.executeQuery("SELECT * FROM Atleta WHERE codiceFiscale = '" + codiceFiscaleCercato +"'");
+			ResultSet resultSet = this.statement.executeQuery("SELECT * FROM Atleta WHERE codiceFiscale = '" + codiceFiscaleCercato + "'");
 			
 			if(resultSet.next()) {
 				String codiceFiscale = resultSet.getString("codiceFiscale");
