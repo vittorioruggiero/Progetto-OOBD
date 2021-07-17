@@ -15,8 +15,6 @@ import javax.swing.table.DefaultTableModel;
 import controller.Controller;
 import entity.Sponsor;
 import exception.DuplicatoException;
-import exception.GettoneNonValidoException;
-
 import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
 import javax.swing.JButton;
@@ -91,7 +89,6 @@ public class SponsorFrame extends JFrame {
 			public void mouseClicked(MouseEvent e) {
 				nomeTF.setText((String) model.getValueAt(table.getSelectedRow(), 0));
 				statoTF.setText((String) model.getValueAt(table.getSelectedRow(), 1));
-				//statoTF.setText(String.valueOf(model.getValueAt(table.getSelectedRow(), 1)));
 			}
 		});
 		
@@ -128,20 +125,16 @@ public class SponsorFrame extends JFrame {
 					Sponsor sponsor;
 					String nome = nomeTF.getText();
 					String stato = statoTF.getText();
-					//double stato = Double.parseDouble(statoTF.getText());
+					
 					try {
-						//if(stato<=0) throw new GettoneNonValidoException();
 						for(int i = 0; i<table.getRowCount(); i++)
 							if(nome.equals(model.getValueAt(i, 0))) throw new DuplicatoException();
 						sponsor = new Sponsor(nome, stato);
 						controller.inserisci(sponsor);
 						ricaricaSponsor();
 					}
-//					catch (GettoneNonValidoException exception) {
-//						JOptionPane.showMessageDialog(SponsorFrame.this, "Il valore del gettone deve essere maggiore di 0", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
-//					}
 					catch (DuplicatoException exception) {
-						JOptionPane.showMessageDialog(SponsorFrame.this, "Lo sponsor " +nome+ " è già presente", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
+						JOptionPane.showMessageDialog(SponsorFrame.this, "Lo sponsor " +nome+ " ï¿½ giï¿½ presente", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
 					}
 				}
 			}
@@ -157,7 +150,6 @@ public class SponsorFrame extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				String nome = nomeTF.getText();
 				String stato = statoTF.getText();
-				//double stato = Double.parseDouble(statoTF.getText());
 				Sponsor sponsor = new Sponsor(nome, stato);
 				controller.rimuovi(sponsor);
 				ricaricaSponsor();
@@ -175,7 +167,6 @@ public class SponsorFrame extends JFrame {
 					Sponsor sponsor;
 					String nome = nomeTF.getText();
 					String stato = statoTF.getText();
-					//double stato = Double.parseDouble(statoTF.getText());
 					try {
 						for(int i = 0; i<table.getRowCount(); i++) 
 							if(i!=table.getSelectedRow() && nome.equals(model.getValueAt(i, 0))) throw new DuplicatoException();
@@ -185,11 +176,8 @@ public class SponsorFrame extends JFrame {
 						controller.modifica(sponsor, vecchioNome);
 						ricaricaSponsor();
 					}
-//					catch (GettoneNonValidoException exception) {
-//						JOptionPane.showMessageDialog(SponsorFrame.this, "Il valore del gettone deve essere maggiore di 0", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
-//					}
 					catch (DuplicatoException exception) {
-						JOptionPane.showMessageDialog(SponsorFrame.this, "Lo sponsor " +nome+ " è già presente", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
+						JOptionPane.showMessageDialog(SponsorFrame.this, "Lo sponsor " +nome+ " ï¿½ giï¿½ presente", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
 					}
 				}
 			}
