@@ -442,16 +442,6 @@ public class AtletaFrame extends JFrame {
 						""
 						});
 			}
-			
-//			boolean presente = false;
-//			for(int j = 0; j<nazionaleComboBox.getItemCount() && !presente; j++)
-//				if(listaAtleti.get(i).getNazionale()!=null && listaAtleti.get(i).getNazionale().getNome().equals(nazionaleComboBox.getItemAt(j))) presente = true;
-//			if(listaAtleti.get(i).getNazionale()!=null && !presente) nazionaleComboBox.addItem(listaAtleti.get(i).getNazionale().getNome());
-			
-//			presente = false;
-//			for(int j = 0; j<procuratoreComboBox.getItemCount() && !presente; j++)
-//				if(listaAtleti.get(i).getProcuratore()!=null && listaAtleti.get(i).getProcuratore().getCodiceFiscale().equals(procuratoreComboBox.getItemAt(j))) presente = true;
-//			if(listaAtleti.get(i).getProcuratore()!=null && !presente) procuratoreComboBox.addItem(listaAtleti.get(i).getProcuratore().getCodiceFiscale());
 		}
 		
 		if(listaNomiNazionali!=null)
