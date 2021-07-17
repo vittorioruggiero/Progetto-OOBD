@@ -17,6 +17,7 @@ import gui.HomeFrame;
 import gui.NazionaleFrame;
 import gui.ProcuratoreFrame;
 import gui.ClubFrame;
+import gui.SponsorFrame;
 import entity.Atleta;
 import entity.Club;
 import entity.Contratto;
@@ -33,6 +34,7 @@ public class Controller {
 	private ProcuratoreFrame procuratoreFrame;
 	private AtletaFrame atletaFrame;
 	private ClubFrame clubFrame;
+	private SponsorFrame sponsorFrame;
 	private List<Nazionale> listaNazionali;
 	private List<Procuratore> listaProcuratori;
 	private List<Atleta> listaAtleti;
@@ -210,10 +212,10 @@ public class Controller {
 		clubFrame.setClub(listaClub);
 	}
 	
-//	public void setSponsorInOrdine(String nomeColonna) {
-//		listaSponsor = sponsorDAO.getAllsponsor(nomeColonna);
-//		sponsorFrame.setSponsor(listaSponsor);
-//	}
+	public void setSponsorInOrdine(String nomeColonna) {
+		listaSponsor = sponsorDAO.getAllsponsor(nomeColonna);
+		sponsorFrame.setSponsor(listaSponsor);
+	}
 	
 //	public void setContrattiInOrdine(String nomeColonna, String scelta) {
 //		listaContratti = contrattoDAO.getAllContratti(nomeColonna, scelta);
