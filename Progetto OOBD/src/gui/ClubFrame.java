@@ -102,7 +102,7 @@ public class ClubFrame extends JFrame {
 		nomeLabel.setBounds(10, 199, 93, 19);
 		contentPane.add(nomeLabel);
 		
-		JLabel cittaLabel = new JLabel("Città");
+		JLabel cittaLabel = new JLabel("Citta");
 		cittaLabel.setFont(new Font("SansSerif", Font.PLAIN, 14));
 		cittaLabel.setBounds(10, 226, 93, 19);
 		contentPane.add(cittaLabel);
@@ -207,7 +207,7 @@ public class ClubFrame extends JFrame {
 		ordinaComboBox.setFont(new Font("SansSerif", Font.PLAIN, 12));
 		ordinaComboBox.setBounds(243, 306, 93, 19);
 		ordinaComboBox.addItem("Nome");
-		ordinaComboBox.addItem("Città");
+		ordinaComboBox.addItem("Citta");
 		contentPane.add(ordinaComboBox);
 		ordinaComboBox.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -220,7 +220,7 @@ public class ClubFrame extends JFrame {
 	public void setClub(List<Club> listaClub) {
 		DefaultTableModel model = (DefaultTableModel) this.table.getModel();
 		model.addColumn("Nome");
-		model.addColumn("Città");
+		model.addColumn("Citta");
 		for(int i=0; i<listaClub.size(); i++) model.addRow(new Object[] {listaClub.get(i).getNome(), listaClub.get(i).getCitta()});
 	}
 	
