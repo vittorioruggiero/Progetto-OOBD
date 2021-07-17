@@ -141,7 +141,7 @@ public class ClubFrame extends JFrame {
 //						JOptionPane.showMessageDialog(ClubFrame.this, "Il valore del gettone deve essere maggiore di 0", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
 //					}
 					catch (DuplicatoException exception) {
-						JOptionPane.showMessageDialog(ClubFrame.this, "Il club " +nome+ " √® gi√† presente", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
+						JOptionPane.showMessageDialog(ClubFrame.this, "Il club " +nome+ " Ë gi‡ presente", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
 					}
 				}
 			}

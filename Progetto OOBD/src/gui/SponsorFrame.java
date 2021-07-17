@@ -141,7 +141,7 @@ public class SponsorFrame extends JFrame {
 //						JOptionPane.showMessageDialog(SponsorFrame.this, "Il valore del gettone deve essere maggiore di 0", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
 //					}
 					catch (DuplicatoException exception) {
-						JOptionPane.showMessageDialog(SponsorFrame.this, "Lo sponsor " +nome+ " √® gi√† presente", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
+						JOptionPane.showMessageDialog(SponsorFrame.this, "Lo sponsor " +nome+ " Ë gi‡ presente", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
 					}
 				}
 			}
@@ -156,7 +156,7 @@ public class SponsorFrame extends JFrame {
 		rimuoviButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				String nome = nomeTF.getText();
-				String stato = nomeTF.getText();
+				String stato = statoTF.getText();
 				//double stato = Double.parseDouble(statoTF.getText());
 				Sponsor sponsor = new Sponsor(nome, stato);
 				controller.rimuovi(sponsor);
