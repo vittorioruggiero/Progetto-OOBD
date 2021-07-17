@@ -1,5 +1,6 @@
 package dao;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import entity.Atleta;
@@ -15,5 +16,6 @@ public interface AtletaDAO {
 	void deleteAtleta(Atleta atleta, String nazionale, int presenzeNazionale, String procuratore);
 
 	void updateAtleta(Atleta nuovoAtleta, String nazionale, int presenzeNazionale, String procuratore, String vecchioCodiceFiscale);
-
+	
+	ArrayList<ArrayList<Object>> getSorgentiIntroito(String nomeColonna);
 }

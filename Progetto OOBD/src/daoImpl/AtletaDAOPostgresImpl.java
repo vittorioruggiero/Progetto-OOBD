@@ -184,4 +184,32 @@ public class AtletaDAOPostgresImpl implements AtletaDAO {
             System.out.println("SQLException: " + exception.getMessage());
         }
 	}
+	
+	@Override
+	public ArrayList<ArrayList<Object>> getSorgentiIntroito(String nomeColonna) {
+		ArrayList<ArrayList<Object>> listaSorgentiIntroito = new ArrayList<ArrayList<Object>>();
+		try {
+			this.statement = this.connection.createStatement();
+			if(!nomeColonna.equals("CodiceFiscale")) nomeColonna = nomeColonna.concat(" DESC");
+			ResultSet resultSet = this.statement.executeQuery("SELECT * FROM atleta_sorgenti_introito ORDER BY " + nomeColonna + " NULLS LAST");
+			
+			while(resultSet.next()) {
+				String codiceFiscale = resultSet.getString("codiceFiscale");
+				double guadagniDaNazionale = resultSet.getDouble("guadagnidanazionale");
+				double guadagniDaClub = resultSet.getDouble("guadagnidaclub");
+				double guadagniDaSponsor = resultSet.getDouble("guadagnidasponsor");
+				ArrayList<Object> lista = new ArrayList<Object>();
+				lista.add(codiceFiscale);
+				lista.add(guadagniDaNazionale);
+				lista.add(guadagniDaClub);
+				lista.add(guadagniDaSponsor);
+				listaSorgentiIntroito.add(lista);
+			}
+			resultSet.close();
+		}
+		catch (SQLException exception) {
+			System.out.println("SQLException: " + exception.getMessage());
+		}
+		return listaSorgentiIntroito;
+	}
 }
