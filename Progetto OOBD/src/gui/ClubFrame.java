@@ -127,7 +127,7 @@ public class ClubFrame extends JFrame {
 				if(nomeTF.getText().length()>0 && cittaTF.getText().length()>0) {
 					Club club;
 					String nome = nomeTF.getText();
-					String citta = nomeTF.getText();
+					String citta = cittaTF.getText();
 					//double citta = Double.parseDouble(cittaTF.getText());
 					try {
 						//if(citta<=0) throw new GettoneNonValidoException();
@@ -156,7 +156,7 @@ public class ClubFrame extends JFrame {
 		rimuoviButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				String nome = nomeTF.getText();
-				String citta = nomeTF.getText();
+				String citta = cittaTF.getText();
 				//double citta = Double.parseDouble(cittaTF.getText());
 				Club club = new Club(nome, citta);
 				controller.rimuovi(club);

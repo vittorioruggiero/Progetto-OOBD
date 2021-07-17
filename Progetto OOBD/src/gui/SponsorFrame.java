@@ -127,7 +127,7 @@ public class SponsorFrame extends JFrame {
 				if(nomeTF.getText().length()>0 && statoTF.getText().length()>0) {
 					Sponsor sponsor;
 					String nome = nomeTF.getText();
-					String stato = nomeTF.getText();
+					String stato = statoTF.getText();
 					//double stato = Double.parseDouble(statoTF.getText());
 					try {
 						//if(stato<=0) throw new GettoneNonValidoException();
