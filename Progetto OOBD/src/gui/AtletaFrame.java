@@ -387,7 +387,7 @@ public class AtletaFrame extends JFrame {
 		
 	}
 	
-	public void setAtleti(List<Atleta> listaAtleti) {
+	public void setAtleti(List<Atleta> listaAtleti, List<String> listaNomiNazionali, List<String> listaCodiciFiscaliProcuratori) {
 		DefaultTableModel model = (DefaultTableModel) this.table.getModel();
 		model.addColumn("Codice fiscale");
 		model.addColumn("Nome");
@@ -443,18 +443,21 @@ public class AtletaFrame extends JFrame {
 						});
 			}
 			
+//			boolean presente = false;
+//			for(int j = 0; j<nazionaleComboBox.getItemCount() && !presente; j++)
+//				if(listaAtleti.get(i).getNazionale()!=null && listaAtleti.get(i).getNazionale().getNome().equals(nazionaleComboBox.getItemAt(j))) presente = true;
+//			if(listaAtleti.get(i).getNazionale()!=null && !presente) nazionaleComboBox.addItem(listaAtleti.get(i).getNazionale().getNome());
 			
-			
-			boolean presente = false;
-			for(int j = 0; j<nazionaleComboBox.getItemCount() && !presente; j++)
-				if(listaAtleti.get(i).getNazionale()!=null && listaAtleti.get(i).getNazionale().getNome().equals(nazionaleComboBox.getItemAt(j))) presente = true;
-			if(listaAtleti.get(i).getNazionale()!=null && !presente) nazionaleComboBox.addItem(listaAtleti.get(i).getNazionale().getNome());
-			
-			presente = false;
-			for(int j = 0; j<procuratoreComboBox.getItemCount() && !presente; j++)
-				if(listaAtleti.get(i).getProcuratore()!=null && listaAtleti.get(i).getProcuratore().getCodiceFiscale().equals(procuratoreComboBox.getItemAt(j))) presente = true;
-			if(listaAtleti.get(i).getProcuratore()!=null && !presente) procuratoreComboBox.addItem(listaAtleti.get(i).getProcuratore().getCodiceFiscale());
+//			presente = false;
+//			for(int j = 0; j<procuratoreComboBox.getItemCount() && !presente; j++)
+//				if(listaAtleti.get(i).getProcuratore()!=null && listaAtleti.get(i).getProcuratore().getCodiceFiscale().equals(procuratoreComboBox.getItemAt(j))) presente = true;
+//			if(listaAtleti.get(i).getProcuratore()!=null && !presente) procuratoreComboBox.addItem(listaAtleti.get(i).getProcuratore().getCodiceFiscale());
 		}
+		
+		if(listaNomiNazionali!=null)
+		    for(int j=0; j<listaNomiNazionali.size(); j++) nazionaleComboBox.addItem(listaNomiNazionali.get(j));
+		if(listaCodiciFiscaliProcuratori!=null)
+		   for(int j=0; j<listaCodiciFiscaliProcuratori.size(); j++) procuratoreComboBox.addItem(listaCodiciFiscaliProcuratori.get(j));
 	}
 	
 	public void ricaricaAtleti() {

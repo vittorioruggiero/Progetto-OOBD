@@ -9,6 +9,8 @@ public interface NazionaleDAO {
 	List<Nazionale> getAllNazionali(String nomeColonna);
 	
 	Nazionale getNazionale(String nomeCercato);
+	
+	 List<String> getNomiNazionali();
 
 	void insertNazionale(Nazionale nazionale);
 

@@ -23,6 +23,7 @@ import entity.Nazionale;
 import entity.Procuratore;
 import entity.Sponsor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Controller {
@@ -95,15 +96,22 @@ public class Controller {
 	}
 	
 	public void apriAtletaFrame() {
+		List<String> listaNomiNazionali = new ArrayList<String>();
+		List<String> listaCodiciFiscaliProcuratori = new ArrayList<String>();
 		try {
 			atletaDAO = new AtletaDAOPostgresImpl(connection, this);
-			listaAtleti = atletaDAO.getAllAtleti("codiceFiscale");
+			nazionaleDAO = new NazionaleDAOPostgresImpl(connection);
+			procuratoreDAO = new ProcuratoreDAOPostgresImpl(connection);
 		}
 		catch (SQLException exception) {
 			System.out.println("SQLException: " + exception.getMessage());
 		}
+		listaAtleti = atletaDAO.getAllAtleti("codiceFiscale");
+		listaNomiNazionali = nazionaleDAO.getNomiNazionali();
+		listaCodiciFiscaliProcuratori = procuratoreDAO.getCodiciFiscaliProcuratori();
+		
 		atletaFrame = new AtletaFrame(this);
-		atletaFrame.setAtleti(listaAtleti);
+		atletaFrame.setAtleti(listaAtleti, listaNomiNazionali, listaCodiciFiscaliProcuratori);
 		homeFrame.setVisible(false);
 		atletaFrame.setVisible(true);
 	}
@@ -192,7 +200,7 @@ public class Controller {
 	
 	public void setAtletiInOrdine(String nomeColonna) {
 		listaAtleti = atletaDAO.getAllAtleti(nomeColonna);
-		atletaFrame.setAtleti(listaAtleti);
+		atletaFrame.setAtleti(listaAtleti, null, null);
 	}
 	
 //	public void setClubInOrdine(String nomeColonna) {

@@ -31,6 +31,7 @@ public class ProcuratoreDAOPostgresImpl implements ProcuratoreDAO {
 		List<Procuratore> listaProcuratori = new ArrayList<Procuratore>();
 		try {
 			this.statement = this.connection.createStatement();
+			if(nomeColonna.equals("DataNascita")) nomeColonna = nomeColonna.concat(" DESC");
 			ResultSet resultSet = this.statement.executeQuery("SELECT * FROM Procuratore ORDER BY " + nomeColonna);
 			
 			while(resultSet.next()) {
@@ -68,6 +69,22 @@ public class ProcuratoreDAOPostgresImpl implements ProcuratoreDAO {
 			System.out.println("SQLException: " + exception.getMessage());
 		}
 		return procuratore;
+	}
+	
+	@Override
+	public List<String> getCodiciFiscaliProcuratori() {
+		List<String> listaCodiciFiscaliProcuratori = new ArrayList<String>();
+		try {
+			this.statement = this.connection.createStatement();
+			ResultSet resultSet = this.statement.executeQuery("SELECT codicefiscale FROM procuratore ORDER BY codicefiscale");
+			
+			while (resultSet.next()) listaCodiciFiscaliProcuratori.add(resultSet.getString("codicefiscale"));
+			resultSet.close();
+		}
+		catch (SQLException exception) {
+			System.out.println("SQLException: " + exception.getMessage());
+		}
+		return listaCodiciFiscaliProcuratori;
 	}
 	
 	@Override

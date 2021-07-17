@@ -31,6 +31,7 @@ public class NazionaleDAOPostgresImpl implements NazionaleDAO {
 		List<Nazionale> listaNazionali = new ArrayList<Nazionale>();
 		try {
 			this.statement = this.connection.createStatement();
+			if(nomeColonna.equals("ValoreGettone")) nomeColonna = nomeColonna.concat(" DESC");
 			ResultSet resultSet = this.statement.executeQuery("SELECT * FROM Nazionale ORDER BY " + nomeColonna);
 			
 			while(resultSet.next()) {
@@ -65,6 +66,22 @@ public class NazionaleDAOPostgresImpl implements NazionaleDAO {
 			System.out.println("SQLException: " + exception.getMessage());
 		}
 		return nazionale;
+	}
+	
+	@Override
+	public List<String> getNomiNazionali() {
+		List<String> listaNomiNazionali = new ArrayList<String>();
+		try {
+			this.statement = this.connection.createStatement();
+			ResultSet resultSet = this.statement.executeQuery("SELECT nome FROM nazionale ORDER BY nome");
+			
+			while (resultSet.next()) listaNomiNazionali.add(resultSet.getString("nome"));
+			resultSet.close();
+		}
+		catch (SQLException exception) {
+			System.out.println("SQLException: " + exception.getMessage());
+		}
+		return listaNomiNazionali;
 	}
 	
 	@Override
