@@ -72,11 +72,21 @@ public class HomeFrame extends JFrame {
 		contentPane.add(contrattiButton);
 		
 		JButton clubButton = new JButton("Club");
+		clubButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				controller.apriClubFrame();
+			}
+		});
 		clubButton.setFont(new Font("SansSerif", Font.PLAIN, 14));
 		clubButton.setBounds(296, 39, 110, 27);
 		contentPane.add(clubButton);
 		
 		JButton sponsorButton = new JButton("Sponsor");
+		sponsorButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				controller.apriSponsorFrame();
+			}
+		});
 		sponsorButton.setFont(new Font("SansSerif", Font.PLAIN, 14));
 		sponsorButton.setBounds(296, 76, 110, 27);
 		contentPane.add(sponsorButton);

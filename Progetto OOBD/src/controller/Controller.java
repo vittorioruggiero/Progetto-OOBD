@@ -85,6 +85,34 @@ public class Controller {
 		nazionaleFrame.setVisible(true);
 	}
 	
+	public void apriClubFrame() {
+		try {
+			clubDAO = new ClubDAOPostgresImpl(connection);
+			listaClub = clubDAO.getAllClub("nome");
+		}
+		catch (SQLException exception) {
+			System.out.println("SQLException: " + exception.getMessage());
+		}
+		clubFrame = new ClubFrame(this);
+		clubFrame.setClub(listaClub);
+		homeFrame.setVisible(false);
+		clubFrame.setVisible(true);
+	}
+	
+	public void apriSponsorFrame() {
+		try {
+			sponsorDAO = new SponsorDAOPostgresImpl(connection);
+			listaSponsor = sponsorDAO.getAllsponsor("nome");
+		}
+		catch (SQLException exception) {
+			System.out.println("SQLException: " + exception.getMessage());
+		}
+		sponsorFrame = new SponsorFrame(this);
+		sponsorFrame.setSponsor(listaSponsor);
+		homeFrame.setVisible(false);
+		sponsorFrame.setVisible(true);
+	}
+	
 	public void apriProcuratoreFrame() {
 		try {
 			procuratoreDAO = new ProcuratoreDAOPostgresImpl(connection);
