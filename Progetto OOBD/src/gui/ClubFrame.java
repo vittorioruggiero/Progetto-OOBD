@@ -15,8 +15,6 @@ import javax.swing.table.DefaultTableModel;
 import controller.Controller;
 import entity.Club;
 import exception.DuplicatoException;
-import exception.GettoneNonValidoException;
-
 import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
 import javax.swing.JButton;
@@ -91,7 +89,6 @@ public class ClubFrame extends JFrame {
 			public void mouseClicked(MouseEvent e) {
 				nomeTF.setText((String) model.getValueAt(table.getSelectedRow(), 0));
 				cittaTF.setText((String) model.getValueAt(table.getSelectedRow(), 1));
-				//cittaTF.setText(String.valueOf(model.getValueAt(table.getSelectedRow(), 1)));
 			}
 		});
 		
@@ -102,7 +99,7 @@ public class ClubFrame extends JFrame {
 		nomeLabel.setBounds(10, 199, 93, 19);
 		contentPane.add(nomeLabel);
 		
-		JLabel cittaLabel = new JLabel("Citta");
+		JLabel cittaLabel = new JLabel("Citt√†");
 		cittaLabel.setFont(new Font("SansSerif", Font.PLAIN, 14));
 		cittaLabel.setBounds(10, 226, 93, 19);
 		contentPane.add(cittaLabel);
@@ -128,20 +125,15 @@ public class ClubFrame extends JFrame {
 					Club club;
 					String nome = nomeTF.getText();
 					String citta = cittaTF.getText();
-					//double citta = Double.parseDouble(cittaTF.getText());
 					try {
-						//if(citta<=0) throw new GettoneNonValidoException();
 						for(int i = 0; i<table.getRowCount(); i++)
 							if(nome.equals(model.getValueAt(i, 0))) throw new DuplicatoException();
 						club = new Club(nome, citta);
 						controller.inserisci(club);
 						ricaricaClub();
 					}
-//					catch (GettoneNonValidoException exception) {
-//						JOptionPane.showMessageDialog(ClubFrame.this, "Il valore del gettone deve essere maggiore di 0", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
-//					}
 					catch (DuplicatoException exception) {
-						JOptionPane.showMessageDialog(ClubFrame.this, "Il club " +nome+ " Ë gi‡ presente", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
+						JOptionPane.showMessageDialog(ClubFrame.this, "Il club " +nome+ " ÔøΩ giÔøΩ presente", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
 					}
 				}
 			}
@@ -157,7 +149,6 @@ public class ClubFrame extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				String nome = nomeTF.getText();
 				String citta = cittaTF.getText();
-				//double citta = Double.parseDouble(cittaTF.getText());
 				Club club = new Club(nome, citta);
 				controller.rimuovi(club);
 				ricaricaClub();
@@ -175,21 +166,16 @@ public class ClubFrame extends JFrame {
 					Club club;
 					String nome = nomeTF.getText();
 					String citta = cittaTF.getText();
-					//double citta = Double.parseDouble(cittaTF.getText());
 					try {
 						for(int i = 0; i<table.getRowCount(); i++) 
 							if(i!=table.getSelectedRow() && nome.equals(model.getValueAt(i, 0))) throw new DuplicatoException();
-						//if(citta<=0) throw new GettoneNonValidoException();
 						club = new Club(nome, citta);
 						String vecchioNome = (String) model.getValueAt(table.getSelectedRow(), 0);
 						controller.modifica(club, vecchioNome);
 						ricaricaClub();
 					}
-//					catch (GettoneNonValidoException exception) {
-//						JOptionPane.showMessageDialog(ClubFrame.this, "Il valore del gettone deve essere maggiore di 0", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
-//					}
 					catch (DuplicatoException exception) {
-						JOptionPane.showMessageDialog(ClubFrame.this, "Il club " +nome+ " Ë gi‡ presente", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
+						JOptionPane.showMessageDialog(ClubFrame.this, "Il club " +nome+ " ÔøΩ giÔøΩ presente", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
 					}
 				}
 			}
@@ -220,7 +206,7 @@ public class ClubFrame extends JFrame {
 	public void setClub(List<Club> listaClub) {
 		DefaultTableModel model = (DefaultTableModel) this.table.getModel();
 		model.addColumn("Nome");
-		model.addColumn("Citta");
+		model.addColumn("Citt√†");
 		for(int i=0; i<listaClub.size(); i++) model.addRow(new Object[] {listaClub.get(i).getNome(), listaClub.get(i).getCitta()});
 	}
 	
