@@ -17,6 +17,7 @@ import gui.HomeFrame;
 import gui.NazionaleFrame;
 import gui.ProcuratoreFrame;
 import gui.ClubFrame;
+import gui.ContrattoFrame;
 import gui.SponsorFrame;
 import entity.Atleta;
 import entity.Club;
@@ -35,6 +36,7 @@ public class Controller {
 	private AtletaFrame atletaFrame;
 	private ClubFrame clubFrame;
 	private SponsorFrame sponsorFrame;
+	private ContrattoFrame contrattoFrame;
 	private List<Nazionale> listaNazionali;
 	private List<Procuratore> listaProcuratori;
 	private List<Atleta> listaAtleti;
@@ -245,10 +247,10 @@ public class Controller {
 		sponsorFrame.setSponsor(listaSponsor);
 	}
 	
-//	public void setContrattiInOrdine(String nomeColonna, String scelta) {
-//		listaContratti = contrattoDAO.getAllContratti(nomeColonna, scelta);
-//		contrattoFrame.setCotratti(listaContratti);
-//	}
+	public void setContrattiInOrdine(String nomeColonna, String scelta) {
+		listaContratti = contrattoDAO.getAllContratti(nomeColonna, scelta);
+		contrattoFrame.setContratti(listaContratti, null, null);
+	}
 	
 	public Procuratore cercaProcuratore(String codiceFiscaleCercato) throws SQLException {
 		return new ProcuratoreDAOPostgresImpl(connection).getProcuratore(codiceFiscaleCercato);

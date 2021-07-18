@@ -7,26 +7,29 @@ public class Contratto {
 	private LocalDate dataFine;
 	private double retribuzione;
 	private int percentualeProcuratore;
+	private double guadagnoProcuratore;
 	private Atleta atleta;
 	private Club club;
 	private Sponsor sponsor;
 
-	public Contratto(LocalDate dataInizio, LocalDate dataFine, double retribuzione, int percentualeProcuratore, Atleta atleta, Club club) {
+	public Contratto(LocalDate dataInizio, LocalDate dataFine, double retribuzione, int percentualeProcuratore, double guadagnoProcuratore, Atleta atleta, Club club) {
 		super();
 		this.dataInizio = dataInizio;
 		this.dataFine = dataFine;
 		this.retribuzione = retribuzione;
 		this.percentualeProcuratore = percentualeProcuratore;
+		this.guadagnoProcuratore = guadagnoProcuratore;
 		this.atleta = atleta;
 		this.club = club;
 	}
 	
-	public Contratto(LocalDate dataInizio, LocalDate dataFine, double retribuzione, int percentualeProcuratore, Atleta atleta, Sponsor sponsor) {
+	public Contratto(LocalDate dataInizio, LocalDate dataFine, double retribuzione, int percentualeProcuratore, double guadagnoProcuratore, Atleta atleta, Sponsor sponsor) {
 		super();
 		this.dataInizio = dataInizio;
 		this.dataFine = dataFine;
 		this.retribuzione = retribuzione;
 		this.percentualeProcuratore = percentualeProcuratore;
+		this.guadagnoProcuratore = guadagnoProcuratore;
 		this.atleta = atleta;
 		this.sponsor = sponsor;
 	}
@@ -61,6 +64,14 @@ public class Contratto {
 
 	public void setPercentualeProcuratore(int percentualeProcuratore) {
 		this.percentualeProcuratore = percentualeProcuratore;
+	}
+	
+	public double getGuadagnoProcuratore() {
+		return guadagnoProcuratore;
+	}
+
+	public void setGuadagnoProcuratore(double guadagnoProcuratore) {
+		this.guadagnoProcuratore = guadagnoProcuratore;
 	}
 	
 	public Atleta getAtleta() {

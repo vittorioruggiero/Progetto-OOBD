@@ -38,7 +38,8 @@ public class ContrattoDAOPostgresImpl implements ContrattoDAO {
 		try {
 			this.statement = this.connection.createStatement();
 			ResultSet resultSet;
-			if(scelta.equals("club"))
+			if(!nomeColonna.equals("CodiceFiscale") && !nomeColonna.equals("Club") && !nomeColonna.equals("Sponsor")) nomeColonna = nomeColonna.concat(" DESC");
+			if(scelta.equals("Club"))
 				resultSet = this.statement.executeQuery("SELECT * FROM Contratto WHERE club is not null ORDER BY " + nomeColonna);
 			else
 				resultSet = this.statement.executeQuery("SELECT * FROM Contratto WHERE sponsor is not null ORDER BY " + nomeColonna);
@@ -48,15 +49,16 @@ public class ContrattoDAOPostgresImpl implements ContrattoDAO {
 				LocalDate dataFine = resultSet.getDate("dataFine").toLocalDate();
 				double retribuzione = resultSet.getDouble("retribuzione");
 				int percentualeProcuratore = resultSet.getInt("percentualeProcuratore");
+				double guadagnoProcuratore = resultSet.getDouble("guadagnoProcuratore");
 				Atleta atleta = controller.cercaAtleta(resultSet.getString("atleta"));
 				Contratto contratto;
-				if (scelta.equals("club")) {
+				if (scelta.equals("Club")) {
 					Club club = controller.cercaClub(resultSet.getString("club"));
-					contratto = new Contratto(dataInizio, dataFine, retribuzione, percentualeProcuratore, atleta, club);
+					contratto = new Contratto(dataInizio, dataFine, retribuzione, percentualeProcuratore, guadagnoProcuratore, atleta, club);
 				}
 				else {
 					Sponsor sponsor = controller.cercaSponsor(resultSet.getString("sponsor"));
-					contratto = new Contratto(dataInizio, dataFine, retribuzione, percentualeProcuratore, atleta, sponsor);
+					contratto = new Contratto(dataInizio, dataFine, retribuzione, percentualeProcuratore, guadagnoProcuratore, atleta, sponsor);
 				}
 				listaContratti.add(contratto);
 			}
