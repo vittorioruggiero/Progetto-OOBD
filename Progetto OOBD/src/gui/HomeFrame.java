@@ -67,6 +67,11 @@ public class HomeFrame extends JFrame {
 		contentPane.add(nazionaliButton);
 		
 		JButton contrattiButton = new JButton("Contratti");
+		contrattiButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+			}
+		});
 		contrattiButton.setFont(new Font("SansSerif", Font.PLAIN, 14));
 		contrattiButton.setBounds(176, 76, 110, 27);
 		contentPane.add(contrattiButton);
