@@ -51,7 +51,7 @@ public class SponsorDAOPostgresImpl implements SponsorDAO {
 		Sponsor sponsor = null;
 		try {
 			this.statement = this.connection.createStatement();
-			ResultSet resultSet = this.statement.executeQuery("SELECT * FROM Sponsor WHERE sponsor = '" + nomeCercato + "'");
+			ResultSet resultSet = this.statement.executeQuery("SELECT * FROM Sponsor WHERE nome = '" + nomeCercato + "'");
 			
 			if(resultSet.next()) {
 				String nome = resultSet.getString("nome");
@@ -64,6 +64,22 @@ public class SponsorDAOPostgresImpl implements SponsorDAO {
 			System.out.println("SQLException: " + exception.getMessage());
 		}
 		return sponsor;
+	}
+	
+	@Override
+	public List<String> getNomiSponsor() {
+		List<String> listaNomiSponsor = new ArrayList<String>();
+		try {
+			this.statement = this.connection.createStatement();
+			ResultSet resultSet = this.statement.executeQuery("SELECT nome FROM sponsor ORDER BY nome");
+			
+			while (resultSet.next()) listaNomiSponsor.add(resultSet.getString("nome"));
+			resultSet.close();
+		}
+		catch (SQLException exception) {
+			System.out.println("SQLException: " + exception.getMessage());
+		}
+		return listaNomiSponsor;
 	}
 	
 	@Override

@@ -38,12 +38,11 @@ public class ContrattoDAOPostgresImpl implements ContrattoDAO {
 		try {
 			this.statement = this.connection.createStatement();
 			ResultSet resultSet;
-			if(!nomeColonna.equals("CodiceFiscale") && !nomeColonna.equals("Club") && !nomeColonna.equals("Sponsor")) nomeColonna = nomeColonna.concat(" DESC");
+			if(!nomeColonna.equals("Atleta") && !nomeColonna.equals("Club") && !nomeColonna.equals("Sponsor")) nomeColonna = nomeColonna.concat(" DESC");
 			if(scelta.equals("Club"))
 				resultSet = this.statement.executeQuery("SELECT * FROM Contratto WHERE club is not null ORDER BY " + nomeColonna);
 			else
 				resultSet = this.statement.executeQuery("SELECT * FROM Contratto WHERE sponsor is not null ORDER BY " + nomeColonna);
-			
 			while(resultSet.next()) {
 				LocalDate dataInizio = resultSet.getDate("dataInizio").toLocalDate();
 				LocalDate dataFine = resultSet.getDate("dataFine").toLocalDate();

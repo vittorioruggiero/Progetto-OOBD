@@ -69,7 +69,7 @@ public class HomeFrame extends JFrame {
 		JButton contrattiButton = new JButton("Contratti");
 		contrattiButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
+				controller.apriContrattoFrame();
 			}
 		});
 		contrattiButton.setFont(new Font("SansSerif", Font.PLAIN, 14));

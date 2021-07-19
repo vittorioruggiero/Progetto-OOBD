@@ -150,6 +150,24 @@ public class Controller {
 		atletaFrame.setVisible(true);
 	}
 	
+	public void apriContrattoFrame() {
+		List<String> listaNomiClub = new ArrayList<String>();
+		try {
+			contrattoDAO = new ContrattoDAOPostgresImpl(connection, this);
+			clubDAO = new ClubDAOPostgresImpl(connection);
+		}
+		catch (SQLException exception) {
+			System.out.println("SQLException: " + exception.getMessage());
+		}
+		listaContratti = contrattoDAO.getAllContratti("Atleta", "Club");
+		listaNomiClub = clubDAO.getNomiClub();
+		
+		contrattoFrame = new ContrattoFrame(this);
+		contrattoFrame.setContratti(listaContratti, listaNomiClub, null);
+		homeFrame.setVisible(false);
+		contrattoFrame.setVisible(true);
+	}
+	
 	public void inserisci(Nazionale nazionale) {
 		nazionaleDAO.insertNazionale(nazionale);
 	}
@@ -248,8 +266,17 @@ public class Controller {
 	}
 	
 	public void setContrattiInOrdine(String nomeColonna, String scelta) {
+		List<String> listaNomiClub = null;
+		List<String> listaNomiSponsor = null;
+		try {
+			if(scelta.equals("Club")) listaNomiClub = new ClubDAOPostgresImpl(connection).getNomiClub();
+			else listaNomiSponsor = new SponsorDAOPostgresImpl(connection).getNomiSponsor();
+		}
+		catch (SQLException exception) {
+			System.out.println("SQLException: " + exception.getMessage());
+		}
 		listaContratti = contrattoDAO.getAllContratti(nomeColonna, scelta);
-		contrattoFrame.setContratti(listaContratti, null, null);
+		contrattoFrame.setContratti(listaContratti, listaNomiClub, listaNomiSponsor);
 	}
 	
 	public Procuratore cercaProcuratore(String codiceFiscaleCercato) throws SQLException {
