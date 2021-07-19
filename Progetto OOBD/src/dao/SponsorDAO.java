@@ -9,6 +9,8 @@ public interface SponsorDAO {
 	List<Sponsor> getAllsponsor(String nomeColonna);
 	
 	Sponsor getSponsor(String nomeCercato);
+	
+	List<String> getNomiSponsor();
 
 	void insertSponsor(Sponsor sponsor);
 

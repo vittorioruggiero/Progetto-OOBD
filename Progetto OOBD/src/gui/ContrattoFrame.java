@@ -29,13 +29,15 @@ import entity.Contratto;
 import exception.CodiceFiscaleNonValidoException;
 import exception.DuplicatoException;
 import exception.LunghezzaCodiceFiscaleNonValidaException;
+import javax.swing.JRadioButton;
+import javax.swing.ButtonGroup;
 
 public class ContrattoFrame extends JFrame {
 
 	private Controller controller;
 	private JPanel contentPane;
 	private JTable table;
-	private JTextField codiceFiscaleTF;
+	private JTextField atletaTF;
 	private JTextField retribuzioneTF;
 	private JComboBox<String> ordinaComboBox;
 	private JTextField percentualeProcuratoreTF;
@@ -46,6 +48,7 @@ public class ContrattoFrame extends JFrame {
 	JComboBox<Integer> meseFineComboBox;
 	JComboBox<Integer> giornoFineComboBox;
 	JComboBox<String> club_sponsorComboBox;
+	private final ButtonGroup club_sponsorButtonGroup = new ButtonGroup();
 
 	public ContrattoFrame(Controller controller) {
 		setResizable(false);
@@ -101,7 +104,7 @@ public class ContrattoFrame extends JFrame {
 		table.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				codiceFiscaleTF.setText((String) model.getValueAt(table.getSelectedRow(), 0));
+				atletaTF.setText((String) model.getValueAt(table.getSelectedRow(), 0));
 				club_sponsorComboBox.setSelectedItem(String.valueOf(model.getValueAt(table.getSelectedRow(), 1)));
 				annoInizioComboBox.setSelectedItem((Integer) ((LocalDate) model.getValueAt(table.getSelectedRow(), 2)).getYear());
 				meseInizioComboBox.setSelectedItem((Integer) ((LocalDate) model.getValueAt(table.getSelectedRow(), 2)).getMonthValue());
@@ -116,25 +119,25 @@ public class ContrattoFrame extends JFrame {
 		
 		scrollPane.setViewportView(table);
 		
-		JLabel codiceFiscaleLabel = new JLabel("Codice fiscale");
-		codiceFiscaleLabel.setFont(new Font("SansSerif", Font.PLAIN, 14));
-		codiceFiscaleLabel.setBounds(10, 199, 140, 19);
-		contentPane.add(codiceFiscaleLabel);
+		JLabel atletaLabel = new JLabel("Atleta");
+		atletaLabel.setFont(new Font("SansSerif", Font.PLAIN, 14));
+		atletaLabel.setBounds(10, 199, 140, 19);
+		contentPane.add(atletaLabel);
 		
 		JLabel retribuzioneLabel = new JLabel("Retribuzione");
 		retribuzioneLabel.setFont(new Font("SansSerif", Font.PLAIN, 14));
-		retribuzioneLabel.setBounds(10, 344, 140, 19);
+		retribuzioneLabel.setBounds(10, 315, 140, 19);
 		contentPane.add(retribuzioneLabel);
 		
-		codiceFiscaleTF = new JTextField();
-		codiceFiscaleTF.setFont(new Font("SansSerif", Font.PLAIN, 14));
-		codiceFiscaleTF.setBounds(160, 199, 150, 19);
-		contentPane.add(codiceFiscaleTF);
-		codiceFiscaleTF.setColumns(10);
+		atletaTF = new JTextField();
+		atletaTF.setFont(new Font("SansSerif", Font.PLAIN, 14));
+		atletaTF.setBounds(160, 199, 150, 19);
+		contentPane.add(atletaTF);
+		atletaTF.setColumns(10);
 		
 		retribuzioneTF = new JTextField();
 		retribuzioneTF.setFont(new Font("SansSerif", Font.PLAIN, 14));
-		retribuzioneTF.setBounds(160, 343, 150, 20);
+		retribuzioneTF.setBounds(160, 314, 150, 20);
 		contentPane.add(retribuzioneTF);
 		retribuzioneTF.setColumns(10);
 		
@@ -143,9 +146,9 @@ public class ContrattoFrame extends JFrame {
 		//GESTIONE DELL'INSERIMENTO DELLE RIGHE
 		inserisciButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if(codiceFiscaleTF.getText().length()>0 && retribuzioneTF.getText().length()>0 && percentualeProcuratoreTF.getText().length()>0 && annoInizioComboBox.getSelectedIndex()!=-1 && meseInizioComboBox.getSelectedIndex()!=-1 && giornoInizioComboBox.getSelectedIndex()!=-1) {
+				if(atletaTF.getText().length()>0 && retribuzioneTF.getText().length()>0 && percentualeProcuratoreTF.getText().length()>0 && annoInizioComboBox.getSelectedIndex()!=-1 && meseInizioComboBox.getSelectedIndex()!=-1 && giornoInizioComboBox.getSelectedIndex()!=-1) {
 					Contratto contratto;
-					String codiceFiscale = codiceFiscaleTF.getText();
+					String codiceFiscale = atletaTF.getText();
 					String club = (String) club_sponsorComboBox.getSelectedItem();
 					LocalDate dataInizio = LocalDate.of((int) annoInizioComboBox.getSelectedItem(), (int) meseInizioComboBox.getSelectedItem(), (int) giornoInizioComboBox.getSelectedItem());
 					LocalDate dataFine = LocalDate.of((int) annoFineComboBox.getSelectedItem(), (int) meseFineComboBox.getSelectedItem(), (int) giornoFineComboBox.getSelectedItem());
@@ -160,7 +163,7 @@ public class ContrattoFrame extends JFrame {
 							if(codiceFiscale.equals(model.getValueAt(i, 0))) throw new DuplicatoException();
 						//contratto = new Contratto(codiceFiscale, );
 						//controller.inserisci(contratto, nazionale, presenzeNazionale, procuratore);
-						ricaricaContratti();
+						//ricaricaContratti();
 					}
 					catch (LunghezzaCodiceFiscaleNonValidaException exception) {
 						JOptionPane.showMessageDialog(ContrattoFrame.this, "Il codice fiscale deve contenere esattamente 16 caratteri", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
@@ -183,7 +186,7 @@ public class ContrattoFrame extends JFrame {
 		JButton rimuoviButton = new JButton("Rimuovi");
 		rimuoviButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				String codiceFiscale = codiceFiscaleTF.getText();
+				String codiceFiscale = atletaTF.getText();
 				String nome = retribuzioneTF.getText();
 				String cognome = percentualeProcuratoreTF.getText();
 				LocalDate dataNascita = LocalDate.of((int) annoInizioComboBox.getSelectedItem(), (int) meseInizioComboBox.getSelectedItem(), (int) giornoInizioComboBox.getSelectedItem());
@@ -192,7 +195,7 @@ public class ContrattoFrame extends JFrame {
 				//String procuratore = (String) procuratoreComboBox.getSelectedItem();
 				//Contratto contratto = new Contratto(codiceFiscale, nome, cognome, dataNascita);
 				//controller.rimuovi(contratto, nazionale, presenzeNazionale, procuratore);
-				ricaricaContratti();
+				//ricaricaContratti();
 			}
 		});
 		rimuoviButton.setFont(new Font("SansSerif", Font.PLAIN, 14));
@@ -203,9 +206,9 @@ public class ContrattoFrame extends JFrame {
 		JButton modificaButton = new JButton("Modifica");
 		modificaButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if(table.getSelectedRow()!=-1 && codiceFiscaleTF.getText().length()>0 && retribuzioneTF.getText().length()>0 && percentualeProcuratoreTF.getText().length()>0 && annoInizioComboBox.getSelectedIndex()!=-1 && meseInizioComboBox.getSelectedIndex()!=-1 && giornoInizioComboBox.getSelectedIndex()!=-1) {
+				if(table.getSelectedRow()!=-1 && atletaTF.getText().length()>0 && retribuzioneTF.getText().length()>0 && percentualeProcuratoreTF.getText().length()>0 && annoInizioComboBox.getSelectedIndex()!=-1 && meseInizioComboBox.getSelectedIndex()!=-1 && giornoInizioComboBox.getSelectedIndex()!=-1) {
 					Contratto contratto;
-					String codiceFiscale = codiceFiscaleTF.getText();
+					String codiceFiscale = atletaTF.getText();
 					String nome = retribuzioneTF.getText();
 					String cognome = percentualeProcuratoreTF.getText();
 					LocalDate dataNascita = LocalDate.of((int) annoInizioComboBox.getSelectedItem(), (int) meseInizioComboBox.getSelectedItem(), (int) giornoInizioComboBox.getSelectedItem());
@@ -221,7 +224,7 @@ public class ContrattoFrame extends JFrame {
 						//contratto = new Contratto(codiceFiscale, nome, cognome, dataNascita);
 						String vecchioCodiceFiscale = (String) model.getValueAt(table.getSelectedRow(), 0);
 						//controller.modifica(contratto, nazionale, presenzeNazionale, procuratore, vecchioCodiceFiscale);
-						ricaricaContratti();
+						//ricaricaContratti();
 					}
 					catch (LunghezzaCodiceFiscaleNonValidaException exception) {
 						JOptionPane.showMessageDialog(ContrattoFrame.this, "Il codice fiscale deve contenere esattamente 16 caratteri", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
@@ -247,7 +250,7 @@ public class ContrattoFrame extends JFrame {
 		ordinaComboBox = new JComboBox<String>();
 		ordinaComboBox.setFont(new Font("SansSerif", Font.PLAIN, 10));
 		ordinaComboBox.setBounds(331, 305, 93, 19);
-		ordinaComboBox.addItem("CodiceFiscale");
+		ordinaComboBox.addItem("Atleta");
 		ordinaComboBox.addItem("Club");
 		ordinaComboBox.addItem("DataInizio");
 		ordinaComboBox.addItem("DataFine");;
@@ -259,12 +262,12 @@ public class ContrattoFrame extends JFrame {
 		percentualeProcuratoreTF = new JTextField();
 		percentualeProcuratoreTF.setFont(new Font("SansSerif", Font.PLAIN, 14));
 		percentualeProcuratoreTF.setColumns(10);
-		percentualeProcuratoreTF.setBounds(160, 314, 150, 20);
+		percentualeProcuratoreTF.setBounds(160, 344, 150, 20);
 		contentPane.add(percentualeProcuratoreTF);
 		
 		JLabel percentualeProcuratoreLabel = new JLabel("Percentuale procuratore");
 		percentualeProcuratoreLabel.setFont(new Font("SansSerif", Font.PLAIN, 14));
-		percentualeProcuratoreLabel.setBounds(10, 315, 140, 19);
+		percentualeProcuratoreLabel.setBounds(10, 344, 140, 19);
 		contentPane.add(percentualeProcuratoreLabel);
 		
 		JLabel dataInizioLabel = new JLabel("Data inizio");
@@ -274,19 +277,19 @@ public class ContrattoFrame extends JFrame {
 		contentPane.add(dataInizioLabel);
 		
 		annoInizioComboBox = new JComboBox<Integer>();
-		annoInizioComboBox.setFont(new Font("SansSerif", Font.PLAIN, 14));
+		annoInizioComboBox.setFont(new Font("SansSerif", Font.PLAIN, 13));
 		annoInizioComboBox.setBounds(160, 255, 59, 19);
-		for(int i=1950; i<2022; i++) annoInizioComboBox.addItem(i);
+		for(int i=1950; i<2099; i++) annoInizioComboBox.addItem(i);
 		contentPane.add(annoInizioComboBox);
 		
 		meseInizioComboBox = new JComboBox<Integer>();
-		meseInizioComboBox.setFont(new Font("SansSerif", Font.PLAIN, 14));
+		meseInizioComboBox.setFont(new Font("SansSerif", Font.PLAIN, 13));
 		meseInizioComboBox.setBounds(224, 255, 41, 19);
 		for(int i=1; i<13; i++) meseInizioComboBox.addItem(i);
 		contentPane.add(meseInizioComboBox);
 		
 		giornoInizioComboBox = new JComboBox<Integer>();
-		giornoInizioComboBox.setFont(new Font("SansSerif", Font.PLAIN, 14));
+		giornoInizioComboBox.setFont(new Font("SansSerif", Font.PLAIN, 13));
 		giornoInizioComboBox.setBounds(269, 255, 41, 19);
 		for(int i=1; i<32; i++) giornoInizioComboBox.addItem(i);
 		contentPane.add(giornoInizioComboBox);
@@ -299,8 +302,6 @@ public class ContrattoFrame extends JFrame {
 		club_sponsorComboBox = new JComboBox<String>();
 		club_sponsorComboBox.setFont(new Font("SansSerif", Font.PLAIN, 14));
 		club_sponsorComboBox.setBounds(160, 228, 150, 19);
-		club_sponsorComboBox.addItem("");
-		club_sponsorComboBox.setSelectedItem("");
 		contentPane.add(club_sponsorComboBox);
 		
 		JLabel dataFineLabel = new JLabel("Data fine");
@@ -310,65 +311,114 @@ public class ContrattoFrame extends JFrame {
 		contentPane.add(dataFineLabel);
 		
 		annoFineComboBox = new JComboBox<Integer>();
-		annoFineComboBox.setFont(new Font("SansSerif", Font.PLAIN, 14));
+		annoFineComboBox.setFont(new Font("SansSerif", Font.PLAIN, 13));
 		annoFineComboBox.setBounds(160, 285, 59, 19);
+		for(int i=1951; i<2100; i++) annoFineComboBox.addItem(i);
 		contentPane.add(annoFineComboBox);
 		
 		meseFineComboBox = new JComboBox<Integer>();
-		meseFineComboBox.setFont(new Font("SansSerif", Font.PLAIN, 14));
+		meseFineComboBox.setFont(new Font("SansSerif", Font.PLAIN, 13));
 		meseFineComboBox.setBounds(224, 285, 41, 19);
+		for(int i=1; i<13; i++) meseFineComboBox.addItem(i);
 		contentPane.add(meseFineComboBox);
 		
 		giornoFineComboBox = new JComboBox<Integer>();
-		giornoFineComboBox.setFont(new Font("SansSerif", Font.PLAIN, 14));
+		giornoFineComboBox.setFont(new Font("SansSerif", Font.PLAIN, 13));
 		giornoFineComboBox.setBounds(269, 285, 41, 19);
+		for(int i=1; i<32; i++) giornoFineComboBox.addItem(i);
 		contentPane.add(giornoFineComboBox);
 		
-		ordinaComboBox.addActionListener(new ActionListener() {
+		//GESTIONE ANNO FINE
+		annoFineComboBox.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				ricaricaContratti();
+				gestisciDate(annoFineComboBox, meseFineComboBox, giornoFineComboBox);
 			}
 		});
 		
-		//GESTIONE ANNO
-		annoInizioComboBox.addActionListener(new ActionListener() {
+		//GESTIONE MESE FINE
+		meseFineComboBox.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if(annoInizioComboBox.isEnabled()) {
-					giornoInizioComboBox.removeAllItems();
-					int anno = annoInizioComboBox.getItemAt(annoInizioComboBox.getSelectedIndex());
-					int mese = meseInizioComboBox.getItemAt(meseInizioComboBox.getSelectedIndex());
-					if(mese==2) //febbraio
-						if(((anno%100)!=0 && (anno%4)==0) || ((anno%100)==0 && (anno%400)==0)) //anno bisestile
-							for(int i=1; i<30; i++) giornoInizioComboBox.addItem(i);
-						else for(int i=1; i<29; i++) giornoInizioComboBox.addItem(i);
-					else if(mese==4 || mese==6 || mese==9 || mese==11) //aprile, giugno, settembre e novembre
-						for(int i=1; i<31; i++) giornoInizioComboBox.addItem(i);
-					else for(int i=1; i<32; i++) giornoInizioComboBox.addItem(i);
+				gestisciDate(annoFineComboBox, meseFineComboBox, giornoFineComboBox);
+			}
+		});
+		
+		JRadioButton clubRadioButton = new JRadioButton("Club");
+		clubRadioButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (!club_sponsorLabel.getText().equals("Club")) {
+					club_sponsorLabel.setText("Club");
+					club_sponsorComboBox.removeAllItems();
+					ordinaComboBox.setEnabled(false);
+					ordinaComboBox.removeAllItems();
+					ordinaComboBox.addItem("Atleta");
+					ordinaComboBox.addItem("Club");
+					ordinaComboBox.addItem("DataInizio");
+					ordinaComboBox.addItem("DataFine");;
+					ordinaComboBox.addItem("Retribuzione");
+					ordinaComboBox.addItem("PercentualeProcuratore");
+					ordinaComboBox.addItem("GuadagnoProcuratore");
+					ricaricaContratti("Club");
+					ordinaComboBox.setEnabled(true);
 				}
 			}
 		});
+		club_sponsorButtonGroup.add(clubRadioButton);
+		clubRadioButton.setSelected(true);
+		clubRadioButton.setFont(new Font("SansSerif", Font.PLAIN, 14));
+		clubRadioButton.setBounds(430, 200, 103, 21);
+		contentPane.add(clubRadioButton);
 		
-		//GESTIONE MESE
+		JRadioButton sponsorRadioButton = new JRadioButton("Sponsor");
+		sponsorRadioButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (!club_sponsorLabel.getText().equals("Sponsor")) {
+					club_sponsorLabel.setText("Sponsor");
+					club_sponsorComboBox.removeAllItems();
+					ordinaComboBox.setEnabled(false);
+					ordinaComboBox.removeAllItems();
+					ordinaComboBox.addItem("Atleta");
+					ordinaComboBox.addItem("Sponsor");
+					ordinaComboBox.addItem("DataInizio");
+					ordinaComboBox.addItem("DataFine");;
+					ordinaComboBox.addItem("Retribuzione");
+					ordinaComboBox.addItem("PercentualeProcuratore");
+					ordinaComboBox.addItem("GuadagnoProcuratore");
+					ricaricaContratti("Sponsor");
+					ordinaComboBox.setEnabled(true);
+				}
+			}
+		});
+		club_sponsorButtonGroup.add(sponsorRadioButton);
+		sponsorRadioButton.setFont(new Font("SansSerif", Font.PLAIN, 14));
+		sponsorRadioButton.setBounds(430, 225, 103, 21);
+		contentPane.add(sponsorRadioButton);
+		
+		ordinaComboBox.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (ordinaComboBox.isEnabled()) 
+					ricaricaContratti(club_sponsorLabel.getText());
+			}
+		});
+		
+		//GESTIONE ANNO INIZIO
+		annoInizioComboBox.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				gestisciDate(annoInizioComboBox, meseInizioComboBox, giornoInizioComboBox);
+			}
+		});
+		
+		//GESTIONE MESE INIZIO
 		meseInizioComboBox.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-					giornoInizioComboBox.removeAllItems();
-					int anno = annoInizioComboBox.getItemAt(annoInizioComboBox.getSelectedIndex());
-					int mese = meseInizioComboBox.getItemAt(meseInizioComboBox.getSelectedIndex());
-					if(mese==2) //febbraio
-						if(((anno%100)!=0 && (anno%4)==0) || ((anno%100)==0 && (anno%400)==0)) //anno bisestile
-							for(int i=1; i<30; i++) giornoInizioComboBox.addItem(i);
-						else for(int i=1; i<29; i++) giornoInizioComboBox.addItem(i);
-					else if(mese==4 || mese==6 || mese==9 || mese==11) //aprile, giugno, settembre e novembre
-						for(int i=1; i<31; i++) giornoInizioComboBox.addItem(i);
-					else for(int i=1; i<32; i++) giornoInizioComboBox.addItem(i);
-			    }
+				gestisciDate(annoInizioComboBox, meseInizioComboBox, giornoInizioComboBox);
+			}
 		});
 		
 	}
 	
 	public void setContratti(List<Contratto> listaContratti, List<String> listaNomiClub, List<String> listaNomiSponsor) {
 		DefaultTableModel model = (DefaultTableModel) this.table.getModel();
-		model.addColumn("Codice fiscale");
+		model.addColumn("Atleta");
 		model.addColumn("Club");
 		model.addColumn("Data inizio");
 		model.addColumn("Data fine");
@@ -407,12 +457,26 @@ public class ContrattoFrame extends JFrame {
 		   for(int j=0; j<listaNomiSponsor.size(); j++) club_sponsorComboBox.addItem(listaNomiSponsor.get(j));
 	}
 	
-	public void ricaricaContratti() {
+	public void ricaricaContratti(String scelta) {
 		DefaultTableModel model = (DefaultTableModel) this.table.getModel();
 		table.setEnabled(false);
 		model.setRowCount(0);
 		model.setColumnCount(0);
-		controller.setContrattiInOrdine((String) ordinaComboBox.getSelectedItem(), "Club");
+		controller.setContrattiInOrdine((String) ordinaComboBox.getSelectedItem(), scelta);
+		table.getColumnModel().getColumn(1).setHeaderValue(scelta);
 		table.setEnabled(true);
+	}
+	
+	public void gestisciDate(JComboBox<Integer> annoComboBox, JComboBox<Integer> meseComboBox, JComboBox<Integer> giornoComboBox) {
+		giornoComboBox.removeAllItems();
+		int anno = annoComboBox.getItemAt(annoComboBox.getSelectedIndex());
+		int mese = meseComboBox.getItemAt(meseComboBox.getSelectedIndex());
+		if(mese==2) //febbraio
+			if(((anno%100)!=0 && (anno%4)==0) || ((anno%100)==0 && (anno%400)==0)) //anno bisestile
+				for(int i=1; i<30; i++) giornoComboBox.addItem(i);
+			else for(int i=1; i<29; i++) giornoComboBox.addItem(i);
+		else if(mese==4 || mese==6 || mese==9 || mese==11) //aprile, giugno, settembre e novembre
+			for(int i=1; i<31; i++) giornoComboBox.addItem(i);
+		else for(int i=1; i<32; i++) giornoComboBox.addItem(i);
 	}
 }

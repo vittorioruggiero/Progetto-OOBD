@@ -5,7 +5,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -52,7 +51,7 @@ public class ClubDAOPostgresImpl implements ClubDAO {
 		Club club = null;
 		try {
 			this.statement = this.connection.createStatement();
-			ResultSet resultSet = this.statement.executeQuery("SELECT * FROM Club WHERE club = '" + nomeCercato +"'");
+			ResultSet resultSet = this.statement.executeQuery("SELECT * FROM Club WHERE nome = '" + nomeCercato +"'");
 			
 			if(resultSet.next()) {
 				String nome = resultSet.getString("nome");
@@ -65,6 +64,22 @@ public class ClubDAOPostgresImpl implements ClubDAO {
 			System.out.println("SQLException: " + exception.getMessage());
 		}
 		return club;
+	}
+	
+	@Override
+	public List<String> getNomiClub() {
+		List<String> listaNomiClub = new ArrayList<String>();
+		try {
+			this.statement = this.connection.createStatement();
+			ResultSet resultSet = this.statement.executeQuery("SELECT nome FROM club ORDER BY nome");
+			
+			while (resultSet.next()) listaNomiClub.add(resultSet.getString("nome"));
+			resultSet.close();
+		}
+		catch (SQLException exception) {
+			System.out.println("SQLException: " + exception.getMessage());
+		}
+		return listaNomiClub;
 	}
 	
 	@Override
