@@ -27,8 +27,13 @@ import javax.swing.table.DefaultTableModel;
 import controller.Controller;
 import entity.Contratto;
 import exception.CodiceFiscaleNonValidoException;
+import exception.DateIncoerentiException;
+import exception.DateNonValideException;
 import exception.DuplicatoException;
 import exception.LunghezzaCodiceFiscaleNonValidaException;
+import exception.PercentualeProcuratoreNonValidaException;
+import exception.RetribuzioneNonValidaException;
+
 import javax.swing.JRadioButton;
 import javax.swing.ButtonGroup;
 
@@ -124,6 +129,16 @@ public class ContrattoFrame extends JFrame {
 		atletaLabel.setBounds(10, 199, 140, 19);
 		contentPane.add(atletaLabel);
 		
+		JLabel club_sponsorLabel = new JLabel("Club");
+		club_sponsorLabel.setFont(new Font("SansSerif", Font.PLAIN, 14));
+		club_sponsorLabel.setBounds(10, 226, 140, 19);
+		contentPane.add(club_sponsorLabel);
+		
+		club_sponsorComboBox = new JComboBox<String>();
+		club_sponsorComboBox.setFont(new Font("SansSerif", Font.PLAIN, 14));
+		club_sponsorComboBox.setBounds(160, 228, 150, 19);
+		contentPane.add(club_sponsorComboBox);
+		
 		JLabel retribuzioneLabel = new JLabel("Retribuzione");
 		retribuzioneLabel.setFont(new Font("SansSerif", Font.PLAIN, 14));
 		retribuzioneLabel.setBounds(10, 315, 140, 19);
@@ -146,24 +161,34 @@ public class ContrattoFrame extends JFrame {
 		//GESTIONE DELL'INSERIMENTO DELLE RIGHE
 		inserisciButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if(atletaTF.getText().length()>0 && retribuzioneTF.getText().length()>0 && percentualeProcuratoreTF.getText().length()>0 && annoInizioComboBox.getSelectedIndex()!=-1 && meseInizioComboBox.getSelectedIndex()!=-1 && giornoInizioComboBox.getSelectedIndex()!=-1) {
-					Contratto contratto;
-					String codiceFiscale = atletaTF.getText();
-					String club = (String) club_sponsorComboBox.getSelectedItem();
+				if(atletaTF.getText().length()>0 && retribuzioneTF.getText().length()>0 && percentualeProcuratoreTF.getText().length()>0 && club_sponsorComboBox.getSelectedItem()!=null
+						&& annoInizioComboBox.getSelectedIndex()!=-1 && meseInizioComboBox.getSelectedIndex()!=-1 && giornoInizioComboBox.getSelectedIndex()!=-1
+						&& annoFineComboBox.getSelectedIndex()!=-1 && meseFineComboBox.getSelectedIndex()!=-1 && giornoFineComboBox.getSelectedIndex()!=-1) {
+					String atleta = atletaTF.getText();
+					String club_sponsor = (String) club_sponsorComboBox.getSelectedItem();
 					LocalDate dataInizio = LocalDate.of((int) annoInizioComboBox.getSelectedItem(), (int) meseInizioComboBox.getSelectedItem(), (int) giornoInizioComboBox.getSelectedItem());
 					LocalDate dataFine = LocalDate.of((int) annoFineComboBox.getSelectedItem(), (int) meseFineComboBox.getSelectedItem(), (int) giornoFineComboBox.getSelectedItem());
 					double retribuzione = Double.valueOf(retribuzioneTF.getText());
 					int percentualeProcuratore = Integer.valueOf(percentualeProcuratoreTF.getText());
-					double guadagnoProcuratore = 0; //Prova
+					String scelta = club_sponsorLabel.getText();
 					
 					try {
-						if(codiceFiscale.length()!=16) throw new LunghezzaCodiceFiscaleNonValidaException();
-						if(!codiceFiscale.matches("^[A-Z]{6}[0-9]{2}[A-Z][0-9]{2}[A-Z][0-9]{3}[A-Z]$")) throw new CodiceFiscaleNonValidoException();
-						for(int i = 0; i<table.getRowCount(); i++)
-							if(codiceFiscale.equals(model.getValueAt(i, 0))) throw new DuplicatoException();
-						//contratto = new Contratto(codiceFiscale, );
-						//controller.inserisci(contratto, nazionale, presenzeNazionale, procuratore);
-						//ricaricaContratti();
+						if(atleta.length()!=16) throw new LunghezzaCodiceFiscaleNonValidaException();
+						if(!atleta.matches("^[A-Z]{6}[0-9]{2}[A-Z][0-9]{2}[A-Z][0-9]{3}[A-Z]$")) throw new CodiceFiscaleNonValidoException();
+						if(dataInizio.isAfter(dataFine)) throw new DateIncoerentiException();
+						if (scelta.equals("Club"))
+							for (int i = 0; i < table.getRowCount(); i++)
+								if (atleta.equals(model.getValueAt(i, 0))
+										&& !(
+												(dataInizio.isBefore((LocalDate) model.getValueAt(i, 2)) && dataFine.isBefore((LocalDate) model.getValueAt(i, 2)))
+										     || (dataInizio.isAfter((LocalDate) model.getValueAt(i, 3)) && dataFine.isAfter((LocalDate) model.getValueAt(i, 3)))
+										     )
+										)
+									throw new DateNonValideException();
+						if(retribuzione<=0) throw new RetribuzioneNonValidaException();
+						if(percentualeProcuratore<0 || percentualeProcuratore>100) throw new PercentualeProcuratoreNonValidaException();
+						controller.inserisci(atleta, club_sponsor, dataInizio, dataFine, retribuzione, percentualeProcuratore, scelta);
+						ricaricaContratti(scelta);
 					}
 					catch (LunghezzaCodiceFiscaleNonValidaException exception) {
 						JOptionPane.showMessageDialog(ContrattoFrame.this, "Il codice fiscale deve contenere esattamente 16 caratteri", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
@@ -171,8 +196,17 @@ public class ContrattoFrame extends JFrame {
 					catch (CodiceFiscaleNonValidoException exception) {
 						JOptionPane.showMessageDialog(ContrattoFrame.this, "Il codice fiscale non è scritto in una forma valida", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
 					}
-					catch (DuplicatoException exception) {
-						JOptionPane.showMessageDialog(ContrattoFrame.this, "L'contratto " +codiceFiscale+ " è già presente", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
+					catch (DateIncoerentiException exception) {
+						JOptionPane.showMessageDialog(ContrattoFrame.this, "La data di inizio deve essere precedente alla data di fine", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
+					}
+					catch (DateNonValideException exception) {
+						JOptionPane.showMessageDialog(ContrattoFrame.this, "Un atleta può avere un solo contratto con club in un intervallo di date", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
+					}
+					catch (RetribuzioneNonValidaException exception) {
+						JOptionPane.showMessageDialog(ContrattoFrame.this, "Il valore della retribuzione deve essere maggiore di 0", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
+					}
+					catch (PercentualeProcuratoreNonValidaException exception) {
+						JOptionPane.showMessageDialog(ContrattoFrame.this, "La percentuale del procuratore deve essere compresa tra 0 e 100", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
 					}
 				}
 			}
@@ -293,16 +327,6 @@ public class ContrattoFrame extends JFrame {
 		giornoInizioComboBox.setBounds(269, 255, 41, 19);
 		for(int i=1; i<32; i++) giornoInizioComboBox.addItem(i);
 		contentPane.add(giornoInizioComboBox);
-		
-		JLabel club_sponsorLabel = new JLabel("Club");
-		club_sponsorLabel.setFont(new Font("SansSerif", Font.PLAIN, 14));
-		club_sponsorLabel.setBounds(10, 226, 140, 19);
-		contentPane.add(club_sponsorLabel);
-		
-		club_sponsorComboBox = new JComboBox<String>();
-		club_sponsorComboBox.setFont(new Font("SansSerif", Font.PLAIN, 14));
-		club_sponsorComboBox.setBounds(160, 228, 150, 19);
-		contentPane.add(club_sponsorComboBox);
 		
 		JLabel dataFineLabel = new JLabel("Data fine");
 		dataFineLabel.setVerticalAlignment(SwingConstants.TOP);
