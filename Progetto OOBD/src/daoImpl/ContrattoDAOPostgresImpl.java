@@ -70,20 +70,20 @@ public class ContrattoDAOPostgresImpl implements ContrattoDAO {
 	}
 	
 	@Override
-	public void insertContratto(Contratto contratto) {
+	public void insertContratto(String atleta, String club_sponsor, LocalDate dataInizio, LocalDate dataFine, double retribuzione, int percentualeProcuratore, String scelta) {
 		try {
-			insertContrattoPS.setObject(1, contratto.getDataInizio());
-			insertContrattoPS.setObject(2, contratto.getDataFine());
-			insertContrattoPS.setDouble(3, contratto.getRetribuzione());
-			insertContrattoPS.setInt(4, contratto.getPercentualeProcuratore());
-			insertContrattoPS.setString(5, contratto.getAtleta().getCodiceFiscale());
-			if(contratto.getClub()!=null) {
-				insertContrattoPS.setString(6, contratto.getClub().getNome());
+			insertContrattoPS.setObject(1, dataInizio);
+			insertContrattoPS.setObject(2, dataFine);
+			insertContrattoPS.setDouble(3, retribuzione);
+			insertContrattoPS.setInt(4, percentualeProcuratore);
+			insertContrattoPS.setString(5, atleta);
+			if(scelta.equals("Club")) {
+				insertContrattoPS.setString(6, club_sponsor);
 				insertContrattoPS.setString(7, null);
 			}
 			else {
-				insertContrattoPS.setString(6, contratto.getSponsor().getNome());
-				insertContrattoPS.setString(7, null);
+				insertContrattoPS.setString(6, null);
+				insertContrattoPS.setString(7, club_sponsor);
 			}
 			insertContrattoPS.executeUpdate();
 		}

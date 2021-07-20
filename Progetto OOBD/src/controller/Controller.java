@@ -2,6 +2,7 @@ package controller;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.time.LocalDate;
 
 import javax.swing.JFrame;
 
@@ -188,8 +189,8 @@ public class Controller {
 		sponsorDAO.insertSponsor(sponsor);
 	}
 	
-	public void inserisci(Contratto contratto) {
-		contrattoDAO.insertContratto(contratto);
+	public void inserisci(String atleta, String club_sponsor, LocalDate dataInizio, LocalDate dataFine, double retribuzione, int percentualeProcuratore, String scelta) {
+		contrattoDAO.insertContratto(atleta, club_sponsor, dataInizio, dataFine, retribuzione, percentualeProcuratore, scelta);
 	}
 	
 	public void rimuovi(Nazionale nazionale) {
