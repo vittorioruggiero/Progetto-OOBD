@@ -153,18 +153,21 @@ public class Controller {
 	
 	public void apriContrattoFrame() {
 		List<String> listaNomiClub = new ArrayList<String>();
+		List<String> listaCodiciFiscaliAtleti = new ArrayList<String>();
 		try {
 			contrattoDAO = new ContrattoDAOPostgresImpl(connection, this);
+		    atletaDAO = new AtletaDAOPostgresImpl(connection, this);
 			clubDAO = new ClubDAOPostgresImpl(connection);
 		}
 		catch (SQLException exception) {
 			System.out.println("SQLException: " + exception.getMessage());
 		}
 		listaContratti = contrattoDAO.getAllContratti("Atleta", "Club");
+		listaCodiciFiscaliAtleti = atletaDAO.getCodiciFiscaliAtleti();
 		listaNomiClub = clubDAO.getNomiClub();
 		
 		contrattoFrame = new ContrattoFrame(this);
-		contrattoFrame.setContratti(listaContratti, listaNomiClub, null);
+		contrattoFrame.setContratti(listaContratti, listaCodiciFiscaliAtleti, listaNomiClub, null);
 		homeFrame.setVisible(false);
 		contrattoFrame.setVisible(true);
 	}
@@ -189,8 +192,8 @@ public class Controller {
 		sponsorDAO.insertSponsor(sponsor);
 	}
 	
-	public void inserisci(String atleta, String club_sponsor, LocalDate dataInizio, LocalDate dataFine, double retribuzione, int percentualeProcuratore, String scelta) {
-		contrattoDAO.insertContratto(atleta, club_sponsor, dataInizio, dataFine, retribuzione, percentualeProcuratore, scelta);
+	public void inserisci(Contratto contratto) {
+		contrattoDAO.insertContratto(contratto);
 	}
 	
 	public void rimuovi(Nazionale nazionale) {
@@ -277,7 +280,7 @@ public class Controller {
 			System.out.println("SQLException: " + exception.getMessage());
 		}
 		listaContratti = contrattoDAO.getAllContratti(nomeColonna, scelta);
-		contrattoFrame.setContratti(listaContratti, listaNomiClub, listaNomiSponsor);
+		contrattoFrame.setContratti(listaContratti, null, listaNomiClub, listaNomiSponsor);
 	}
 	
 	public Procuratore cercaProcuratore(String codiceFiscaleCercato) throws SQLException {
