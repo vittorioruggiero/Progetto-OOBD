@@ -25,7 +25,10 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
 import controller.Controller;
+import entity.Atleta;
+import entity.Club;
 import entity.Contratto;
+import entity.Sponsor;
 import exception.CodiceFiscaleNonValidoException;
 import exception.DateIncoerentiException;
 import exception.DateNonValideException;
@@ -42,7 +45,6 @@ public class ContrattoFrame extends JFrame {
 	private Controller controller;
 	private JPanel contentPane;
 	private JTable table;
-	private JTextField atletaTF;
 	private JTextField retribuzioneTF;
 	private JComboBox<String> ordinaComboBox;
 	private JTextField percentualeProcuratoreTF;
@@ -52,6 +54,7 @@ public class ContrattoFrame extends JFrame {
 	JComboBox<Integer> annoFineComboBox;
 	JComboBox<Integer> meseFineComboBox;
 	JComboBox<Integer> giornoFineComboBox;
+	JComboBox<String> atletaComboBox;
 	JComboBox<String> club_sponsorComboBox;
 	private final ButtonGroup club_sponsorButtonGroup = new ButtonGroup();
 
@@ -109,7 +112,7 @@ public class ContrattoFrame extends JFrame {
 		table.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				atletaTF.setText((String) model.getValueAt(table.getSelectedRow(), 0));
+				atletaComboBox.setSelectedItem((String) model.getValueAt(table.getSelectedRow(), 0));
 				club_sponsorComboBox.setSelectedItem(String.valueOf(model.getValueAt(table.getSelectedRow(), 1)));
 				annoInizioComboBox.setSelectedItem((Integer) ((LocalDate) model.getValueAt(table.getSelectedRow(), 2)).getYear());
 				meseInizioComboBox.setSelectedItem((Integer) ((LocalDate) model.getValueAt(table.getSelectedRow(), 2)).getMonthValue());
@@ -144,12 +147,6 @@ public class ContrattoFrame extends JFrame {
 		retribuzioneLabel.setBounds(10, 315, 140, 19);
 		contentPane.add(retribuzioneLabel);
 		
-		atletaTF = new JTextField();
-		atletaTF.setFont(new Font("SansSerif", Font.PLAIN, 14));
-		atletaTF.setBounds(160, 199, 150, 19);
-		contentPane.add(atletaTF);
-		atletaTF.setColumns(10);
-		
 		retribuzioneTF = new JTextField();
 		retribuzioneTF.setFont(new Font("SansSerif", Font.PLAIN, 14));
 		retribuzioneTF.setBounds(160, 314, 150, 20);
@@ -161,10 +158,11 @@ public class ContrattoFrame extends JFrame {
 		//GESTIONE DELL'INSERIMENTO DELLE RIGHE
 		inserisciButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if(atletaTF.getText().length()>0 && retribuzioneTF.getText().length()>0 && percentualeProcuratoreTF.getText().length()>0 && club_sponsorComboBox.getSelectedItem()!=null
+				if(atletaComboBox.getSelectedItem()!=null && retribuzioneTF.getText().length()>0 && percentualeProcuratoreTF.getText().length()>0 && club_sponsorComboBox.getSelectedItem()!=null
 						&& annoInizioComboBox.getSelectedIndex()!=-1 && meseInizioComboBox.getSelectedIndex()!=-1 && giornoInizioComboBox.getSelectedIndex()!=-1
 						&& annoFineComboBox.getSelectedIndex()!=-1 && meseFineComboBox.getSelectedIndex()!=-1 && giornoFineComboBox.getSelectedIndex()!=-1) {
-					String atleta = atletaTF.getText();
+					Contratto contratto;
+					String atleta = (String) atletaComboBox.getSelectedItem();
 					String club_sponsor = (String) club_sponsorComboBox.getSelectedItem();
 					LocalDate dataInizio = LocalDate.of((int) annoInizioComboBox.getSelectedItem(), (int) meseInizioComboBox.getSelectedItem(), (int) giornoInizioComboBox.getSelectedItem());
 					LocalDate dataFine = LocalDate.of((int) annoFineComboBox.getSelectedItem(), (int) meseFineComboBox.getSelectedItem(), (int) giornoFineComboBox.getSelectedItem());
@@ -187,7 +185,9 @@ public class ContrattoFrame extends JFrame {
 									throw new DateNonValideException();
 						if(retribuzione<=0) throw new RetribuzioneNonValidaException();
 						if(percentualeProcuratore<0 || percentualeProcuratore>100) throw new PercentualeProcuratoreNonValidaException();
-						controller.inserisci(atleta, club_sponsor, dataInizio, dataFine, retribuzione, percentualeProcuratore, scelta);
+						if(scelta.equals("Club")) contratto = new Contratto(dataInizio, dataFine, retribuzione, percentualeProcuratore, new Atleta(atleta, null, null, null), new Club(club_sponsor, null));
+						else contratto = new Contratto(dataInizio, dataFine, retribuzione, percentualeProcuratore, new Atleta(atleta, null, null, null), new Sponsor(club_sponsor, null));
+						controller.inserisci(contratto);
 						ricaricaContratti(scelta);
 					}
 					catch (LunghezzaCodiceFiscaleNonValidaException exception) {
@@ -220,16 +220,22 @@ public class ContrattoFrame extends JFrame {
 		JButton rimuoviButton = new JButton("Rimuovi");
 		rimuoviButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				String codiceFiscale = atletaTF.getText();
-				String nome = retribuzioneTF.getText();
-				String cognome = percentualeProcuratoreTF.getText();
-				LocalDate dataNascita = LocalDate.of((int) annoInizioComboBox.getSelectedItem(), (int) meseInizioComboBox.getSelectedItem(), (int) giornoInizioComboBox.getSelectedItem());
-				String nazionale = (String) club_sponsorComboBox.getSelectedItem();
-				int presenzeNazionale;
-				//String procuratore = (String) procuratoreComboBox.getSelectedItem();
-				//Contratto contratto = new Contratto(codiceFiscale, nome, cognome, dataNascita);
-				//controller.rimuovi(contratto, nazionale, presenzeNazionale, procuratore);
-				//ricaricaContratti();
+				if (atletaComboBox.getSelectedItem()!=null && retribuzioneTF.getText().length()>0 && percentualeProcuratoreTF.getText().length()>0 && club_sponsorComboBox.getSelectedItem()!=null
+						&& annoInizioComboBox.getSelectedIndex()!=-1 && meseInizioComboBox.getSelectedIndex()!=-1 && giornoInizioComboBox.getSelectedIndex()!=-1
+						&& annoFineComboBox.getSelectedIndex()!=-1 && meseFineComboBox.getSelectedIndex()!=-1 && giornoFineComboBox.getSelectedIndex()!=-1) {
+					String atleta = (String) atletaComboBox.getSelectedItem();
+					String club_sponsor = (String) club_sponsorComboBox.getSelectedItem();
+					LocalDate dataInizio = LocalDate.of((int) annoInizioComboBox.getSelectedItem(), (int) meseInizioComboBox.getSelectedItem(), (int) giornoInizioComboBox.getSelectedItem());
+					LocalDate dataFine = LocalDate.of((int) annoFineComboBox.getSelectedItem(), (int) meseFineComboBox.getSelectedItem(), (int) giornoFineComboBox.getSelectedItem());
+					double retribuzione = Double.valueOf(retribuzioneTF.getText());
+					int percentualeProcuratore = Integer.valueOf(percentualeProcuratoreTF.getText());
+					Contratto contratto;
+					String scelta = club_sponsorLabel.getText();
+					if(scelta.equals("Club")) contratto = new Contratto(dataInizio, dataFine, retribuzione, percentualeProcuratore, new Atleta(atleta, null, null, null), new Club(club_sponsor, null));
+					else contratto = new Contratto(dataInizio, dataFine, retribuzione, percentualeProcuratore, new Atleta(atleta, null, null, null), new Sponsor(club_sponsor, null));
+					controller.rimuovi(contratto);
+					ricaricaContratti(scelta);
+				}
 			}
 		});
 		rimuoviButton.setFont(new Font("SansSerif", Font.PLAIN, 14));
@@ -240,25 +246,50 @@ public class ContrattoFrame extends JFrame {
 		JButton modificaButton = new JButton("Modifica");
 		modificaButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if(table.getSelectedRow()!=-1 && atletaTF.getText().length()>0 && retribuzioneTF.getText().length()>0 && percentualeProcuratoreTF.getText().length()>0 && annoInizioComboBox.getSelectedIndex()!=-1 && meseInizioComboBox.getSelectedIndex()!=-1 && giornoInizioComboBox.getSelectedIndex()!=-1) {
-					Contratto contratto;
-					String codiceFiscale = atletaTF.getText();
-					String nome = retribuzioneTF.getText();
-					String cognome = percentualeProcuratoreTF.getText();
-					LocalDate dataNascita = LocalDate.of((int) annoInizioComboBox.getSelectedItem(), (int) meseInizioComboBox.getSelectedItem(), (int) giornoInizioComboBox.getSelectedItem());
-					String nazionale = (String) club_sponsorComboBox.getSelectedItem();
-					int presenzeNazionale = 0;
-					//String procuratore = (String) procuratoreComboBox.getSelectedItem();
+				if(table.getSelectedRow()!=-1 && atletaComboBox.getSelectedItem()!=null && retribuzioneTF.getText().length()>0 && percentualeProcuratoreTF.getText().length()>0 && club_sponsorComboBox.getSelectedItem()!=null
+						&& annoInizioComboBox.getSelectedIndex()!=-1 && meseInizioComboBox.getSelectedIndex()!=-1 && giornoInizioComboBox.getSelectedIndex()!=-1
+						&& annoFineComboBox.getSelectedIndex()!=-1 && meseFineComboBox.getSelectedIndex()!=-1 && giornoFineComboBox.getSelectedIndex()!=-1) {
+					Contratto nuovoContratto;
+					Contratto vecchioContratto;
+					String atleta = (String) atletaComboBox.getSelectedItem();
+					String club_sponsor = (String) club_sponsorComboBox.getSelectedItem();
+					LocalDate dataInizio = LocalDate.of((int) annoInizioComboBox.getSelectedItem(), (int) meseInizioComboBox.getSelectedItem(), (int) giornoInizioComboBox.getSelectedItem());
+					LocalDate dataFine = LocalDate.of((int) annoFineComboBox.getSelectedItem(), (int) meseFineComboBox.getSelectedItem(), (int) giornoFineComboBox.getSelectedItem());
+					double retribuzione = Double.valueOf(retribuzioneTF.getText());
+					int percentualeProcuratore = Integer.valueOf(percentualeProcuratoreTF.getText());
+					String vecchioAtleta = (String) model.getValueAt(table.getSelectedRow(), 0);
+					String vecchioClub_Sponsor = (String) model.getValueAt(table.getSelectedRow(), 1);
+					LocalDate vecchiaDataInizio = (LocalDate) model.getValueAt(table.getSelectedRow(), 2);
+					LocalDate vecchiaDataFine = (LocalDate) model.getValueAt(table.getSelectedRow(), 3);
+					double vecchiaRetribuzione = (double) model.getValueAt(table.getSelectedRow(), 4);
+					int vecchiaPercentualeProcuratore = (int) model.getValueAt(table.getSelectedRow(), 5);
+					String scelta = club_sponsorLabel.getText();
 					
 					try {
-						if(codiceFiscale.length()!=16) throw new LunghezzaCodiceFiscaleNonValidaException();
-						if(!codiceFiscale.matches("^[A-Z]{6}[0-9]{2}[A-Z][0-9]{2}[A-Z][0-9]{3}[A-Z]$")) throw new CodiceFiscaleNonValidoException();
-						for(int i = 0; i<table.getRowCount(); i++)
-							if(i!=table.getSelectedRow() && codiceFiscale.equals(model.getValueAt(i, 0))) throw new DuplicatoException();
-						//contratto = new Contratto(codiceFiscale, nome, cognome, dataNascita);
-						String vecchioCodiceFiscale = (String) model.getValueAt(table.getSelectedRow(), 0);
-						//controller.modifica(contratto, nazionale, presenzeNazionale, procuratore, vecchioCodiceFiscale);
-						//ricaricaContratti();
+						if(atleta.length()!=16) throw new LunghezzaCodiceFiscaleNonValidaException();
+						if(!atleta.matches("^[A-Z]{6}[0-9]{2}[A-Z][0-9]{2}[A-Z][0-9]{3}[A-Z]$")) throw new CodiceFiscaleNonValidoException();
+						if(dataInizio.isAfter(dataFine)) throw new DateIncoerentiException();
+						if (scelta.equals("Club"))
+							for (int i = 0; i < table.getRowCount(); i++)
+								if (i!=table.getSelectedRow() && atleta.equals(model.getValueAt(i, 0))
+										&& !(
+												(dataInizio.isBefore((LocalDate) model.getValueAt(i, 2)) && dataFine.isBefore((LocalDate) model.getValueAt(i, 2)))
+										     || (dataInizio.isAfter((LocalDate) model.getValueAt(i, 3)) && dataFine.isAfter((LocalDate) model.getValueAt(i, 3)))
+										     )
+										)
+									throw new DateNonValideException();
+						if(retribuzione<=0) throw new RetribuzioneNonValidaException();
+						if(percentualeProcuratore<0 || percentualeProcuratore>100) throw new PercentualeProcuratoreNonValidaException();
+						if(scelta.equals("Club")) {
+							nuovoContratto = new Contratto(dataInizio, dataFine, retribuzione, percentualeProcuratore, new Atleta(atleta, null, null, null), new Club(club_sponsor, null));
+							vecchioContratto = new Contratto(vecchiaDataInizio, vecchiaDataFine, vecchiaRetribuzione, vecchiaPercentualeProcuratore, new Atleta(vecchioAtleta, null, null, null), new Club(vecchioClub_Sponsor, null));
+						}
+						else {
+							nuovoContratto = new Contratto(dataInizio, dataFine, retribuzione, percentualeProcuratore, new Atleta(atleta, null, null, null), new Sponsor(club_sponsor, null));
+							vecchioContratto = new Contratto(vecchiaDataInizio, vecchiaDataFine, vecchiaRetribuzione, vecchiaPercentualeProcuratore, new Atleta(vecchioAtleta, null, null, null), new Sponsor(vecchioClub_Sponsor, null));
+						}
+						controller.modifica(nuovoContratto, vecchioContratto);
+						ricaricaContratti(scelta);
 					}
 					catch (LunghezzaCodiceFiscaleNonValidaException exception) {
 						JOptionPane.showMessageDialog(ContrattoFrame.this, "Il codice fiscale deve contenere esattamente 16 caratteri", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
@@ -266,8 +297,17 @@ public class ContrattoFrame extends JFrame {
 					catch (CodiceFiscaleNonValidoException exception) {
 						JOptionPane.showMessageDialog(ContrattoFrame.this, "Il codice fiscale non è scritto in una forma valida", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
 					}
-					catch (DuplicatoException exception) {
-						JOptionPane.showMessageDialog(ContrattoFrame.this, "L'contratto " +codiceFiscale+ " è già presente", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
+					catch (DateIncoerentiException exception) {
+						JOptionPane.showMessageDialog(ContrattoFrame.this, "La data di inizio deve essere precedente alla data di fine", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
+					}
+					catch (DateNonValideException exception) {
+						JOptionPane.showMessageDialog(ContrattoFrame.this, "Un atleta può avere un solo contratto con club in un intervallo di date", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
+					}
+					catch (RetribuzioneNonValidaException exception) {
+						JOptionPane.showMessageDialog(ContrattoFrame.this, "Il valore della retribuzione deve essere maggiore di 0", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
+					}
+					catch (PercentualeProcuratoreNonValidaException exception) {
+						JOptionPane.showMessageDialog(ContrattoFrame.this, "La percentuale del procuratore deve essere compresa tra 0 e 100", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
 					}
 				}
 			}
@@ -417,6 +457,11 @@ public class ContrattoFrame extends JFrame {
 		sponsorRadioButton.setBounds(430, 225, 103, 21);
 		contentPane.add(sponsorRadioButton);
 		
+		atletaComboBox = new JComboBox<String>();
+		atletaComboBox.setFont(new Font("SansSerif", Font.PLAIN, 14));
+		atletaComboBox.setBounds(160, 200, 150, 19);
+		contentPane.add(atletaComboBox);
+		
 		ordinaComboBox.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (ordinaComboBox.isEnabled()) 
@@ -440,7 +485,7 @@ public class ContrattoFrame extends JFrame {
 		
 	}
 	
-	public void setContratti(List<Contratto> listaContratti, List<String> listaNomiClub, List<String> listaNomiSponsor) {
+	public void setContratti(List<Contratto> listaContratti, List<String> listaCodiciFiscaliAtleti, List<String> listaNomiClub, List<String> listaNomiSponsor) {
 		DefaultTableModel model = (DefaultTableModel) this.table.getModel();
 		model.addColumn("Atleta");
 		model.addColumn("Club");
@@ -475,6 +520,8 @@ public class ContrattoFrame extends JFrame {
 			}
 		}
 		
+		if(listaCodiciFiscaliAtleti!=null)
+			for(int j=0; j<listaCodiciFiscaliAtleti.size(); j++) atletaComboBox.addItem(listaCodiciFiscaliAtleti.get(j));
 		if(listaNomiClub!=null)
 		    for(int j=0; j<listaNomiClub.size(); j++) club_sponsorComboBox.addItem(listaNomiClub.get(j));
 		if(listaNomiSponsor!=null)

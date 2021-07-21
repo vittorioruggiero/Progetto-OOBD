@@ -9,7 +9,7 @@ public interface ContrattoDAO {
 
 	List<Contratto> getAllContratti(String nomeColonna, String scelta);
 
-	void insertContratto(String atleta, String club_sponsor, LocalDate dataInizio, LocalDate dataFine, double retribuzione, int percentualeProcuratore, String scelta);
+	void insertContratto(Contratto contratto);
 
 	void deleteContratto(Contratto contratto);
 
