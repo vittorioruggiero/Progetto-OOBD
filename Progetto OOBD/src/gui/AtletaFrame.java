@@ -26,6 +26,8 @@ import javax.swing.table.DefaultTableModel;
 
 import controller.Controller;
 import entity.Atleta;
+import entity.Nazionale;
+import entity.Procuratore;
 import exception.CodiceFiscaleNonValidoException;
 import exception.DuplicatoException;
 import exception.LunghezzaCodiceFiscaleNonValidaException;
@@ -159,8 +161,8 @@ public class AtletaFrame extends JFrame {
 							if(codiceFiscale.equals(model.getValueAt(i, 0))) throw new DuplicatoException();
 						if(nazionale.length()>0 && presenzeNazionaleTF.getText().length()==0) throw new PresenzeNazionaleMancantiException();
 						if(nazionale.length()>0 && presenzeNazionaleTF.getText().length()>0) presenzeNazionale = Integer.valueOf(presenzeNazionaleTF.getText()); 
-						atleta = new Atleta(codiceFiscale, nome, cognome, dataNascita);
-						controller.inserisci(atleta, nazionale, presenzeNazionale, procuratore);
+						atleta = new Atleta(codiceFiscale, nome, cognome, dataNascita, presenzeNazionale, new Procuratore(procuratore, null, null, null), new Nazionale(nazionale, 0));
+						controller.inserisci(atleta);
 						ricaricaAtleti();
 					}
 					catch (LunghezzaCodiceFiscaleNonValidaException exception) {
@@ -196,8 +198,8 @@ public class AtletaFrame extends JFrame {
 				if(nazionale.length()>0 && presenzeNazionaleTF.getText().length()>0) presenzeNazionale = Integer.valueOf(presenzeNazionaleTF.getText());
 				else presenzeNazionale = 0;
 				String procuratore = (String) procuratoreComboBox.getSelectedItem();
-				Atleta atleta = new Atleta(codiceFiscale, nome, cognome, dataNascita);
-				controller.rimuovi(atleta, nazionale, presenzeNazionale, procuratore);
+				Atleta atleta = new Atleta(codiceFiscale, nome, cognome, dataNascita, presenzeNazionale, new Procuratore(procuratore, null, null, null), new Nazionale(nazionale, 0));
+				controller.rimuovi(atleta);
 				ricaricaAtleti();
 			}
 		});
@@ -226,9 +228,9 @@ public class AtletaFrame extends JFrame {
 							if(i!=table.getSelectedRow() && codiceFiscale.equals(model.getValueAt(i, 0))) throw new DuplicatoException();
 						if(nazionale.length()>0 && presenzeNazionaleTF.getText().length()==0) throw new PresenzeNazionaleMancantiException();
 						if(nazionale.length()>0 && presenzeNazionaleTF.getText().length()>0) presenzeNazionale = Integer.valueOf(presenzeNazionaleTF.getText()); 
-						atleta = new Atleta(codiceFiscale, nome, cognome, dataNascita);
+						atleta = new Atleta(codiceFiscale, nome, cognome, dataNascita, presenzeNazionale, new Procuratore(procuratore, null, null, null), new Nazionale(nazionale, 0));
 						String vecchioCodiceFiscale = (String) model.getValueAt(table.getSelectedRow(), 0);
-						controller.modifica(atleta, nazionale, presenzeNazionale, procuratore, vecchioCodiceFiscale);
+						controller.modifica(atleta, vecchioCodiceFiscale);
 						ricaricaAtleti();
 					}
 					catch (LunghezzaCodiceFiscaleNonValidaException exception) {

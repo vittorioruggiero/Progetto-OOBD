@@ -11,11 +11,11 @@ public interface AtletaDAO {
 	
 	Atleta getAtleta(String codiceFiscaleCercato);
 
-	void insertAtleta(Atleta atleta, String nazionale, int presenzeNazionale, String procuratore);
+	void insertAtleta(Atleta atleta);
 
-	void deleteAtleta(Atleta atleta, String nazionale, int presenzeNazionale, String procuratore);
+	void deleteAtleta(Atleta atleta);
 
-	void updateAtleta(Atleta nuovoAtleta, String nazionale, int presenzeNazionale, String procuratore, String vecchioCodiceFiscale);
+	void updateAtleta(Atleta nuovoAtleta, String vecchioCodiceFiscale);
 	
 	ArrayList<ArrayList<Object>> getSorgentiIntroito(String nomeColonna);
 }

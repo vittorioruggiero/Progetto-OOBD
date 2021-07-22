@@ -1,7 +1,5 @@
 package gui;
 
-import java.awt.BorderLayout;
-import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -29,11 +27,8 @@ import entity.Atleta;
 import entity.Club;
 import entity.Contratto;
 import entity.Sponsor;
-import exception.CodiceFiscaleNonValidoException;
 import exception.DateIncoerentiException;
 import exception.DateNonValideException;
-import exception.DuplicatoException;
-import exception.LunghezzaCodiceFiscaleNonValidaException;
 import exception.PercentualeProcuratoreNonValidaException;
 import exception.RetribuzioneNonValidaException;
 
@@ -171,8 +166,6 @@ public class ContrattoFrame extends JFrame {
 					String scelta = club_sponsorLabel.getText();
 					
 					try {
-						if(atleta.length()!=16) throw new LunghezzaCodiceFiscaleNonValidaException();
-						if(!atleta.matches("^[A-Z]{6}[0-9]{2}[A-Z][0-9]{2}[A-Z][0-9]{3}[A-Z]$")) throw new CodiceFiscaleNonValidoException();
 						if(dataInizio.isAfter(dataFine)) throw new DateIncoerentiException();
 						if (scelta.equals("Club"))
 							for (int i = 0; i < table.getRowCount(); i++)
@@ -189,12 +182,6 @@ public class ContrattoFrame extends JFrame {
 						else contratto = new Contratto(dataInizio, dataFine, retribuzione, percentualeProcuratore, new Atleta(atleta, null, null, null), new Sponsor(club_sponsor, null));
 						controller.inserisci(contratto);
 						ricaricaContratti(scelta);
-					}
-					catch (LunghezzaCodiceFiscaleNonValidaException exception) {
-						JOptionPane.showMessageDialog(ContrattoFrame.this, "Il codice fiscale deve contenere esattamente 16 caratteri", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
-					}
-					catch (CodiceFiscaleNonValidoException exception) {
-						JOptionPane.showMessageDialog(ContrattoFrame.this, "Il codice fiscale non è scritto in una forma valida", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
 					}
 					catch (DateIncoerentiException exception) {
 						JOptionPane.showMessageDialog(ContrattoFrame.this, "La data di inizio deve essere precedente alla data di fine", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
@@ -266,8 +253,6 @@ public class ContrattoFrame extends JFrame {
 					String scelta = club_sponsorLabel.getText();
 					
 					try {
-						if(atleta.length()!=16) throw new LunghezzaCodiceFiscaleNonValidaException();
-						if(!atleta.matches("^[A-Z]{6}[0-9]{2}[A-Z][0-9]{2}[A-Z][0-9]{3}[A-Z]$")) throw new CodiceFiscaleNonValidoException();
 						if(dataInizio.isAfter(dataFine)) throw new DateIncoerentiException();
 						if (scelta.equals("Club"))
 							for (int i = 0; i < table.getRowCount(); i++)
@@ -290,12 +275,6 @@ public class ContrattoFrame extends JFrame {
 						}
 						controller.modifica(nuovoContratto, vecchioContratto);
 						ricaricaContratti(scelta);
-					}
-					catch (LunghezzaCodiceFiscaleNonValidaException exception) {
-						JOptionPane.showMessageDialog(ContrattoFrame.this, "Il codice fiscale deve contenere esattamente 16 caratteri", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
-					}
-					catch (CodiceFiscaleNonValidoException exception) {
-						JOptionPane.showMessageDialog(ContrattoFrame.this, "Il codice fiscale non è scritto in una forma valida", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
 					}
 					catch (DateIncoerentiException exception) {
 						JOptionPane.showMessageDialog(ContrattoFrame.this, "La data di inizio deve essere precedente alla data di fine", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);

@@ -1,5 +1,4 @@
-/controller/
-/gui/
-/dao/
 /daoImpl/
-/entity/
+/gui/
+/controller/
+/dao/

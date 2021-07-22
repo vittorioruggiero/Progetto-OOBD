@@ -121,22 +121,22 @@ public class AtletaDAOPostgresImpl implements AtletaDAO {
 	}
 	
 	@Override
-	public void insertAtleta(Atleta atleta, String nazionale, int presenzeNazionale, String procuratore) {
+	public void insertAtleta(Atleta atleta) {
 		try {
 			insertAtletaPS.setString(1, atleta.getCodiceFiscale());
 			insertAtletaPS.setString(2, atleta.getNome());
 			insertAtletaPS.setString(3, atleta.getCognome());
 			insertAtletaPS.setObject(4, atleta.getDataNascita());
-			if (nazionale.length()>0) {
-				insertAtletaPS.setInt(5, presenzeNazionale);
-				insertAtletaPS.setString(6, nazionale);
+			if (atleta.getNazionale().getNome().length()>0) {
+				insertAtletaPS.setInt(5, atleta.getPresenzeNazionale());
+				insertAtletaPS.setString(6, atleta.getNazionale().getNome());
 			}
 			else {
 				insertAtletaPS.setNull(5, java.sql.Types.INTEGER);
 				insertAtletaPS.setNull(6, java.sql.Types.VARCHAR);
 			}
-			if (procuratore.length()>0) 
-				insertAtletaPS.setString(7, procuratore);
+			if (atleta.getProcuratore().getCodiceFiscale().length()>0) 
+				insertAtletaPS.setString(7, atleta.getProcuratore().getCodiceFiscale());
 			else
 				insertAtletaPS.setNull(7, java.sql.Types.CHAR);
 			insertAtletaPS.executeUpdate();
@@ -147,11 +147,11 @@ public class AtletaDAOPostgresImpl implements AtletaDAO {
 	}
 	
 	@Override
-	public void deleteAtleta(Atleta atleta, String nazionale, int presenzeNazionale, String procuratore) {
+	public void deleteAtleta(Atleta atleta) {
 		String deleteString = "DELETE FROM Atleta WHERE codiceFiscale = ? AND nome = ? AND cognome = ? AND dataNascita = ?";
-		if(nazionale.length()>0) deleteString = deleteString.concat(" AND nazionale = ? AND presenzeNazionale = ?");
+		if(atleta.getNazionale().getNome().length()>0) deleteString = deleteString.concat(" AND nazionale = ? AND presenzeNazionale = ?");
 		else deleteString = deleteString.concat(" AND nazionale is null AND presenzeNazionale is null");
-		if(procuratore.length()>0) deleteString = deleteString.concat(" AND procuratore = ?");
+		if(atleta.getProcuratore().getCodiceFiscale().length()>0) deleteString = deleteString.concat(" AND procuratore = ?");
 		else deleteString = deleteString.concat(" AND procuratore is null");
 		try {
 			deleteAtletaPS = connection.prepareStatement(deleteString);
@@ -159,12 +159,12 @@ public class AtletaDAOPostgresImpl implements AtletaDAO {
 			deleteAtletaPS.setString(2, atleta.getNome());
 			deleteAtletaPS.setString(3, atleta.getCognome());
 			deleteAtletaPS.setObject(4, atleta.getDataNascita());
-			if (nazionale.length()>0) {
-				deleteAtletaPS.setString(5, nazionale);
-				deleteAtletaPS.setInt(6, presenzeNazionale);
-				if(procuratore.length()>0) deleteAtletaPS.setString(7, procuratore);
+			if (atleta.getNazionale().getNome().length()>0) {
+				deleteAtletaPS.setString(5, atleta.getNazionale().getNome());
+				deleteAtletaPS.setInt(6, atleta.getPresenzeNazionale());
+				if(atleta.getProcuratore().getCodiceFiscale().length()>0) deleteAtletaPS.setString(7, atleta.getProcuratore().getCodiceFiscale());
 			}
-			else if(procuratore.length()>0) deleteAtletaPS.setString(5, procuratore);
+			else if(atleta.getProcuratore().getCodiceFiscale().length()>0) deleteAtletaPS.setString(5, atleta.getProcuratore().getCodiceFiscale());
 			deleteAtletaPS.executeUpdate();
 		}
 			catch (SQLException exception) {
@@ -173,22 +173,22 @@ public class AtletaDAOPostgresImpl implements AtletaDAO {
 	}
 	
 	@Override
-	public void updateAtleta(Atleta nuovoAtleta, String nazionale, int presenzeNazionale, String procuratore, String vecchioCodiceFiscale) {
+	public void updateAtleta(Atleta nuovoAtleta, String vecchioCodiceFiscale) {
 		try {
 			updateAtletaPS.setString(1, nuovoAtleta.getCodiceFiscale());
 			updateAtletaPS.setString(2, nuovoAtleta.getNome());
 			updateAtletaPS.setString(3, nuovoAtleta.getCognome());
 			updateAtletaPS.setObject(4, nuovoAtleta.getDataNascita());
-			if (nazionale.length()>0) {
-				updateAtletaPS.setString(5, nazionale);
-				updateAtletaPS.setInt(6, presenzeNazionale);
+			if (nuovoAtleta.getNazionale().getNome().length()>0) {
+				updateAtletaPS.setString(5, nuovoAtleta.getNazionale().getNome());
+				updateAtletaPS.setInt(6, nuovoAtleta.getPresenzeNazionale());
 			}
 			else {
 				updateAtletaPS.setNull(5, java.sql.Types.VARCHAR);
 				updateAtletaPS.setNull(6, java.sql.Types.INTEGER);
 			}
-			if (procuratore.length()>0) 
-				updateAtletaPS.setString(7, procuratore);
+			if (nuovoAtleta.getProcuratore().getCodiceFiscale().length()>0) 
+				updateAtletaPS.setString(7, nuovoAtleta.getProcuratore().getCodiceFiscale());
 			else
 				updateAtletaPS.setNull(7, java.sql.Types.CHAR);
 			updateAtletaPS.setString(8, vecchioCodiceFiscale);

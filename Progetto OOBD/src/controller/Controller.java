@@ -180,8 +180,8 @@ public class Controller {
 		procuratoreDAO.insertProcuratore(procuratore);
 	}
 	
-	public void inserisci(Atleta atleta, String nazionale, int presenzeNazionale, String procuratore) {
-		atletaDAO.insertAtleta(atleta, nazionale, presenzeNazionale, procuratore);
+	public void inserisci(Atleta atleta) {
+		atletaDAO.insertAtleta(atleta);
 	}
 	
 	public void inserisci(Club club) {
@@ -204,8 +204,8 @@ public class Controller {
 		procuratoreDAO.deleteProcuratore(procuratore);
 	}
 	
-	public void rimuovi(Atleta atleta, String nazionale, int presenzeNazionale, String procuratore) {
-		atletaDAO.deleteAtleta(atleta, nazionale, presenzeNazionale, procuratore);
+	public void rimuovi(Atleta atleta) {
+		atletaDAO.deleteAtleta(atleta);
 	}
 	
 	public void rimuovi(Club club) {
@@ -228,8 +228,8 @@ public class Controller {
 		procuratoreDAO.updateProcuratore(procuratore, vecchioCodiceFiscale);
 	}
 	
-	public void modifica(Atleta atleta, String nazionale, int presenzeNazionale, String procuratore, String vecchioCodiceFiscale) {
-		atletaDAO.updateAtleta(atleta, nazionale, presenzeNazionale, procuratore, vecchioCodiceFiscale);
+	public void modifica(Atleta atleta, String vecchioCodiceFiscale) {
+		atletaDAO.updateAtleta(atleta, vecchioCodiceFiscale);
 	}
 	
 	public void modifica(Club club, String vecchioNome) {
