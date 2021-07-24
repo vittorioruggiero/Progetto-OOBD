@@ -347,6 +347,16 @@ public class AtletaFrame extends JFrame {
 		procuratoreComboBox.addItem("");
 		contentPane.add(procuratoreComboBox);
 		
+		JButton sorgentiIntroitoButton = new JButton("<html>Sorgenti<br>di introito</html");
+		sorgentiIntroitoButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				controller.apriSorgentiIntroitoFrame();
+			}
+		});
+		sorgentiIntroitoButton.setFont(new Font("SansSerif", Font.PLAIN, 14));
+		sorgentiIntroitoButton.setBounds(515, 200, 93, 45);
+		contentPane.add(sorgentiIntroitoButton);
+		
 		ordinaComboBox.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				ricaricaAtleti();
