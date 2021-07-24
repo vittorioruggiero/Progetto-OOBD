@@ -17,6 +17,7 @@ import gui.AtletaFrame;
 import gui.HomeFrame;
 import gui.NazionaleFrame;
 import gui.ProcuratoreFrame;
+import gui.SorgentiIntroitoFrame;
 import gui.ClubFrame;
 import gui.ContrattoFrame;
 import gui.SponsorFrame;
@@ -38,12 +39,14 @@ public class Controller {
 	private ClubFrame clubFrame;
 	private SponsorFrame sponsorFrame;
 	private ContrattoFrame contrattoFrame;
+	private SorgentiIntroitoFrame sorgentiIntroitoFrame;
 	private List<Nazionale> listaNazionali;
 	private List<Procuratore> listaProcuratori;
 	private List<Atleta> listaAtleti;
 	private List<Club> listaClub;
 	private List<Sponsor> listaSponsor;
 	private List<Contratto> listaContratti;
+	private ArrayList<ArrayList<Object>> listaSorgentiIntroito;
 	private NazionaleDAOPostgresImpl nazionaleDAO;
 	private ProcuratoreDAOPostgresImpl procuratoreDAO;
 	private AtletaDAOPostgresImpl atletaDAO;
@@ -172,6 +175,19 @@ public class Controller {
 		contrattoFrame.setVisible(true);
 	}
 	
+	public void apriSorgentiIntroitoFrame() {
+		listaSorgentiIntroito = atletaDAO.getSorgentiIntroito("CodiceFiscale");
+		sorgentiIntroitoFrame = new SorgentiIntroitoFrame(this);
+		sorgentiIntroitoFrame.setSorgentiIntroito(listaSorgentiIntroito);
+		atletaFrame.setVisible(false);
+		sorgentiIntroitoFrame.setVisible(true);
+	}
+	
+	public void riapriAtletaFrame() {
+		sorgentiIntroitoFrame.setVisible(false);
+		atletaFrame.setVisible(true);
+	}
+	
 	public void inserisci(Nazionale nazionale) {
 		nazionaleDAO.insertNazionale(nazionale);
 	}
@@ -281,6 +297,11 @@ public class Controller {
 		}
 		listaContratti = contrattoDAO.getAllContratti(nomeColonna, scelta);
 		contrattoFrame.setContratti(listaContratti, null, listaNomiClub, listaNomiSponsor);
+	}
+	
+	public void setSorgentiIntroitoInOrdine(String nomeColonna) {
+		listaSorgentiIntroito = atletaDAO.getSorgentiIntroito(nomeColonna);
+		sorgentiIntroitoFrame.setSorgentiIntroito(listaSorgentiIntroito);
 	}
 	
 	public Procuratore cercaProcuratore(String codiceFiscaleCercato) throws SQLException {

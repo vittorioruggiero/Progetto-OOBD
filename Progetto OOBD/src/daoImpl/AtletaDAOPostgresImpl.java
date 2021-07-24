@@ -209,9 +209,12 @@ public class AtletaDAOPostgresImpl implements AtletaDAO {
 			
 			while(resultSet.next()) {
 				String codiceFiscale = resultSet.getString("codiceFiscale");
-				double guadagniDaNazionale = resultSet.getDouble("guadagnidanazionale");
-				double guadagniDaClub = resultSet.getDouble("guadagnidaclub");
-				double guadagniDaSponsor = resultSet.getDouble("guadagnidasponsor");
+				Double guadagniDaNazionale = null;
+				if(resultSet.getObject("guadagnidanazionale")!=null) guadagniDaNazionale = resultSet.getDouble("guadagnidanazionale");
+				Double guadagniDaClub = null;
+				if(resultSet.getObject("guadagnidaclub")!=null) guadagniDaClub = resultSet.getDouble("guadagnidaclub");
+				Double guadagniDaSponsor = null;
+				if(resultSet.getObject("guadagnidasponsor")!=null) guadagniDaSponsor = resultSet.getDouble("guadagnidasponsor");
 				ArrayList<Object> lista = new ArrayList<Object>();
 				lista.add(codiceFiscale);
 				lista.add(guadagniDaNazionale);
