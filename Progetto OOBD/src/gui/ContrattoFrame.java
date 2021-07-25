@@ -411,7 +411,7 @@ public class ContrattoFrame extends JFrame {
 					ordinaComboBox.addItem("Retribuzione");
 					ordinaComboBox.addItem("PercentualeProcuratore");
 					ordinaComboBox.addItem("GuadagnoProcuratore");
-					ricaricaContratti("Club");
+					ricaricaContratti("Prendi Club");
 					ordinaComboBox.setEnabled(true);
 				}
 			}
@@ -437,7 +437,7 @@ public class ContrattoFrame extends JFrame {
 					ordinaComboBox.addItem("Retribuzione");
 					ordinaComboBox.addItem("PercentualeProcuratore");
 					ordinaComboBox.addItem("GuadagnoProcuratore");
-					ricaricaContratti("Sponsor");
+					ricaricaContratti("Prendi Sponsor");
 					ordinaComboBox.setEnabled(true);
 				}
 			}

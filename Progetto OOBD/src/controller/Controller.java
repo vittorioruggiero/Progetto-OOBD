@@ -289,8 +289,14 @@ public class Controller {
 		List<String> listaNomiClub = null;
 		List<String> listaNomiSponsor = null;
 		try {
-			if(scelta.equals("Club")) listaNomiClub = new ClubDAOPostgresImpl(connection).getNomiClub();
-			else listaNomiSponsor = new SponsorDAOPostgresImpl(connection).getNomiSponsor();
+			if(scelta.equals("Prendi Club")) { 
+				listaNomiClub = new ClubDAOPostgresImpl(connection).getNomiClub();
+				scelta = "Club";
+				}
+			else if(scelta.equals("Prendi Sponsor")) { 
+				listaNomiSponsor = new SponsorDAOPostgresImpl(connection).getNomiSponsor();
+				scelta = "Sponsor";
+				}
 		}
 		catch (SQLException exception) {
 			System.out.println("SQLException: " + exception.getMessage());
