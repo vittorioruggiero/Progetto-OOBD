@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 
 import daoImpl.AtletaDAOPostgresImpl;
 import daoImpl.ClubDAOPostgresImpl;
@@ -328,5 +329,9 @@ public class Controller {
 	
 	public Sponsor cercaSponsor(String nomeCercato) throws SQLException {
 		return new SponsorDAOPostgresImpl(connection).getSponsor(nomeCercato);
+	}
+	
+	public void gestisciEccezione() {
+		JOptionPane.showMessageDialog(contrattoFrame, "La percentuale del procuratore deve essere presente se l'atleta è associato ad esso, non presente altrimenti", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
 	}
 }

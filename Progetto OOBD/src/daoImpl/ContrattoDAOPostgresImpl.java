@@ -39,9 +39,9 @@ public class ContrattoDAOPostgresImpl implements ContrattoDAO {
 			ResultSet resultSet;
 			if(!nomeColonna.equals("Atleta") && !nomeColonna.equals("Club") && !nomeColonna.equals("Sponsor")) nomeColonna = nomeColonna.concat(" DESC");
 			if(scelta.equals("Club"))
-				resultSet = this.statement.executeQuery("SELECT * FROM Contratto WHERE club is not null ORDER BY " + nomeColonna);
+				resultSet = this.statement.executeQuery("SELECT * FROM Contratto WHERE club is not null ORDER BY " + nomeColonna + " NULLS LAST");
 			else
-				resultSet = this.statement.executeQuery("SELECT * FROM Contratto WHERE sponsor is not null ORDER BY " + nomeColonna);
+				resultSet = this.statement.executeQuery("SELECT * FROM Contratto WHERE sponsor is not null ORDER BY " + nomeColonna + " NULLS LAST");
 			while(resultSet.next()) {
 				LocalDate dataInizio = resultSet.getDate("dataInizio").toLocalDate();
 				LocalDate dataFine = resultSet.getDate("dataFine").toLocalDate();
@@ -73,7 +73,8 @@ public class ContrattoDAOPostgresImpl implements ContrattoDAO {
 			insertContrattoPS.setObject(1, contratto.getDataInizio());
 			insertContrattoPS.setObject(2, contratto.getDataFine());
 			insertContrattoPS.setDouble(3, contratto.getRetribuzione());
-			insertContrattoPS.setInt(4, contratto.getPercentualeProcuratore());
+			if(contratto.getPercentualeProcuratore()!=0) insertContrattoPS.setInt(4, contratto.getPercentualeProcuratore());
+			else insertContrattoPS.setNull(4, java.sql.Types.INTEGER);
 			insertContrattoPS.setString(5, contratto.getAtleta().getCodiceFiscale());
 			if(contratto.getClub()!=null) {
 				insertContrattoPS.setString(6, contratto.getClub().getNome());
@@ -86,7 +87,8 @@ public class ContrattoDAOPostgresImpl implements ContrattoDAO {
 			insertContrattoPS.executeUpdate();
 		}
 			catch (SQLException exception) {
-	            System.out.println("SQLException: " + exception.getMessage());
+				if(exception.getMessage().startsWith("ERRORE: Incoerenza associazione procuratore")) controller.gestisciEccezione();
+				else System.out.println("SQLException: " + exception.getMessage());
 	        }
 	}
 	
@@ -95,16 +97,17 @@ public class ContrattoDAOPostgresImpl implements ContrattoDAO {
 		String scelta;
 		if(contratto.getClub()!=null) scelta = "Club";
 		else scelta = "Sponsor";
-		String deleteString = "DELETE FROM Contratto WHERE datainizio = ? AND datafine = ? AND retribuzione = ? AND percentualeprocuratore = ? AND atleta = ? AND " + scelta + " = ?";
+		String deleteString = "DELETE FROM Contratto WHERE datainizio = ? AND datafine = ? AND retribuzione = ? AND atleta = ? AND " + scelta + " = ? AND percentualeprocuratore = ?";
+		if(contratto.getPercentualeProcuratore()==0) deleteString = deleteString.replace("percentualeprocuratore = ?", "percentualeprocuratore is null");
 		try {
 			deleteContrattoPS = connection.prepareStatement(deleteString);
 			deleteContrattoPS.setObject(1, contratto.getDataInizio());
 			deleteContrattoPS.setObject(2, contratto.getDataFine());
 			deleteContrattoPS.setDouble(3, contratto.getRetribuzione());
-			deleteContrattoPS.setInt(4, contratto.getPercentualeProcuratore());
-			deleteContrattoPS.setString(5, contratto.getAtleta().getCodiceFiscale());
-			if(scelta.equals("Club")) deleteContrattoPS.setString(6, contratto.getClub().getNome());
-			else deleteContrattoPS.setString(6, contratto.getSponsor().getNome());
+			deleteContrattoPS.setString(4, contratto.getAtleta().getCodiceFiscale());
+			if(scelta.equals("Club")) deleteContrattoPS.setString(5, contratto.getClub().getNome());
+			else deleteContrattoPS.setString(5, contratto.getSponsor().getNome());
+			if(contratto.getPercentualeProcuratore()!=0) deleteContrattoPS.setInt(6, contratto.getPercentualeProcuratore());
 			deleteContrattoPS.executeUpdate();
 		}
 			catch (SQLException exception) {
@@ -117,27 +120,31 @@ public class ContrattoDAOPostgresImpl implements ContrattoDAO {
 		String scelta;
 		if(nuovoContratto.getClub()!=null) scelta = "Club";
 		else scelta = "Sponsor";
-		String updateString = "UPDATE Contratto SET datainizio = ?, datafine = ?, retribuzione = ?, percentualeprocuratore = ?, atleta = ?, " + scelta + " = ? WHERE datainizio = ? AND datafine = ? AND retribuzione = ? AND percentualeprocuratore = ? AND atleta = ? AND " + scelta + " = ?";
+		String updateString = "UPDATE Contratto SET datainizio = ?, datafine = ?, retribuzione = ?, percentualeprocuratore = ?, atleta = ?, " + scelta + " = ? WHERE datainizio = ? AND datafine = ? AND retribuzione = ? AND atleta = ? AND " + scelta + " = ? AND percentualeprocuratore = ?";
+		//if(nuovoContratto.getPercentualeProcuratore()==0) updateString = updateString.replace(, );
+		if(vecchioContratto.getPercentualeProcuratore()==0) updateString = updateString.replace("AND percentualeprocuratore = ?", "AND percentualeprocuratore is null");
 		try {
 			updateContrattoPS = connection.prepareStatement(updateString);
 			updateContrattoPS.setObject(1, nuovoContratto.getDataInizio());
 			updateContrattoPS.setObject(2, nuovoContratto.getDataFine());
 			updateContrattoPS.setDouble(3, nuovoContratto.getRetribuzione());
-			updateContrattoPS.setInt(4, nuovoContratto.getPercentualeProcuratore());
+			if(nuovoContratto.getPercentualeProcuratore()==0) updateContrattoPS.setNull(4, java.sql.Types.INTEGER);
+			else updateContrattoPS.setInt(4, nuovoContratto.getPercentualeProcuratore());
 			updateContrattoPS.setString(5, nuovoContratto.getAtleta().getCodiceFiscale());
 			if(nuovoContratto.getClub()!=null) updateContrattoPS.setString(6, nuovoContratto.getClub().getNome());
 			else updateContrattoPS.setString(6, nuovoContratto.getSponsor().getNome());
 			updateContrattoPS.setObject(7, vecchioContratto.getDataInizio());
 			updateContrattoPS.setObject(8, vecchioContratto.getDataFine());
 			updateContrattoPS.setDouble(9, vecchioContratto.getRetribuzione());
-			updateContrattoPS.setInt(10, vecchioContratto.getPercentualeProcuratore());
-			updateContrattoPS.setString(11, vecchioContratto.getAtleta().getCodiceFiscale());
-			if(vecchioContratto.getClub()!=null) updateContrattoPS.setString(12, vecchioContratto.getClub().getNome());
-			else updateContrattoPS.setString(12, vecchioContratto.getSponsor().getNome());
+			updateContrattoPS.setString(10, vecchioContratto.getAtleta().getCodiceFiscale());
+			if(vecchioContratto.getClub()!=null) updateContrattoPS.setString(11, vecchioContratto.getClub().getNome());
+			else updateContrattoPS.setString(11, vecchioContratto.getSponsor().getNome());
+			if(vecchioContratto.getPercentualeProcuratore()!=0) updateContrattoPS.setInt(12, vecchioContratto.getPercentualeProcuratore());
 			updateContrattoPS.executeUpdate();
 		}
 		catch (SQLException exception) {
-            System.out.println("SQLException: " + exception.getMessage());
+			if(exception.getMessage().startsWith("ERRORE: Incoerenza associazione procuratore")) controller.gestisciEccezione();
+			else System.out.println("SQLException: " + exception.getMessage());
         }
 	}
 }
