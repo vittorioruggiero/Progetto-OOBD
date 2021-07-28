@@ -62,7 +62,7 @@ public class ContrattoFrame extends JFrame {
 		this.controller = controller;
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 641, 438);
+		setBounds(100, 100, 1030, 438);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -70,7 +70,7 @@ public class ContrattoFrame extends JFrame {
 		
 		JLabel contrattiLabel = new JLabel("Contratti");
 		contrattiLabel.setFont(new Font("SansSerif", Font.BOLD, 14));
-		contrattiLabel.setBounds(272, 20, 73, 14);
+		contrattiLabel.setBounds(464, 20, 73, 14);
 		contentPane.add(contrattiLabel);
 		
 		JButton indietroButton = new JButton("Indietro");
@@ -80,12 +80,12 @@ public class ContrattoFrame extends JFrame {
 			}
 		});
 		indietroButton.setFont(new Font("SansSerif", Font.PLAIN, 14));
-		indietroButton.setBounds(515, 373, 93, 19);
+		indietroButton.setBounds(911, 373, 93, 19);
 		contentPane.add(indietroButton);
 		
 		//Codice di scrollPane scritto a mano per evitare problemi
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(10, 44, 617, 131);
+		scrollPane.setBounds(10, 44, 994, 131);
 		this.getContentPane().add(scrollPane);
 		
 		table = new JTable();
@@ -137,7 +137,7 @@ public class ContrattoFrame extends JFrame {
 		
 		club_sponsorComboBox = new JComboBox<String>();
 		club_sponsorComboBox.setFont(new Font("SansSerif", Font.PLAIN, 14));
-		club_sponsorComboBox.setBounds(160, 228, 150, 19);
+		club_sponsorComboBox.setBounds(180, 228, 181, 19);
 		contentPane.add(club_sponsorComboBox);
 		
 		JLabel retribuzioneLabel = new JLabel("Retribuzione");
@@ -147,7 +147,7 @@ public class ContrattoFrame extends JFrame {
 		
 		retribuzioneTF = new JTextField();
 		retribuzioneTF.setFont(new Font("SansSerif", Font.PLAIN, 14));
-		retribuzioneTF.setBounds(160, 314, 150, 20);
+		retribuzioneTF.setBounds(180, 314, 181, 20);
 		contentPane.add(retribuzioneTF);
 		retribuzioneTF.setColumns(10);
 		
@@ -208,7 +208,7 @@ public class ContrattoFrame extends JFrame {
 		});
 		
 		inserisciButton.setFont(new Font("SansSerif", Font.PLAIN, 14));
-		inserisciButton.setBounds(331, 199, 93, 19);
+		inserisciButton.setBounds(371, 199, 93, 19);
 		contentPane.add(inserisciButton);
 		
 		//GESTIONE DELLA RIMOZIONE DELLE RIGHE
@@ -235,7 +235,7 @@ public class ContrattoFrame extends JFrame {
 			}
 		});
 		rimuoviButton.setFont(new Font("SansSerif", Font.PLAIN, 14));
-		rimuoviButton.setBounds(331, 226, 93, 19);
+		rimuoviButton.setBounds(371, 226, 93, 19);
 		contentPane.add(rimuoviButton);
 		
 		//GESTIONE DELLA MODIFICA DELLE RIGHE
@@ -307,17 +307,17 @@ public class ContrattoFrame extends JFrame {
 			}
 		});
 		modificaButton.setFont(new Font("SansSerif", Font.PLAIN, 14));
-		modificaButton.setBounds(331, 255, 93, 19);
+		modificaButton.setBounds(371, 255, 93, 19);
 		contentPane.add(modificaButton);
 		
 		JLabel ordinaLabel = new JLabel("Ordina per");
 		ordinaLabel.setFont(new Font("SansSerif", Font.BOLD, 14));
-		ordinaLabel.setBounds(331, 284, 93, 19);
+		ordinaLabel.setBounds(371, 284, 93, 19);
 		contentPane.add(ordinaLabel);
 		
 		ordinaComboBox = new JComboBox<String>();
 		ordinaComboBox.setFont(new Font("SansSerif", Font.PLAIN, 10));
-		ordinaComboBox.setBounds(331, 305, 93, 19);
+		ordinaComboBox.setBounds(371, 305, 93, 19);
 		ordinaComboBox.addItem("Atleta");
 		ordinaComboBox.addItem("Club");
 		ordinaComboBox.addItem("DataInizio");
@@ -330,12 +330,12 @@ public class ContrattoFrame extends JFrame {
 		percentualeProcuratoreTF = new JTextField();
 		percentualeProcuratoreTF.setFont(new Font("SansSerif", Font.PLAIN, 14));
 		percentualeProcuratoreTF.setColumns(10);
-		percentualeProcuratoreTF.setBounds(160, 344, 150, 20);
+		percentualeProcuratoreTF.setBounds(180, 344, 181, 20);
 		contentPane.add(percentualeProcuratoreTF);
 		
 		JLabel percentualeProcuratoreLabel = new JLabel("Percentuale procuratore");
 		percentualeProcuratoreLabel.setFont(new Font("SansSerif", Font.PLAIN, 14));
-		percentualeProcuratoreLabel.setBounds(10, 344, 140, 19);
+		percentualeProcuratoreLabel.setBounds(10, 344, 160, 19);
 		contentPane.add(percentualeProcuratoreLabel);
 		
 		JLabel dataInizioLabel = new JLabel("Data inizio");
@@ -346,19 +346,19 @@ public class ContrattoFrame extends JFrame {
 		
 		annoInizioComboBox = new JComboBox<Integer>();
 		annoInizioComboBox.setFont(new Font("SansSerif", Font.PLAIN, 13));
-		annoInizioComboBox.setBounds(160, 255, 59, 19);
+		annoInizioComboBox.setBounds(180, 255, 79, 19);
 		for(int i=1950; i<2099; i++) annoInizioComboBox.addItem(i);
 		contentPane.add(annoInizioComboBox);
 		
 		meseInizioComboBox = new JComboBox<Integer>();
 		meseInizioComboBox.setFont(new Font("SansSerif", Font.PLAIN, 13));
-		meseInizioComboBox.setBounds(224, 255, 41, 19);
+		meseInizioComboBox.setBounds(263, 255, 47, 19);
 		for(int i=1; i<13; i++) meseInizioComboBox.addItem(i);
 		contentPane.add(meseInizioComboBox);
 		
 		giornoInizioComboBox = new JComboBox<Integer>();
 		giornoInizioComboBox.setFont(new Font("SansSerif", Font.PLAIN, 13));
-		giornoInizioComboBox.setBounds(269, 255, 41, 19);
+		giornoInizioComboBox.setBounds(314, 255, 47, 19);
 		for(int i=1; i<32; i++) giornoInizioComboBox.addItem(i);
 		contentPane.add(giornoInizioComboBox);
 		
@@ -370,19 +370,19 @@ public class ContrattoFrame extends JFrame {
 		
 		annoFineComboBox = new JComboBox<Integer>();
 		annoFineComboBox.setFont(new Font("SansSerif", Font.PLAIN, 13));
-		annoFineComboBox.setBounds(160, 285, 59, 19);
+		annoFineComboBox.setBounds(180, 285, 79, 19);
 		for(int i=1951; i<2100; i++) annoFineComboBox.addItem(i);
 		contentPane.add(annoFineComboBox);
 		
 		meseFineComboBox = new JComboBox<Integer>();
 		meseFineComboBox.setFont(new Font("SansSerif", Font.PLAIN, 13));
-		meseFineComboBox.setBounds(224, 285, 41, 19);
+		meseFineComboBox.setBounds(263, 285, 47, 19);
 		for(int i=1; i<13; i++) meseFineComboBox.addItem(i);
 		contentPane.add(meseFineComboBox);
 		
 		giornoFineComboBox = new JComboBox<Integer>();
 		giornoFineComboBox.setFont(new Font("SansSerif", Font.PLAIN, 13));
-		giornoFineComboBox.setBounds(269, 285, 41, 19);
+		giornoFineComboBox.setBounds(314, 285, 47, 19);
 		for(int i=1; i<32; i++) giornoFineComboBox.addItem(i);
 		contentPane.add(giornoFineComboBox);
 		
@@ -423,7 +423,7 @@ public class ContrattoFrame extends JFrame {
 		club_sponsorButtonGroup.add(clubRadioButton);
 		clubRadioButton.setSelected(true);
 		clubRadioButton.setFont(new Font("SansSerif", Font.PLAIN, 14));
-		clubRadioButton.setBounds(430, 200, 103, 21);
+		clubRadioButton.setBounds(470, 200, 103, 21);
 		contentPane.add(clubRadioButton);
 		
 		JRadioButton sponsorRadioButton = new JRadioButton("Sponsor");
@@ -448,12 +448,12 @@ public class ContrattoFrame extends JFrame {
 		});
 		club_sponsorButtonGroup.add(sponsorRadioButton);
 		sponsorRadioButton.setFont(new Font("SansSerif", Font.PLAIN, 14));
-		sponsorRadioButton.setBounds(430, 225, 103, 21);
+		sponsorRadioButton.setBounds(470, 225, 103, 21);
 		contentPane.add(sponsorRadioButton);
 		
 		atletaComboBox = new JComboBox<String>();
-		atletaComboBox.setFont(new Font("SansSerif", Font.PLAIN, 14));
-		atletaComboBox.setBounds(160, 200, 150, 19);
+		atletaComboBox.setFont(new Font("SansSerif", Font.PLAIN, 13));
+		atletaComboBox.setBounds(180, 200, 181, 19);
 		contentPane.add(atletaComboBox);
 		
 		ordinaComboBox.addActionListener(new ActionListener() {
@@ -488,6 +488,7 @@ public class ContrattoFrame extends JFrame {
 		model.addColumn("Retribuzione");
 		model.addColumn("Percentuale procuratore");
 		model.addColumn("Guadagno procuratore");
+		table.getColumnModel().getColumn(0).setPreferredWidth(120);
 		
 		for(int i=0; i<listaContratti.size(); i++) {
 			String atleta = listaContratti.get(i).getAtleta().getCodiceFiscale();
@@ -517,28 +518,6 @@ public class ContrattoFrame extends JFrame {
 						""
 						});
 			
-//			if(listaContratti.get(i).getClub()!=null) {
-//				model.addRow(new Object[] {
-//						listaContratti.get(i).getAtleta().getCodiceFiscale(),
-//						listaContratti.get(i).getClub().getNome(), 
-//						listaContratti.get(i).getDataInizio(),
-//						listaContratti.get(i).getDataFine(),
-//						listaContratti.get(i).getRetribuzione(),
-//						listaContratti.get(i).getPercentualeProcuratore(),
-//						listaContratti.get(i).getGuadagnoProcuratore()
-//						});
-//			}
-//			else if(listaContratti.get(i).getSponsor()!=null) {
-//				model.addRow(new Object[] {
-//						listaContratti.get(i).getAtleta().getCodiceFiscale(),
-//						listaContratti.get(i).getSponsor().getNome(), 
-//						listaContratti.get(i).getDataInizio(),
-//						listaContratti.get(i).getDataFine(),
-//						listaContratti.get(i).getRetribuzione(),
-//						listaContratti.get(i).getPercentualeProcuratore(),
-//						listaContratti.get(i).getGuadagnoProcuratore()
-//						});
-//			}
 		}
 		
 		if(listaCodiciFiscaliAtleti!=null)

@@ -18,6 +18,7 @@ import gui.AtletaFrame;
 import gui.HomeFrame;
 import gui.NazionaleFrame;
 import gui.ProcuratoreFrame;
+import gui.ProcuratoreMaxGuadagniFrame;
 import gui.SorgentiIntroitoFrame;
 import gui.ClubFrame;
 import gui.ContrattoFrame;
@@ -41,6 +42,7 @@ public class Controller {
 	private SponsorFrame sponsorFrame;
 	private ContrattoFrame contrattoFrame;
 	private SorgentiIntroitoFrame sorgentiIntroitoFrame;
+	private ProcuratoreMaxGuadagniFrame procuratoreMaxGuadagniFrame;
 	private List<Nazionale> listaNazionali;
 	private List<Procuratore> listaProcuratori;
 	private List<Atleta> listaAtleti;
@@ -48,6 +50,7 @@ public class Controller {
 	private List<Sponsor> listaSponsor;
 	private List<Contratto> listaContratti;
 	private ArrayList<ArrayList<Object>> listaSorgentiIntroito;
+	private ArrayList<ArrayList<Object>> listaProcuratoriMaxGuadagni;
 	private NazionaleDAOPostgresImpl nazionaleDAO;
 	private ProcuratoreDAOPostgresImpl procuratoreDAO;
 	private AtletaDAOPostgresImpl atletaDAO;
@@ -184,9 +187,22 @@ public class Controller {
 		sorgentiIntroitoFrame.setVisible(true);
 	}
 	
+	public void apriProcuratoreMaxGuadagniFrame() {
+		listaProcuratoriMaxGuadagni = procuratoreDAO.getProcuratoriMaxGuadagni("Procuratore");
+		procuratoreMaxGuadagniFrame = new ProcuratoreMaxGuadagniFrame(this);
+		procuratoreMaxGuadagniFrame.setProcuratoreMaxGuadagni(listaProcuratoriMaxGuadagni);
+		procuratoreFrame.setVisible(false);
+		procuratoreMaxGuadagniFrame.setVisible(true);
+	}
+	
 	public void riapriAtletaFrame() {
 		sorgentiIntroitoFrame.setVisible(false);
 		atletaFrame.setVisible(true);
+	}
+	
+	public void riapriProcuratoreFrame() {
+		procuratoreMaxGuadagniFrame.setVisible(false);
+		procuratoreFrame.setVisible(true);
 	}
 	
 	public void inserisci(Nazionale nazionale) {
@@ -309,6 +325,11 @@ public class Controller {
 	public void setSorgentiIntroitoInOrdine(String nomeColonna) {
 		listaSorgentiIntroito = atletaDAO.getSorgentiIntroito(nomeColonna);
 		sorgentiIntroitoFrame.setSorgentiIntroito(listaSorgentiIntroito);
+	}
+	
+	public void setProcuratoriMaxGuadagniInOrdine(String nomeColonna) {
+		listaProcuratoriMaxGuadagni = procuratoreDAO.getProcuratoriMaxGuadagni(nomeColonna);
+		procuratoreMaxGuadagniFrame.setProcuratoreMaxGuadagni(listaProcuratoriMaxGuadagni);
 	}
 	
 	public Procuratore cercaProcuratore(String codiceFiscaleCercato) throws SQLException {

@@ -129,4 +129,35 @@ public class ProcuratoreDAOPostgresImpl implements ProcuratoreDAO {
             System.out.println("SQLException: " + exception.getMessage());
         }
 	}
+	
+	public ArrayList<ArrayList<Object>> getProcuratoriMaxGuadagni(String nomeColonna) {
+		ArrayList<ArrayList<Object>> listaProcuratoriMaxGuadagni = new ArrayList<ArrayList<Object>>();
+		try {
+			this.statement = this.connection.createStatement();
+			if(nomeColonna.equals("Max_guadagno_da_atleta") || nomeColonna.equals("Max_guadagno_da_club")) nomeColonna = nomeColonna.concat(" DESC");
+			ResultSet resultSet = this.statement.executeQuery("SELECT * FROM procuratore_atleta_club_maxguadagno ORDER BY " + nomeColonna + " NULLS LAST");
+			
+			while(resultSet.next()) {
+				String procuratore = resultSet.getString("procuratore");
+				String atletaMaxGuadagno = resultSet.getString("atleta_max_guadagno");
+				Double maxGuadagnoDaAtleta = null;
+				if(resultSet.getObject("max_guadagno_da_atleta")!=null) maxGuadagnoDaAtleta = resultSet.getDouble("max_guadagno_da_atleta");
+				String clubMaxGuadagno = resultSet.getString("club_max_guadagno");
+				Double maxGuadagnoDaClub = null;
+				if(resultSet.getObject("max_guadagno_da_club")!=null) maxGuadagnoDaClub = resultSet.getDouble("max_guadagno_da_club");
+				ArrayList<Object> lista = new ArrayList<Object>();
+				lista.add(procuratore);
+				lista.add(atletaMaxGuadagno);
+				lista.add(maxGuadagnoDaAtleta);
+				lista.add(clubMaxGuadagno);
+				lista.add(maxGuadagnoDaClub);
+				listaProcuratoriMaxGuadagni.add(lista);
+			}
+			resultSet.close();
+		}
+		catch (SQLException exception) {
+			System.out.println("SQLException: " + exception.getMessage());
+		}
+		return listaProcuratoriMaxGuadagni;
+	}
 }
