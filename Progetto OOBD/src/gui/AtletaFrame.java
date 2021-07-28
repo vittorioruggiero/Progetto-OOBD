@@ -55,7 +55,7 @@ public class AtletaFrame extends JFrame {
 		this.controller = controller;
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 641, 438);
+		setBounds(100, 100, 1030, 438);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -63,7 +63,7 @@ public class AtletaFrame extends JFrame {
 		
 		JLabel atletiLabel = new JLabel("Atleti");
 		atletiLabel.setFont(new Font("SansSerif", Font.BOLD, 14));
-		atletiLabel.setBounds(272, 20, 50, 14);
+		atletiLabel.setBounds(472, 20, 50, 14);
 		contentPane.add(atletiLabel);
 		
 		JButton indietroButton = new JButton("Indietro");
@@ -73,12 +73,12 @@ public class AtletaFrame extends JFrame {
 			}
 		});
 		indietroButton.setFont(new Font("SansSerif", Font.PLAIN, 14));
-		indietroButton.setBounds(515, 373, 93, 19);
+		indietroButton.setBounds(912, 373, 93, 19);
 		contentPane.add(indietroButton);
 		
 		//Codice di scrollPane scritto a mano per evitare problemi
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(10, 44, 617, 131);
+		scrollPane.setBounds(10, 44, 995, 131);
 		this.getContentPane().add(scrollPane);
 		
 		table = new JTable();
@@ -347,14 +347,14 @@ public class AtletaFrame extends JFrame {
 		procuratoreComboBox.addItem("");
 		contentPane.add(procuratoreComboBox);
 		
-		JButton sorgentiIntroitoButton = new JButton("<html>Sorgenti<br>di introito</html");
+		JButton sorgentiIntroitoButton = new JButton("<html>Sorgenti<br>di introito</html>");
 		sorgentiIntroitoButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				controller.apriSorgentiIntroitoFrame();
 			}
 		});
 		sorgentiIntroitoButton.setFont(new Font("SansSerif", Font.PLAIN, 14));
-		sorgentiIntroitoButton.setBounds(515, 200, 93, 45);
+		sorgentiIntroitoButton.setBounds(912, 200, 93, 45);
 		contentPane.add(sorgentiIntroitoButton);
 		
 		ordinaComboBox.addActionListener(new ActionListener() {
@@ -408,6 +408,8 @@ public class AtletaFrame extends JFrame {
 		model.addColumn("Nazionale");
 		model.addColumn("Presenze in nazionale");
 		model.addColumn("Procuratore");
+		table.getColumnModel().getColumn(0).setPreferredWidth(120);
+		table.getColumnModel().getColumn(6).setPreferredWidth(120);
 		
 		for(int i=0; i<listaAtleti.size(); i++) {
 			if(listaAtleti.get(i).getNazionale()!=null && listaAtleti.get(i).getProcuratore()!=null) {

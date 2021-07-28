@@ -270,6 +270,16 @@ public class ProcuratoreFrame extends JFrame {
 		for(int i=1; i<32; i++) giornoComboBox.addItem(i);
 		contentPane.add(giornoComboBox);
 		
+		JButton procuratoreMaxGuadagniButton = new JButton("<html>Max<br>guadagni</html>");
+		procuratoreMaxGuadagniButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				controller.apriProcuratoreMaxGuadagniFrame();
+			}
+		});
+		procuratoreMaxGuadagniButton.setFont(new Font("SansSerif", Font.PLAIN, 14));
+		procuratoreMaxGuadagniButton.setBounds(434, 200, 93, 45);
+		contentPane.add(procuratoreMaxGuadagniButton);
+		
 		ordinaComboBox.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				ricaricaProcuratori();
@@ -318,6 +328,8 @@ public class ProcuratoreFrame extends JFrame {
 		model.addColumn("Nome");
 		model.addColumn("Cognome");
 		model.addColumn("Data di nascita");
+		table.getColumnModel().getColumn(0).setPreferredWidth(100);
+		
 		for(int i=0; i<listaProcuratori.size(); i++) model.addRow(new Object[] {
 				listaProcuratori.get(i).getCodiceFiscale(),
 				listaProcuratori.get(i).getNome(),
