@@ -83,7 +83,6 @@ public class ContrattoFrame extends JFrame {
 		indietroButton.setBounds(911, 373, 93, 19);
 		contentPane.add(indietroButton);
 		
-		//Codice di scrollPane scritto a mano per evitare problemi
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setBounds(10, 44, 994, 131);
 		this.getContentPane().add(scrollPane);
@@ -164,12 +163,13 @@ public class ContrattoFrame extends JFrame {
 					String club_sponsor = (String) club_sponsorComboBox.getSelectedItem();
 					LocalDate dataInizio = LocalDate.of((int) annoInizioComboBox.getSelectedItem(), (int) meseInizioComboBox.getSelectedItem(), (int) giornoInizioComboBox.getSelectedItem());
 					LocalDate dataFine = LocalDate.of((int) annoFineComboBox.getSelectedItem(), (int) meseFineComboBox.getSelectedItem(), (int) giornoFineComboBox.getSelectedItem());
-					double retribuzione = Double.valueOf(retribuzioneTF.getText());
+					double retribuzione = 0;
 					int percentualeProcuratore = 0;
+					try {
+					retribuzione = Double.valueOf(retribuzioneTF.getText());
 					if(percentualeProcuratoreTF.getText().length()>0) percentualeProcuratore = Integer.valueOf(percentualeProcuratoreTF.getText());
 					String scelta = club_sponsorLabel.getText();
 					
-					try {
 						if(dataInizio.isAfter(dataFine)) throw new DateIncoerentiException();
 						if(ChronoUnit.YEARS.between(dataInizio, dataFine)<1) throw new DurataContrattoInsufficienteException();
 						if (scelta.equals("Club"))
@@ -197,6 +197,10 @@ public class ContrattoFrame extends JFrame {
 					catch (IntervalloDateOccupatoException exception) {
 						JOptionPane.showMessageDialog(ContrattoFrame.this, "Un atleta può avere un solo contratto con club in un intervallo di date", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
 					}
+					catch (NumberFormatException exception) {
+						if(retribuzione==0) JOptionPane.showMessageDialog(ContrattoFrame.this, "Il valore della retribuzione deve essere un numero", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
+						else if(percentualeProcuratore==0) JOptionPane.showMessageDialog(ContrattoFrame.this, "Il valore della percentuale del procuratore deve essere un numero intero", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
+					}
 					catch (RetribuzioneNonValidaException exception) {
 						JOptionPane.showMessageDialog(ContrattoFrame.this, "Il valore della retribuzione deve essere maggiore di 0", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
 					}
@@ -222,15 +226,23 @@ public class ContrattoFrame extends JFrame {
 					String club_sponsor = (String) club_sponsorComboBox.getSelectedItem();
 					LocalDate dataInizio = LocalDate.of((int) annoInizioComboBox.getSelectedItem(), (int) meseInizioComboBox.getSelectedItem(), (int) giornoInizioComboBox.getSelectedItem());
 					LocalDate dataFine = LocalDate.of((int) annoFineComboBox.getSelectedItem(), (int) meseFineComboBox.getSelectedItem(), (int) giornoFineComboBox.getSelectedItem());
-					double retribuzione = Double.valueOf(retribuzioneTF.getText());
+					double retribuzione = 0;
 					int percentualeProcuratore = 0;
+					String scelta = null;
+					try {
+					retribuzione = Double.valueOf(retribuzioneTF.getText());
 					if(percentualeProcuratoreTF.getText().length()>0) percentualeProcuratore = Integer.valueOf(percentualeProcuratoreTF.getText());
 					Contratto contratto;
-					String scelta = club_sponsorLabel.getText();
+					scelta = club_sponsorLabel.getText();
 					if(scelta.equals("Club")) contratto = new Contratto(dataInizio, dataFine, retribuzione, percentualeProcuratore, new Atleta(atleta, null, null, null), new Club(club_sponsor, null));
 					else contratto = new Contratto(dataInizio, dataFine, retribuzione, percentualeProcuratore, new Atleta(atleta, null, null, null), new Sponsor(club_sponsor, null));
 					controller.rimuovi(contratto);
 					ricaricaContratti(scelta);
+					}
+					catch (NumberFormatException exception) {
+						if(retribuzione==0) JOptionPane.showMessageDialog(ContrattoFrame.this, "Il valore della retribuzione deve essere un numero", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
+						else if(percentualeProcuratore==0) JOptionPane.showMessageDialog(ContrattoFrame.this, "Il valore della percentuale del procuratore deve essere un numero intero", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
+					}
 				}
 			}
 		});
@@ -251,9 +263,8 @@ public class ContrattoFrame extends JFrame {
 					String club_sponsor = (String) club_sponsorComboBox.getSelectedItem();
 					LocalDate dataInizio = LocalDate.of((int) annoInizioComboBox.getSelectedItem(), (int) meseInizioComboBox.getSelectedItem(), (int) giornoInizioComboBox.getSelectedItem());
 					LocalDate dataFine = LocalDate.of((int) annoFineComboBox.getSelectedItem(), (int) meseFineComboBox.getSelectedItem(), (int) giornoFineComboBox.getSelectedItem());
-					double retribuzione = Double.valueOf(retribuzioneTF.getText());
+					double retribuzione = 0;
 					int percentualeProcuratore = 0;
-					if(percentualeProcuratoreTF.getText().length()>0) percentualeProcuratore = Integer.valueOf(percentualeProcuratoreTF.getText());
 					String vecchioAtleta = (String) model.getValueAt(table.getSelectedRow(), 0);
 					String vecchioClub_Sponsor = (String) model.getValueAt(table.getSelectedRow(), 1);
 					LocalDate vecchiaDataInizio = (LocalDate) model.getValueAt(table.getSelectedRow(), 2);
@@ -264,6 +275,8 @@ public class ContrattoFrame extends JFrame {
 					String scelta = club_sponsorLabel.getText();
 					
 					try {
+						retribuzione = Double.valueOf(retribuzioneTF.getText());
+						if(percentualeProcuratoreTF.getText().length()>0) percentualeProcuratore = Integer.valueOf(percentualeProcuratoreTF.getText());
 						if(dataInizio.isAfter(dataFine)) throw new DateIncoerentiException();
 						if(ChronoUnit.YEARS.between(dataInizio, dataFine)<1) throw new DurataContrattoInsufficienteException();
 						if (scelta.equals("Club"))
@@ -296,6 +309,10 @@ public class ContrattoFrame extends JFrame {
 					}
 					catch (IntervalloDateOccupatoException exception) {
 						JOptionPane.showMessageDialog(ContrattoFrame.this, "Un atleta può avere un solo contratto con club in un intervallo di date", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
+					}
+					catch (NumberFormatException exception) {
+						if(retribuzione==0) JOptionPane.showMessageDialog(ContrattoFrame.this, "Il valore della retribuzione deve essere un numero", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
+						else if(percentualeProcuratore==0) JOptionPane.showMessageDialog(ContrattoFrame.this, "Il valore della percentuale del procuratore deve essere un numero intero", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
 					}
 					catch (RetribuzioneNonValidaException exception) {
 						JOptionPane.showMessageDialog(ContrattoFrame.this, "Il valore della retribuzione deve essere maggiore di 0", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);

@@ -60,7 +60,6 @@ public class SponsorFrame extends JFrame {
 		indietroButton.setBounds(434, 318, 93, 19);
 		contentPane.add(indietroButton);
 		
-		//Codice di scrollPane scritto a mano per evitare problemi
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setBounds(10, 44, 517, 131);
 		this.getContentPane().add(scrollPane);

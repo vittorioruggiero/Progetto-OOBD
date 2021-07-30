@@ -62,7 +62,6 @@ public class NazionaleFrame extends JFrame {
 		indietroButton.setBounds(434, 318, 93, 19);
 		contentPane.add(indietroButton);
 		
-		//Codice di scrollPane scritto a mano per evitare problemi
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setBounds(10, 44, 517, 131);
 		this.getContentPane().add(scrollPane);
@@ -126,14 +125,17 @@ public class NazionaleFrame extends JFrame {
 				if(nomeTF.getText().length()>0 && valoreGettoneTF.getText().length()>0) {
 					Nazionale nazionale;
 					String nome = nomeTF.getText();
-					double valoreGettone = Double.parseDouble(valoreGettoneTF.getText());
 					try {
+						double valoreGettone = Double.parseDouble(valoreGettoneTF.getText());
 						if(valoreGettone<=0) throw new GettoneNonValidoException();
 						for(int i = 0; i<table.getRowCount(); i++)
 							if(nome.equals(model.getValueAt(i, 0))) throw new DuplicatoException();
 						nazionale = new Nazionale(nome, valoreGettone);
 						controller.inserisci(nazionale);
 						ricaricaNazionali();
+					}
+					catch (NumberFormatException exception) {
+						JOptionPane.showMessageDialog(NazionaleFrame.this, "Il valore del gettone deve essere un numero", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
 					}
 					catch (GettoneNonValidoException exception) {
 						JOptionPane.showMessageDialog(NazionaleFrame.this, "Il valore del gettone deve essere maggiore di 0", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
@@ -154,10 +156,15 @@ public class NazionaleFrame extends JFrame {
 		rimuoviButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				String nome = nomeTF.getText();
-				double valoreGettone = Double.parseDouble(valoreGettoneTF.getText());
-				Nazionale nazionale = new Nazionale(nome, valoreGettone);
-				controller.rimuovi(nazionale);
-				ricaricaNazionali();
+				try {
+					double valoreGettone = Double.parseDouble(valoreGettoneTF.getText());
+					Nazionale nazionale = new Nazionale(nome, valoreGettone);
+					controller.rimuovi(nazionale);
+					ricaricaNazionali();
+				}
+				catch (NumberFormatException exception) {
+					JOptionPane.showMessageDialog(NazionaleFrame.this, "Il valore del gettone deve essere un numero", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
+				}
 			}
 		});
 		rimuoviButton.setFont(new Font("SansSerif", Font.PLAIN, 14));
@@ -171,8 +178,8 @@ public class NazionaleFrame extends JFrame {
 				if(table.getSelectedRow()!=-1 && nomeTF.getText().length()>0 && valoreGettoneTF.getText().length()>0) {
 					Nazionale nazionale;
 					String nome = nomeTF.getText();
-					double valoreGettone = Double.parseDouble(valoreGettoneTF.getText());
 					try {
+						double valoreGettone = Double.parseDouble(valoreGettoneTF.getText());
 						for(int i = 0; i<table.getRowCount(); i++) 
 							if(i!=table.getSelectedRow() && nome.equals(model.getValueAt(i, 0))) throw new DuplicatoException();
 						if(valoreGettone<=0) throw new GettoneNonValidoException();
@@ -180,6 +187,9 @@ public class NazionaleFrame extends JFrame {
 						String vecchioNome = (String) model.getValueAt(table.getSelectedRow(), 0);
 						controller.modifica(nazionale, vecchioNome);
 						ricaricaNazionali();
+					}
+					catch (NumberFormatException exception) {
+						JOptionPane.showMessageDialog(NazionaleFrame.this, "Il valore del gettone deve essere un numero", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
 					}
 					catch (GettoneNonValidoException exception) {
 						JOptionPane.showMessageDialog(NazionaleFrame.this, "Il valore del gettone deve essere maggiore di 0", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
