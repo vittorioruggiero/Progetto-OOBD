@@ -130,6 +130,7 @@ public class ProcuratoreDAOPostgresImpl implements ProcuratoreDAO {
         }
 	}
 	
+	@Override
 	public ArrayList<ArrayList<Object>> getProcuratoriMaxGuadagni(String nomeColonna) {
 		ArrayList<ArrayList<Object>> listaProcuratoriMaxGuadagni = new ArrayList<ArrayList<Object>>();
 		try {

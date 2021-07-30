@@ -10,6 +10,8 @@ public interface AtletaDAO {
 	List<Atleta> getAllAtleti(String nomeColonna);
 	
 	Atleta getAtleta(String codiceFiscaleCercato);
+	
+	List<String> getCodiciFiscaliAtleti();
 
 	void insertAtleta(Atleta atleta);
 

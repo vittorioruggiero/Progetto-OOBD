@@ -105,6 +105,7 @@ public class AtletaDAOPostgresImpl implements AtletaDAO {
 		return atleta;
 	}
 	
+	@Override
 	public List<String> getCodiciFiscaliAtleti() {
 		List<String> listaCodiciFiscaliAtleti = new ArrayList<String>();
 		try {
