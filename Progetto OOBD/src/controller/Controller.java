@@ -68,12 +68,12 @@ public class Controller {
 		try {
             this.dbconn = DBConnection.getInstance();
             this.connection = this.dbconn.getConnection();
+            this.homeFrame = new HomeFrame(this);
+    		this.homeFrame.setVisible(true);
 		}
 		catch (SQLException exception) {
             System.out.println("SQLException: " + exception.getMessage());
         }
-		this.homeFrame = new HomeFrame(this);
-		this.homeFrame.setVisible(true);
 	}
 	
 	public void apriHomeFrame(JFrame frame) {
@@ -85,56 +85,56 @@ public class Controller {
 		try {
 			nazionaleDAO = new NazionaleDAOPostgresImpl(connection);
 			listaNazionali = nazionaleDAO.getAllNazionali("nome");
+		    nazionaleFrame = new NazionaleFrame(this);
+		    nazionaleFrame.setNazionali(listaNazionali);
+		    homeFrame.setVisible(false);
+		    nazionaleFrame.setVisible(true);
 		}
 		catch (SQLException exception) {
 			System.out.println("SQLException: " + exception.getMessage());
 		}
-		nazionaleFrame = new NazionaleFrame(this);
-		nazionaleFrame.setNazionali(listaNazionali);
-		homeFrame.setVisible(false);
-		nazionaleFrame.setVisible(true);
 	}
 	
 	public void apriClubFrame() {
 		try {
 			clubDAO = new ClubDAOPostgresImpl(connection);
 			listaClub = clubDAO.getAllClub("nome");
+			clubFrame = new ClubFrame(this);
+			clubFrame.setClub(listaClub);
+			homeFrame.setVisible(false);
+			clubFrame.setVisible(true);
 		}
 		catch (SQLException exception) {
 			System.out.println("SQLException: " + exception.getMessage());
 		}
-		clubFrame = new ClubFrame(this);
-		clubFrame.setClub(listaClub);
-		homeFrame.setVisible(false);
-		clubFrame.setVisible(true);
 	}
 	
 	public void apriSponsorFrame() {
 		try {
 			sponsorDAO = new SponsorDAOPostgresImpl(connection);
 			listaSponsor = sponsorDAO.getAllsponsor("nome");
+			sponsorFrame = new SponsorFrame(this);
+			sponsorFrame.setSponsor(listaSponsor);
+			homeFrame.setVisible(false);
+			sponsorFrame.setVisible(true);
 		}
 		catch (SQLException exception) {
 			System.out.println("SQLException: " + exception.getMessage());
 		}
-		sponsorFrame = new SponsorFrame(this);
-		sponsorFrame.setSponsor(listaSponsor);
-		homeFrame.setVisible(false);
-		sponsorFrame.setVisible(true);
 	}
 	
 	public void apriProcuratoreFrame() {
 		try {
 			procuratoreDAO = new ProcuratoreDAOPostgresImpl(connection);
 			listaProcuratori = procuratoreDAO.getAllProcuratori("codiceFiscale");
+			procuratoreFrame = new ProcuratoreFrame(this);
+			procuratoreFrame.setProcuratori(listaProcuratori);
+			homeFrame.setVisible(false);
+			procuratoreFrame.setVisible(true);
 		}
 		catch (SQLException exception) {
 			System.out.println("SQLException: " + exception.getMessage());
 		}
-		procuratoreFrame = new ProcuratoreFrame(this);
-		procuratoreFrame.setProcuratori(listaProcuratori);
-		homeFrame.setVisible(false);
-		procuratoreFrame.setVisible(true);
 	}
 	
 	public void apriAtletaFrame() {
@@ -144,18 +144,19 @@ public class Controller {
 			atletaDAO = new AtletaDAOPostgresImpl(connection, this);
 			nazionaleDAO = new NazionaleDAOPostgresImpl(connection);
 			procuratoreDAO = new ProcuratoreDAOPostgresImpl(connection);
+			
+			listaAtleti = atletaDAO.getAllAtleti("codiceFiscale");
+			listaNomiNazionali = nazionaleDAO.getNomiNazionali();
+			listaCodiciFiscaliProcuratori = procuratoreDAO.getCodiciFiscaliProcuratori();
+			
+			atletaFrame = new AtletaFrame(this);
+			atletaFrame.setAtleti(listaAtleti, listaNomiNazionali, listaCodiciFiscaliProcuratori);
+			homeFrame.setVisible(false);
+			atletaFrame.setVisible(true);
 		}
 		catch (SQLException exception) {
 			System.out.println("SQLException: " + exception.getMessage());
 		}
-		listaAtleti = atletaDAO.getAllAtleti("codiceFiscale");
-		listaNomiNazionali = nazionaleDAO.getNomiNazionali();
-		listaCodiciFiscaliProcuratori = procuratoreDAO.getCodiciFiscaliProcuratori();
-		
-		atletaFrame = new AtletaFrame(this);
-		atletaFrame.setAtleti(listaAtleti, listaNomiNazionali, listaCodiciFiscaliProcuratori);
-		homeFrame.setVisible(false);
-		atletaFrame.setVisible(true);
 	}
 	
 	public void apriContrattoFrame() {
@@ -165,18 +166,19 @@ public class Controller {
 			contrattoDAO = new ContrattoDAOPostgresImpl(connection, this);
 		    atletaDAO = new AtletaDAOPostgresImpl(connection, this);
 			clubDAO = new ClubDAOPostgresImpl(connection);
+			
+			listaContratti = contrattoDAO.getAllContratti("Atleta", "Club");
+			listaCodiciFiscaliAtleti = atletaDAO.getCodiciFiscaliAtleti();
+			listaNomiClub = clubDAO.getNomiClub();
+			
+			contrattoFrame = new ContrattoFrame(this);
+			contrattoFrame.setContratti(listaContratti, listaCodiciFiscaliAtleti, listaNomiClub, null);
+			homeFrame.setVisible(false);
+			contrattoFrame.setVisible(true);
 		}
 		catch (SQLException exception) {
 			System.out.println("SQLException: " + exception.getMessage());
 		}
-		listaContratti = contrattoDAO.getAllContratti("Atleta", "Club");
-		listaCodiciFiscaliAtleti = atletaDAO.getCodiciFiscaliAtleti();
-		listaNomiClub = clubDAO.getNomiClub();
-		
-		contrattoFrame = new ContrattoFrame(this);
-		contrattoFrame.setContratti(listaContratti, listaCodiciFiscaliAtleti, listaNomiClub, null);
-		homeFrame.setVisible(false);
-		contrattoFrame.setVisible(true);
 	}
 	
 	public void apriSorgentiIntroitoFrame() {
