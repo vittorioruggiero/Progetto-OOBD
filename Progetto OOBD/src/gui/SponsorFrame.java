@@ -133,7 +133,7 @@ public class SponsorFrame extends JFrame {
 						ricaricaSponsor();
 					}
 					catch (DuplicatoException exception) {
-						JOptionPane.showMessageDialog(SponsorFrame.this, "Lo sponsor " +nome+ " � gi� presente", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
+						JOptionPane.showMessageDialog(SponsorFrame.this, "Lo sponsor " +nome+ " è già presente", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
 					}
 				}
 			}
@@ -169,14 +169,13 @@ public class SponsorFrame extends JFrame {
 					try {
 						for(int i = 0; i<table.getRowCount(); i++) 
 							if(i!=table.getSelectedRow() && nome.equals(model.getValueAt(i, 0))) throw new DuplicatoException();
-						//if(stato<=0) throw new GettoneNonValidoException();
 						sponsor = new Sponsor(nome, stato);
 						String vecchioNome = (String) model.getValueAt(table.getSelectedRow(), 0);
 						controller.modifica(sponsor, vecchioNome);
 						ricaricaSponsor();
 					}
 					catch (DuplicatoException exception) {
-						JOptionPane.showMessageDialog(SponsorFrame.this, "Lo sponsor " +nome+ " � gi� presente", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
+						JOptionPane.showMessageDialog(SponsorFrame.this, "Lo sponsor " +nome+ " è già presente", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
 					}
 				}
 			}

@@ -132,7 +132,7 @@ public class ClubFrame extends JFrame {
 						ricaricaClub();
 					}
 					catch (DuplicatoException exception) {
-						JOptionPane.showMessageDialog(ClubFrame.this, "Il club " +nome+ " � gi� presente", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
+						JOptionPane.showMessageDialog(ClubFrame.this, "Il club " +nome+ " è già presente", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
 					}
 				}
 			}
@@ -174,7 +174,7 @@ public class ClubFrame extends JFrame {
 						ricaricaClub();
 					}
 					catch (DuplicatoException exception) {
-						JOptionPane.showMessageDialog(ClubFrame.this, "Il club " +nome+ " � gi� presente", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
+						JOptionPane.showMessageDialog(ClubFrame.this, "Il club " +nome+ " è già presente", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
 					}
 				}
 			}
