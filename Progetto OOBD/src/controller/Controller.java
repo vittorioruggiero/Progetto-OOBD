@@ -29,6 +29,7 @@ import entity.Contratto;
 import entity.Nazionale;
 import entity.Procuratore;
 import entity.Sponsor;
+import exception.IncoerenzaAssociazioneProcuratoreException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -228,7 +229,11 @@ public class Controller {
 	}
 	
 	public void inserisci(Contratto contratto) {
-		contrattoDAO.insertContratto(contratto);
+		try {
+			contrattoDAO.insertContratto(contratto);
+		} catch (IncoerenzaAssociazioneProcuratoreException exception) {
+			JOptionPane.showMessageDialog(contrattoFrame, "La percentuale del procuratore deve essere presente se l'atleta è associato ad esso, non presente altrimenti", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
+		}
 	}
 	
 	public void rimuovi(Nazionale nazionale) {
@@ -275,8 +280,12 @@ public class Controller {
 		sponsorDAO.updateSponsor(sponsor, vecchioNome);
 	}
 	
-	public void modifica(Contratto contratto, Contratto vecchioContrtato) {
-		contrattoDAO.updateContratto(contratto, vecchioContrtato);
+	public void modifica(Contratto contratto, Contratto vecchioContratto) {
+		try {
+			contrattoDAO.updateContratto(contratto, vecchioContratto);
+		} catch (IncoerenzaAssociazioneProcuratoreException exception) {
+			JOptionPane.showMessageDialog(contrattoFrame, "La percentuale del procuratore deve essere presente se l'atleta è associato ad esso, non presente altrimenti", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
+		}
 	}
 	
 	public void setNazionaliInOrdine(String nomeColonna) {
@@ -316,12 +325,12 @@ public class Controller {
 				listaNomiSponsor = new SponsorDAOPostgresImpl(connection).getNomiSponsor();
 				scelta = "Sponsor";
 				}
+			listaContratti = contrattoDAO.getAllContratti(nomeColonna, scelta);
+			contrattoFrame.setContratti(listaContratti, null, listaNomiClub, listaNomiSponsor);
 		}
 		catch (SQLException exception) {
 			System.out.println("SQLException: " + exception.getMessage());
 		}
-		listaContratti = contrattoDAO.getAllContratti(nomeColonna, scelta);
-		contrattoFrame.setContratti(listaContratti, null, listaNomiClub, listaNomiSponsor);
 	}
 	
 	public void setSorgentiIntroitoInOrdine(String nomeColonna) {
@@ -352,9 +361,5 @@ public class Controller {
 	
 	public Sponsor cercaSponsor(String nomeCercato) throws SQLException {
 		return new SponsorDAOPostgresImpl(connection).getSponsor(nomeCercato);
-	}
-	
-	public void gestisciEccezione() {
-		JOptionPane.showMessageDialog(contrattoFrame, "La percentuale del procuratore deve essere presente se l'atleta è associato ad esso, non presente altrimenti", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
 	}
 }

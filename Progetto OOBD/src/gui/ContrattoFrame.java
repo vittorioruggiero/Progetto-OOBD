@@ -432,7 +432,7 @@ public class ContrattoFrame extends JFrame {
 					ordinaComboBox.addItem("Retribuzione");
 					ordinaComboBox.addItem("PercentualeProcuratore");
 					ordinaComboBox.addItem("GuadagnoProcuratore");
-					ricaricaContratti("Prendi Club");
+					ricaricaContratti("Club");
 					ordinaComboBox.setEnabled(true);
 				}
 			}
@@ -458,7 +458,7 @@ public class ContrattoFrame extends JFrame {
 					ordinaComboBox.addItem("Retribuzione");
 					ordinaComboBox.addItem("PercentualeProcuratore");
 					ordinaComboBox.addItem("GuadagnoProcuratore");
-					ricaricaContratti("Prendi Sponsor");
+					ricaricaContratti("Sponsor");
 					ordinaComboBox.setEnabled(true);
 				}
 			}
@@ -550,7 +550,8 @@ public class ContrattoFrame extends JFrame {
 		table.setEnabled(false);
 		model.setRowCount(0);
 		model.setColumnCount(0);
-		controller.setContrattiInOrdine((String) ordinaComboBox.getSelectedItem(), scelta);
+		if(scelta.equals("Club")) controller.setContrattiInOrdine((String) ordinaComboBox.getSelectedItem(), "Prendi Club");
+		else controller.setContrattiInOrdine((String) ordinaComboBox.getSelectedItem(), "Prendi Sponsor");
 		table.getColumnModel().getColumn(1).setHeaderValue(scelta);
 		table.setEnabled(true);
 	}

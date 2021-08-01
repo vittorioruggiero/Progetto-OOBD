@@ -15,6 +15,7 @@ import entity.Atleta;
 import entity.Club;
 import entity.Contratto;
 import entity.Sponsor;
+import exception.IncoerenzaAssociazioneProcuratoreException;
 
 public class ContrattoDAOPostgresImpl implements ContrattoDAO {
 	private Connection connection;
@@ -68,7 +69,7 @@ public class ContrattoDAOPostgresImpl implements ContrattoDAO {
 	}
 	
 	@Override
-	public void insertContratto(Contratto contratto) {
+	public void insertContratto(Contratto contratto) throws IncoerenzaAssociazioneProcuratoreException {
 		try {
 			insertContrattoPS.setObject(1, contratto.getDataInizio());
 			insertContrattoPS.setObject(2, contratto.getDataFine());
@@ -87,7 +88,7 @@ public class ContrattoDAOPostgresImpl implements ContrattoDAO {
 			insertContrattoPS.executeUpdate();
 		}
 			catch (SQLException exception) {
-				if(exception.getMessage().startsWith("ERRORE: Incoerenza associazione procuratore")) controller.gestisciEccezione();
+				if(exception.getMessage().startsWith("ERRORE: Incoerenza associazione procuratore")) throw new IncoerenzaAssociazioneProcuratoreException();
 				else System.out.println("SQLException: " + exception.getMessage());
 	        }
 	}
@@ -116,12 +117,11 @@ public class ContrattoDAOPostgresImpl implements ContrattoDAO {
 	}
 	
 	@Override
-	public void updateContratto(Contratto nuovoContratto, Contratto vecchioContratto) {
+	public void updateContratto(Contratto nuovoContratto, Contratto vecchioContratto) throws IncoerenzaAssociazioneProcuratoreException {
 		String scelta;
 		if(nuovoContratto.getClub()!=null) scelta = "Club";
 		else scelta = "Sponsor";
 		String updateString = "UPDATE Contratto SET datainizio = ?, datafine = ?, retribuzione = ?, percentualeprocuratore = ?, atleta = ?, " + scelta + " = ? WHERE datainizio = ? AND datafine = ? AND retribuzione = ? AND atleta = ? AND " + scelta + " = ? AND percentualeprocuratore = ?";
-		//if(nuovoContratto.getPercentualeProcuratore()==0) updateString = updateString.replace(, );
 		if(vecchioContratto.getPercentualeProcuratore()==0) updateString = updateString.replace("AND percentualeprocuratore = ?", "AND percentualeprocuratore is null");
 		try {
 			updateContrattoPS = connection.prepareStatement(updateString);
@@ -143,7 +143,7 @@ public class ContrattoDAOPostgresImpl implements ContrattoDAO {
 			updateContrattoPS.executeUpdate();
 		}
 		catch (SQLException exception) {
-			if(exception.getMessage().startsWith("ERRORE: Incoerenza associazione procuratore")) controller.gestisciEccezione();
+			if(exception.getMessage().startsWith("ERRORE: Incoerenza associazione procuratore")) throw new IncoerenzaAssociazioneProcuratoreException();
 			else System.out.println("SQLException: " + exception.getMessage());
         }
 	}
