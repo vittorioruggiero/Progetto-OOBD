@@ -162,7 +162,7 @@ public class AtletaFrame extends JFrame {
 						if(nazionale.length()>0 && presenzeNazionaleTF.getText().length()>0) presenzeNazionale = Integer.valueOf(presenzeNazionaleTF.getText());
 						if(presenzeNazionale<0) throw new PresenzeNazionaleNonValideException();
 						if(codiceFiscale.equals(procuratore)) throw new CodiciFiscaliUgualiException();
-						atleta = new Atleta(codiceFiscale, nome, cognome, dataNascita, presenzeNazionale, new Procuratore(procuratore, null, null, null), new Nazionale(nazionale, 0));
+						atleta = new Atleta(codiceFiscale, nome, cognome, dataNascita, presenzeNazionale, controller.cercaProcuratore(procuratore), controller.cercaNazionale(nazionale));
 						controller.inserisci(atleta);
 						ricaricaAtleti();
 					}
@@ -206,7 +206,7 @@ public class AtletaFrame extends JFrame {
 				if(nazionale.length()>0 && presenzeNazionaleTF.getText().length()>0) presenzeNazionale = Integer.valueOf(presenzeNazionaleTF.getText());
 				else presenzeNazionale = 0;
 				String procuratore = (String) procuratoreComboBox.getSelectedItem();
-				Atleta atleta = new Atleta(codiceFiscale, nome, cognome, dataNascita, presenzeNazionale, new Procuratore(procuratore, null, null, null), new Nazionale(nazionale, 0));
+				Atleta atleta = new Atleta(codiceFiscale, nome, cognome, dataNascita, presenzeNazionale, controller.cercaProcuratore(procuratore), controller.cercaNazionale(nazionale));
 				controller.rimuovi(atleta);
 				ricaricaAtleti();
 				}
@@ -241,7 +241,7 @@ public class AtletaFrame extends JFrame {
 						if(nazionale.length()>0 && presenzeNazionaleTF.getText().length()>0) presenzeNazionale = Integer.valueOf(presenzeNazionaleTF.getText()); 
 						if(presenzeNazionale<0) throw new PresenzeNazionaleNonValideException();
 						if(codiceFiscale.equals(procuratore)) throw new CodiciFiscaliUgualiException();
-						atleta = new Atleta(codiceFiscale, nome, cognome, dataNascita, presenzeNazionale, new Procuratore(procuratore, null, null, null), new Nazionale(nazionale, 0));
+						atleta = new Atleta(codiceFiscale, nome, cognome, dataNascita, presenzeNazionale, controller.cercaProcuratore(procuratore), controller.cercaNazionale(nazionale));
 						String vecchioCodiceFiscale = (String) model.getValueAt(table.getSelectedRow(), 0);
 						controller.modifica(atleta, vecchioCodiceFiscale);
 						ricaricaAtleti();

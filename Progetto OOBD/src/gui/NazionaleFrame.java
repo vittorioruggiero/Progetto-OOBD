@@ -127,7 +127,6 @@ public class NazionaleFrame extends JFrame {
 					String nome = nomeTF.getText();
 					try {
 						double valoreGettone = Double.parseDouble(valoreGettoneTF.getText());
-						if(valoreGettone<=0) throw new GettoneNonValidoException();
 						for(int i = 0; i<table.getRowCount(); i++)
 							if(nome.equals(model.getValueAt(i, 0))) throw new DuplicatoException();
 						nazionale = new Nazionale(nome, valoreGettone);
@@ -165,6 +164,9 @@ public class NazionaleFrame extends JFrame {
 				catch (NumberFormatException exception) {
 					JOptionPane.showMessageDialog(NazionaleFrame.this, "Il valore del gettone deve essere un numero", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
 				}
+				catch (GettoneNonValidoException exception) {
+					JOptionPane.showMessageDialog(NazionaleFrame.this, "Il valore del gettone deve essere maggiore di 0", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
+				}
 			}
 		});
 		rimuoviButton.setFont(new Font("SansSerif", Font.PLAIN, 14));
@@ -182,7 +184,6 @@ public class NazionaleFrame extends JFrame {
 						double valoreGettone = Double.parseDouble(valoreGettoneTF.getText());
 						for(int i = 0; i<table.getRowCount(); i++) 
 							if(i!=table.getSelectedRow() && nome.equals(model.getValueAt(i, 0))) throw new DuplicatoException();
-						if(valoreGettone<=0) throw new GettoneNonValidoException();
 						nazionale = new Nazionale(nome, valoreGettone);
 						String vecchioNome = (String) model.getValueAt(table.getSelectedRow(), 0);
 						controller.modifica(nazionale, vecchioNome);

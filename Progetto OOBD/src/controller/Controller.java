@@ -29,6 +29,7 @@ import entity.Contratto;
 import entity.Nazionale;
 import entity.Procuratore;
 import entity.Sponsor;
+import exception.GettoneNonValidoException;
 import exception.IncoerenzaAssociazioneProcuratoreException;
 
 import java.util.ArrayList;
@@ -93,6 +94,8 @@ public class Controller {
 		}
 		catch (SQLException exception) {
 			System.out.println("SQLException: " + exception.getMessage());
+		} catch (GettoneNonValidoException exception) {
+			exception.printStackTrace();
 		}
 	}
 	
@@ -289,8 +292,12 @@ public class Controller {
 	}
 	
 	public void setNazionaliInOrdine(String nomeColonna) {
-		listaNazionali = nazionaleDAO.getAllNazionali(nomeColonna);
-		nazionaleFrame.setNazionali(listaNazionali);
+		try {
+			listaNazionali = nazionaleDAO.getAllNazionali(nomeColonna);
+			nazionaleFrame.setNazionali(listaNazionali);
+		} catch (GettoneNonValidoException exception) {
+			exception.printStackTrace();
+		}
 	}
 	
 	public void setProcuratoriInOrdine(String nomeColonna) {
@@ -343,16 +350,33 @@ public class Controller {
 		procuratoreMaxGuadagniFrame.setProcuratoreMaxGuadagni(listaProcuratoriMaxGuadagni);
 	}
 	
-	public Procuratore cercaProcuratore(String codiceFiscaleCercato) throws SQLException {
-		return new ProcuratoreDAOPostgresImpl(connection).getProcuratore(codiceFiscaleCercato);
+	public Procuratore cercaProcuratore(String codiceFiscaleCercato) {
+		Procuratore procuratore = null;
+		try {
+			procuratore = new ProcuratoreDAOPostgresImpl(connection).getProcuratore(codiceFiscaleCercato);
+		}
+		catch (SQLException exception) {
+			System.out.println("SQLException: " + exception.getMessage());
+		}
+		return procuratore;
 	}
 	
 	public Atleta cercaAtleta(String codiceFiscaleCercato) throws SQLException {
 		return new AtletaDAOPostgresImpl(connection, this).getAtleta(codiceFiscaleCercato);
 	}
 	
-	public Nazionale cercaNazionale(String nomeCercato) throws SQLException {
-		return new NazionaleDAOPostgresImpl(connection).getNazionale(nomeCercato);
+	public Nazionale cercaNazionale(String nomeCercato) {
+		Nazionale nazionale = null;
+		try {
+			nazionale = new NazionaleDAOPostgresImpl(connection).getNazionale(nomeCercato);
+		}
+		catch (SQLException exception) {
+			System.out.println("SQLException: " + exception.getMessage());
+		}
+		catch (GettoneNonValidoException exception) {
+			exception.printStackTrace();
+		}
+		return nazionale;
 	}
 	
 	public Club cercaClub(String nomeCercato) throws SQLException {

@@ -3,12 +3,13 @@ package dao;
 import java.util.List;
 
 import entity.Nazionale;
+import exception.GettoneNonValidoException;
 
 public interface NazionaleDAO {
 
-	List<Nazionale> getAllNazionali(String nomeColonna);
+	List<Nazionale> getAllNazionali(String nomeColonna) throws GettoneNonValidoException;
 	
-	Nazionale getNazionale(String nomeCercato);
+	Nazionale getNazionale(String nomeCercato) throws GettoneNonValidoException;
 	
 	 List<String> getNomiNazionali();
 

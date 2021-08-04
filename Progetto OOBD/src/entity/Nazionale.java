@@ -1,12 +1,14 @@
 package entity;
 
+import exception.GettoneNonValidoException;
 
 public class Nazionale {
 	private String nome;
 	private double valoreGettone;
 	
-	public Nazionale(String nome, double valoreGettone) {
+	public Nazionale(String nome, double valoreGettone) throws GettoneNonValidoException {
 		super();
+		if(valoreGettone<=0) throw new GettoneNonValidoException();
 		this.nome = nome;
 		this.valoreGettone = valoreGettone;
 	}
@@ -23,7 +25,8 @@ public class Nazionale {
 		return valoreGettone;
 	}
 
-	public void setValoreGettone(double valoreGettone) {
+	public void setValoreGettone(double valoreGettone) throws GettoneNonValidoException {
+		if(valoreGettone<=0) throw new GettoneNonValidoException();
 		this.valoreGettone = valoreGettone;
 	}
 	

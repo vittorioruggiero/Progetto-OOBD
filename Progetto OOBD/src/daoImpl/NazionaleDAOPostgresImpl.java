@@ -11,6 +11,7 @@ import java.util.List;
 
 import dao.NazionaleDAO;
 import entity.Nazionale;
+import exception.GettoneNonValidoException;
 
 public class NazionaleDAOPostgresImpl implements NazionaleDAO {
 	private Connection connection;
@@ -27,7 +28,7 @@ public class NazionaleDAOPostgresImpl implements NazionaleDAO {
 	}
 	
 	@Override
-	public List<Nazionale> getAllNazionali(String nomeColonna) {
+	public List<Nazionale> getAllNazionali(String nomeColonna) throws GettoneNonValidoException {
 		List<Nazionale> listaNazionali = new ArrayList<Nazionale>();
 		try {
 			this.statement = this.connection.createStatement();
@@ -49,7 +50,7 @@ public class NazionaleDAOPostgresImpl implements NazionaleDAO {
 	}
 	
 	@Override
-	public Nazionale getNazionale(String nomeCercato) {
+	public Nazionale getNazionale(String nomeCercato) throws GettoneNonValidoException {
 		Nazionale nazionale = null;
 		try {
 			this.statement = this.connection.createStatement();
