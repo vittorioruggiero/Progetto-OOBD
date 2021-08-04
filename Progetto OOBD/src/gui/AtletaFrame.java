@@ -31,7 +31,6 @@ import entity.Procuratore;
 import exception.CodiceFiscaleNonValidoException;
 import exception.CodiciFiscaliUgualiException;
 import exception.DuplicatoException;
-import exception.LunghezzaCodiceFiscaleNonValidaException;
 import exception.PresenzeNazionaleMancantiException;
 import exception.PresenzeNazionaleNonValideException;
 
@@ -156,7 +155,6 @@ public class AtletaFrame extends JFrame {
 					String procuratore = (String) procuratoreComboBox.getSelectedItem();
 					
 					try {
-						if(codiceFiscale.length()!=16) throw new LunghezzaCodiceFiscaleNonValidaException();
 						if(!codiceFiscale.matches("^[A-Z]{6}[0-9]{2}[A-Z][0-9]{2}[A-Z][0-9]{3}[A-Z]$")) throw new CodiceFiscaleNonValidoException();
 						for(int i = 0; i<table.getRowCount(); i++)
 							if(codiceFiscale.equals(model.getValueAt(i, 0))) throw new DuplicatoException();
@@ -168,11 +166,8 @@ public class AtletaFrame extends JFrame {
 						controller.inserisci(atleta);
 						ricaricaAtleti();
 					}
-					catch (LunghezzaCodiceFiscaleNonValidaException exception) {
-						JOptionPane.showMessageDialog(AtletaFrame.this, "Il codice fiscale deve contenere esattamente 16 caratteri", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
-					}
 					catch (CodiceFiscaleNonValidoException exception) {
-						JOptionPane.showMessageDialog(AtletaFrame.this, "Il codice fiscale non è scritto in una forma valida", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
+						JOptionPane.showMessageDialog(AtletaFrame.this, "Il codice fiscale non è valido", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
 					}
 					catch (DuplicatoException exception) {
 						JOptionPane.showMessageDialog(AtletaFrame.this, "L'atleta " +codiceFiscale+ " è già presente", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
@@ -239,7 +234,6 @@ public class AtletaFrame extends JFrame {
 					String procuratore = (String) procuratoreComboBox.getSelectedItem();
 					
 					try {
-						if(codiceFiscale.length()!=16) throw new LunghezzaCodiceFiscaleNonValidaException();
 						if(!codiceFiscale.matches("^[A-Z]{6}[0-9]{2}[A-Z][0-9]{2}[A-Z][0-9]{3}[A-Z]$")) throw new CodiceFiscaleNonValidoException();
 						for(int i = 0; i<table.getRowCount(); i++)
 							if(i!=table.getSelectedRow() && codiceFiscale.equals(model.getValueAt(i, 0))) throw new DuplicatoException();
@@ -252,11 +246,8 @@ public class AtletaFrame extends JFrame {
 						controller.modifica(atleta, vecchioCodiceFiscale);
 						ricaricaAtleti();
 					}
-					catch (LunghezzaCodiceFiscaleNonValidaException exception) {
-						JOptionPane.showMessageDialog(AtletaFrame.this, "Il codice fiscale deve contenere esattamente 16 caratteri", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
-					}
 					catch (CodiceFiscaleNonValidoException exception) {
-						JOptionPane.showMessageDialog(AtletaFrame.this, "Il codice fiscale non è scritto in una forma valida", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
+						JOptionPane.showMessageDialog(AtletaFrame.this, "Il codice fiscale non è valido", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
 					}
 					catch (DuplicatoException exception) {
 						JOptionPane.showMessageDialog(AtletaFrame.this, "L'atleta " +codiceFiscale+ " è già presente", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);

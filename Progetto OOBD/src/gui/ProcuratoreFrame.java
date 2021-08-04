@@ -28,7 +28,6 @@ import entity.Procuratore;
 import exception.CodiceFiscaleNonValidoException;
 import exception.DuplicatoException;
 import exception.GettoneNonValidoException;
-import exception.LunghezzaCodiceFiscaleNonValidaException;
 import javax.swing.SwingConstants;
 
 public class ProcuratoreFrame extends JFrame {
@@ -142,7 +141,6 @@ public class ProcuratoreFrame extends JFrame {
 					String cognome = cognomeTF.getText();
 					LocalDate dataNascita = LocalDate.of((int) annoComboBox.getSelectedItem(), (int) meseComboBox.getSelectedItem(), (int) giornoComboBox.getSelectedItem());
 					try {
-						if(codiceFiscale.length()!=16) throw new LunghezzaCodiceFiscaleNonValidaException();
 						if(!codiceFiscale.matches("^[A-Z]{6}[0-9]{2}[A-Z][0-9]{2}[A-Z][0-9]{3}[A-Z]$")) throw new CodiceFiscaleNonValidoException();
 						for(int i = 0; i<table.getRowCount(); i++)
 							if(codiceFiscale.equals(model.getValueAt(i, 0))) throw new DuplicatoException();
@@ -150,11 +148,8 @@ public class ProcuratoreFrame extends JFrame {
 						controller.inserisci(procuratore);
 						ricaricaProcuratori();
 					}
-					catch (LunghezzaCodiceFiscaleNonValidaException exception) {
-						JOptionPane.showMessageDialog(ProcuratoreFrame.this, "Il codice fiscale deve contenere esattamente 16 caratteri", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
-					}
 					catch (CodiceFiscaleNonValidoException exception) {
-						JOptionPane.showMessageDialog(ProcuratoreFrame.this, "Il codice fiscale non è scritto in una forma valida", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
+						JOptionPane.showMessageDialog(ProcuratoreFrame.this, "Il codice fiscale non è valido", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
 					}
 					catch (DuplicatoException exception) {
 						JOptionPane.showMessageDialog(ProcuratoreFrame.this, "Il procuratore " +codiceFiscale+ " è già presente", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
@@ -195,7 +190,6 @@ public class ProcuratoreFrame extends JFrame {
 					String cognome = cognomeTF.getText();
 					LocalDate dataNascita = LocalDate.of((int) annoComboBox.getSelectedItem(), (int) meseComboBox.getSelectedItem(), (int) giornoComboBox.getSelectedItem());
 					try {
-						if(codiceFiscale.length()!=16) throw new LunghezzaCodiceFiscaleNonValidaException();
 						if(!codiceFiscale.matches("^[A-Z]{6}[0-9]{2}[A-Z][0-9]{2}[A-Z][0-9]{3}[A-Z]$")) throw new CodiceFiscaleNonValidoException();
 						for(int i = 0; i<table.getRowCount(); i++)
 							if(i!=table.getSelectedRow() && codiceFiscale.equals(model.getValueAt(i, 0))) throw new DuplicatoException();
@@ -204,11 +198,8 @@ public class ProcuratoreFrame extends JFrame {
 						controller.modifica(procuratore, vecchioCodiceFiscale);
 						ricaricaProcuratori();
 					}
-					catch (LunghezzaCodiceFiscaleNonValidaException exception) {
-						JOptionPane.showMessageDialog(ProcuratoreFrame.this, "Il codice fiscale deve contenere esattamente 16 caratteri", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
-					}
 					catch (CodiceFiscaleNonValidoException exception) {
-						JOptionPane.showMessageDialog(ProcuratoreFrame.this, "Il codice fiscale non è scritto in una forma valida", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
+						JOptionPane.showMessageDialog(ProcuratoreFrame.this, "Il codice fiscale non è valido", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
 					}
 					catch (DuplicatoException exception) {
 						JOptionPane.showMessageDialog(ProcuratoreFrame.this, "Il procuratore " +codiceFiscale+ " è già presente", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
