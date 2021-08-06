@@ -7,7 +7,6 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
-import java.time.temporal.TemporalUnit;
 import java.util.List;
 
 import javax.swing.JButton;
@@ -25,10 +24,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
 import controller.Controller;
-import entity.Atleta;
-import entity.Club;
 import entity.Contratto;
-import entity.Sponsor;
 import exception.DurataContrattoInsufficienteException;
 import exception.DateIncoerentiException;
 import exception.IntervalloDateOccupatoException;
@@ -183,8 +179,8 @@ public class ContrattoFrame extends JFrame {
 									throw new IntervalloDateOccupatoException();
 						if(retribuzione<=0) throw new RetribuzioneNonValidaException();
 						if(percentualeProcuratoreTF.getText().length()>0 && (percentualeProcuratore<=0 || percentualeProcuratore>=100)) throw new PercentualeProcuratoreNonValidaException();
-						if(scelta.equals("Club")) contratto = new Contratto(dataInizio, dataFine, retribuzione, percentualeProcuratore, new Atleta(atleta, null, null, null), new Club(club_sponsor, null));
-						else contratto = new Contratto(dataInizio, dataFine, retribuzione, percentualeProcuratore, new Atleta(atleta, null, null, null), new Sponsor(club_sponsor, null));
+						if(scelta.equals("Club")) contratto = new Contratto(dataInizio, dataFine, retribuzione, percentualeProcuratore, controller.cercaAtleta(atleta), controller.cercaClub(club_sponsor));
+						else contratto = new Contratto(dataInizio, dataFine, retribuzione, percentualeProcuratore, controller.cercaAtleta(atleta), controller.cercaSponsor(club_sponsor));
 						controller.inserisci(contratto);
 						ricaricaContratti(scelta);
 					}
@@ -234,8 +230,8 @@ public class ContrattoFrame extends JFrame {
 					if(percentualeProcuratoreTF.getText().length()>0) percentualeProcuratore = Integer.valueOf(percentualeProcuratoreTF.getText());
 					Contratto contratto;
 					scelta = club_sponsorLabel.getText();
-					if(scelta.equals("Club")) contratto = new Contratto(dataInizio, dataFine, retribuzione, percentualeProcuratore, new Atleta(atleta, null, null, null), new Club(club_sponsor, null));
-					else contratto = new Contratto(dataInizio, dataFine, retribuzione, percentualeProcuratore, new Atleta(atleta, null, null, null), new Sponsor(club_sponsor, null));
+					if(scelta.equals("Club")) contratto = new Contratto(dataInizio, dataFine, retribuzione, percentualeProcuratore, controller.cercaAtleta(atleta), controller.cercaClub(club_sponsor));
+					else contratto = new Contratto(dataInizio, dataFine, retribuzione, percentualeProcuratore, controller.cercaAtleta(atleta), controller.cercaSponsor(club_sponsor));
 					controller.rimuovi(contratto);
 					ricaricaContratti(scelta);
 					}
@@ -291,12 +287,12 @@ public class ContrattoFrame extends JFrame {
 						if(retribuzione<=0) throw new RetribuzioneNonValidaException();
 						if(percentualeProcuratoreTF.getText().length()>0 && (percentualeProcuratore<=0 || percentualeProcuratore>=100)) throw new PercentualeProcuratoreNonValidaException();
 						if(scelta.equals("Club")) {
-							nuovoContratto = new Contratto(dataInizio, dataFine, retribuzione, percentualeProcuratore, new Atleta(atleta, null, null, null), new Club(club_sponsor, null));
-							vecchioContratto = new Contratto(vecchiaDataInizio, vecchiaDataFine, vecchiaRetribuzione, vecchiaPercentualeProcuratore, new Atleta(vecchioAtleta, null, null, null), new Club(vecchioClub_Sponsor, null));
+							nuovoContratto = new Contratto(dataInizio, dataFine, retribuzione, percentualeProcuratore, controller.cercaAtleta(atleta), controller.cercaClub(club_sponsor));
+							vecchioContratto = new Contratto(vecchiaDataInizio, vecchiaDataFine, vecchiaRetribuzione, vecchiaPercentualeProcuratore, controller.cercaAtleta(vecchioAtleta), controller.cercaClub(vecchioClub_Sponsor));
 						}
 						else {
-							nuovoContratto = new Contratto(dataInizio, dataFine, retribuzione, percentualeProcuratore, new Atleta(atleta, null, null, null), new Sponsor(club_sponsor, null));
-							vecchioContratto = new Contratto(vecchiaDataInizio, vecchiaDataFine, vecchiaRetribuzione, vecchiaPercentualeProcuratore, new Atleta(vecchioAtleta, null, null, null), new Sponsor(vecchioClub_Sponsor, null));
+							nuovoContratto = new Contratto(dataInizio, dataFine, retribuzione, percentualeProcuratore, controller.cercaAtleta(atleta), controller.cercaSponsor(club_sponsor));
+							vecchioContratto = new Contratto(vecchiaDataInizio, vecchiaDataFine, vecchiaRetribuzione, vecchiaPercentualeProcuratore, controller.cercaAtleta(vecchioAtleta), controller.cercaSponsor(vecchioClub_Sponsor));
 						}
 						controller.modifica(nuovoContratto, vecchioContratto);
 						ricaricaContratti(scelta);

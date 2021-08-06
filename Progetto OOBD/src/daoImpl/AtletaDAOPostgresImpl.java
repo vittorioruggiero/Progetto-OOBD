@@ -12,6 +12,9 @@ import java.util.List;
 import entity.Atleta;
 import entity.Nazionale;
 import entity.Procuratore;
+import exception.CodiceFiscaleNonValidoException;
+import exception.CodiciFiscaliUgualiException;
+import exception.PresenzeNazionaleNonValideException;
 import controller.Controller;
 import dao.AtletaDAO;
 
@@ -31,7 +34,7 @@ public class AtletaDAOPostgresImpl implements AtletaDAO {
 	}
 	
 	@Override
-	public List<Atleta> getAllAtleti(String nomeColonna) {
+	public List<Atleta> getAllAtleti(String nomeColonna) throws CodiceFiscaleNonValidoException, PresenzeNazionaleNonValideException, CodiciFiscaliUgualiException {
 		List<Atleta> listaAtleti = new ArrayList<Atleta>();
 		try {
 			this.statement = this.connection.createStatement();
@@ -70,7 +73,7 @@ public class AtletaDAOPostgresImpl implements AtletaDAO {
 	}
 	
 	@Override
-	public Atleta getAtleta(String codiceFiscaleCercato) {
+	public Atleta getAtleta(String codiceFiscaleCercato) throws CodiceFiscaleNonValidoException, PresenzeNazionaleNonValideException, CodiciFiscaliUgualiException {
 		Atleta atleta = null;
 		try {
 			this.statement = this.connection.createStatement();

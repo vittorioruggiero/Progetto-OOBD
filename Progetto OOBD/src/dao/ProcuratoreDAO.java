@@ -4,12 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import entity.Procuratore;
+import exception.CodiceFiscaleNonValidoException;
 
 public interface ProcuratoreDAO {
 
-	List<Procuratore> getAllProcuratori(String nomeColonna);
+	List<Procuratore> getAllProcuratori(String nomeColonna) throws CodiceFiscaleNonValidoException;
 	
-	Procuratore getProcuratore(String codiceFiscaleCercato);
+	Procuratore getProcuratore(String codiceFiscaleCercato) throws CodiceFiscaleNonValidoException;
 	
 	List<String> getCodiciFiscaliProcuratori();
 

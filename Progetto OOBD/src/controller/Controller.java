@@ -29,8 +29,11 @@ import entity.Contratto;
 import entity.Nazionale;
 import entity.Procuratore;
 import entity.Sponsor;
+import exception.CodiceFiscaleNonValidoException;
+import exception.CodiciFiscaliUgualiException;
 import exception.GettoneNonValidoException;
 import exception.IncoerenzaAssociazioneProcuratoreException;
+import exception.PresenzeNazionaleNonValideException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -138,6 +141,9 @@ public class Controller {
 		}
 		catch (SQLException exception) {
 			System.out.println("SQLException: " + exception.getMessage());
+		} 
+		catch (CodiceFiscaleNonValidoException exception) {
+			exception.printStackTrace();
 		}
 	}
 	
@@ -160,6 +166,12 @@ public class Controller {
 		}
 		catch (SQLException exception) {
 			System.out.println("SQLException: " + exception.getMessage());
+		} catch (CodiceFiscaleNonValidoException e) {
+			e.printStackTrace();
+		} catch (PresenzeNazionaleNonValideException e) {
+			e.printStackTrace();
+		} catch (CodiciFiscaliUgualiException e) {
+			e.printStackTrace();
 		}
 	}
 	
@@ -301,13 +313,26 @@ public class Controller {
 	}
 	
 	public void setProcuratoriInOrdine(String nomeColonna) {
-		listaProcuratori = procuratoreDAO.getAllProcuratori(nomeColonna);
-		procuratoreFrame.setProcuratori(listaProcuratori);
+		try {
+			listaProcuratori = procuratoreDAO.getAllProcuratori(nomeColonna);
+			procuratoreFrame.setProcuratori(listaProcuratori);
+		} 
+		catch (CodiceFiscaleNonValidoException exception) {
+			exception.printStackTrace();
+		}
 	}
 	
 	public void setAtletiInOrdine(String nomeColonna) {
-		listaAtleti = atletaDAO.getAllAtleti(nomeColonna);
-		atletaFrame.setAtleti(listaAtleti, null, null);
+		try {
+			listaAtleti = atletaDAO.getAllAtleti(nomeColonna);
+			atletaFrame.setAtleti(listaAtleti, null, null);
+		} catch (CodiceFiscaleNonValidoException e) {
+			e.printStackTrace();
+		} catch (PresenzeNazionaleNonValideException e) {
+			e.printStackTrace();
+		} catch (CodiciFiscaliUgualiException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	public void setClubInOrdine(String nomeColonna) {
@@ -358,11 +383,26 @@ public class Controller {
 		catch (SQLException exception) {
 			System.out.println("SQLException: " + exception.getMessage());
 		}
+		catch (CodiceFiscaleNonValidoException exception) {
+			exception.printStackTrace();
+		}
 		return procuratore;
 	}
 	
-	public Atleta cercaAtleta(String codiceFiscaleCercato) throws SQLException {
-		return new AtletaDAOPostgresImpl(connection, this).getAtleta(codiceFiscaleCercato);
+	public Atleta cercaAtleta(String codiceFiscaleCercato) {
+		Atleta atleta = null;
+		try {
+			atleta = new AtletaDAOPostgresImpl(connection, this).getAtleta(codiceFiscaleCercato);
+		} catch (CodiceFiscaleNonValidoException e) {
+			e.printStackTrace();
+		} catch (PresenzeNazionaleNonValideException e) {
+			e.printStackTrace();
+		} catch (CodiciFiscaliUgualiException e) {
+			e.printStackTrace();
+		} catch (SQLException e) {
+			System.out.println("SQLException: " + e.getMessage());
+		}
+		return atleta;
 	}
 	
 	public Nazionale cercaNazionale(String nomeCercato) {
@@ -379,11 +419,25 @@ public class Controller {
 		return nazionale;
 	}
 	
-	public Club cercaClub(String nomeCercato) throws SQLException {
-		return new ClubDAOPostgresImpl(connection).getClub(nomeCercato);
+	public Club cercaClub(String nomeCercato) {
+		Club club = null;
+		try {
+		club = new ClubDAOPostgresImpl(connection).getClub(nomeCercato);
+		}
+		catch (SQLException exception) {
+			System.out.println("SQLException: " + exception.getMessage());
+		}
+		return club;
 	}
 	
-	public Sponsor cercaSponsor(String nomeCercato) throws SQLException {
-		return new SponsorDAOPostgresImpl(connection).getSponsor(nomeCercato);
+	public Sponsor cercaSponsor(String nomeCercato) {
+		Sponsor sponsor = null;
+		try {
+		sponsor = new SponsorDAOPostgresImpl(connection).getSponsor(nomeCercato);
+		}
+		catch (SQLException exception) {
+			System.out.println("SQLException: " + exception.getMessage());
+		}
+		return sponsor;
 	}
 }

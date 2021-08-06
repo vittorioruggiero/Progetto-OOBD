@@ -4,12 +4,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 import entity.Atleta;
+import exception.CodiceFiscaleNonValidoException;
+import exception.CodiciFiscaliUgualiException;
+import exception.PresenzeNazionaleNonValideException;
 
 public interface AtletaDAO {
 
-	List<Atleta> getAllAtleti(String nomeColonna);
+	List<Atleta> getAllAtleti(String nomeColonna) throws CodiceFiscaleNonValidoException, PresenzeNazionaleNonValideException, CodiciFiscaliUgualiException;
 	
-	Atleta getAtleta(String codiceFiscaleCercato);
+	Atleta getAtleta(String codiceFiscaleCercato) throws CodiceFiscaleNonValidoException, PresenzeNazionaleNonValideException, CodiciFiscaliUgualiException;
 	
 	List<String> getCodiciFiscaliAtleti();
 

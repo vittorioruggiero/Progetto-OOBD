@@ -11,6 +11,7 @@ import java.util.List;
 
 import dao.ProcuratoreDAO;
 import entity.Procuratore;
+import exception.CodiceFiscaleNonValidoException;
 
 public class ProcuratoreDAOPostgresImpl implements ProcuratoreDAO {
 	private Connection connection;
@@ -27,7 +28,7 @@ public class ProcuratoreDAOPostgresImpl implements ProcuratoreDAO {
 	}
 	
 	@Override
-	public List<Procuratore> getAllProcuratori(String nomeColonna) {
+	public List<Procuratore> getAllProcuratori(String nomeColonna) throws CodiceFiscaleNonValidoException {
 		List<Procuratore> listaProcuratori = new ArrayList<Procuratore>();
 		try {
 			this.statement = this.connection.createStatement();
@@ -51,7 +52,7 @@ public class ProcuratoreDAOPostgresImpl implements ProcuratoreDAO {
 	}
 	
 	@Override
-	public Procuratore getProcuratore(String codiceFiscaleCercato) {
+	public Procuratore getProcuratore(String codiceFiscaleCercato) throws CodiceFiscaleNonValidoException {
 		Procuratore procuratore = null;
 		try {
 			this.statement = this.connection.createStatement();

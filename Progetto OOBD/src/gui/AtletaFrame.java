@@ -155,13 +155,10 @@ public class AtletaFrame extends JFrame {
 					String procuratore = (String) procuratoreComboBox.getSelectedItem();
 					
 					try {
-						if(!codiceFiscale.matches("^[A-Z]{6}[0-9]{2}[A-Z][0-9]{2}[A-Z][0-9]{3}[A-Z]$")) throw new CodiceFiscaleNonValidoException();
 						for(int i = 0; i<table.getRowCount(); i++)
 							if(codiceFiscale.equals(model.getValueAt(i, 0))) throw new DuplicatoException();
 						if(nazionale.length()>0 && presenzeNazionaleTF.getText().length()==0) throw new PresenzeNazionaleMancantiException();
 						if(nazionale.length()>0 && presenzeNazionaleTF.getText().length()>0) presenzeNazionale = Integer.valueOf(presenzeNazionaleTF.getText());
-						if(presenzeNazionale<0) throw new PresenzeNazionaleNonValideException();
-						if(codiceFiscale.equals(procuratore)) throw new CodiciFiscaliUgualiException();
 						atleta = new Atleta(codiceFiscale, nome, cognome, dataNascita, presenzeNazionale, controller.cercaProcuratore(procuratore), controller.cercaNazionale(nazionale));
 						controller.inserisci(atleta);
 						ricaricaAtleti();
@@ -175,11 +172,11 @@ public class AtletaFrame extends JFrame {
 					catch (PresenzeNazionaleMancantiException exception) {
 						JOptionPane.showMessageDialog(AtletaFrame.this, "Specificare il numero di presenze nella nazionale scelta", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
 					}
-					catch (PresenzeNazionaleNonValideException exception) {
-						JOptionPane.showMessageDialog(AtletaFrame.this, "Il numero di presenze in nazionale deve essere maggiore o uguale a 0", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
-					}
 					catch (NumberFormatException exception) {
 						JOptionPane.showMessageDialog(AtletaFrame.this, "Il valore delle presenze in nazionale deve essere un numero intero", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
+					}
+					catch (PresenzeNazionaleNonValideException exception) {
+						JOptionPane.showMessageDialog(AtletaFrame.this, "Il numero di presenze in nazionale deve essere maggiore o uguale a 0", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
 					}
 					catch (CodiciFiscaliUgualiException exception) {
 						JOptionPane.showMessageDialog(AtletaFrame.this, "Il codice fiscale del procuratore deve essere diverso da quello dell'atleta", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
@@ -210,8 +207,17 @@ public class AtletaFrame extends JFrame {
 				controller.rimuovi(atleta);
 				ricaricaAtleti();
 				}
+				catch (CodiceFiscaleNonValidoException exception) {
+					JOptionPane.showMessageDialog(AtletaFrame.this, "Il codice fiscale non è valido", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
+				}
 				catch (NumberFormatException exception) {
 					JOptionPane.showMessageDialog(AtletaFrame.this, "Il valore delle presenze in nazionale deve essere un numero intero", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
+				}
+				catch (PresenzeNazionaleNonValideException exception) {
+					JOptionPane.showMessageDialog(AtletaFrame.this, "Il numero di presenze in nazionale deve essere maggiore o uguale a 0", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
+				}
+				catch (CodiciFiscaliUgualiException exception) {
+					JOptionPane.showMessageDialog(AtletaFrame.this, "Il codice fiscale del procuratore deve essere diverso da quello dell'atleta", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
 				}
 			}
 		});
@@ -234,13 +240,10 @@ public class AtletaFrame extends JFrame {
 					String procuratore = (String) procuratoreComboBox.getSelectedItem();
 					
 					try {
-						if(!codiceFiscale.matches("^[A-Z]{6}[0-9]{2}[A-Z][0-9]{2}[A-Z][0-9]{3}[A-Z]$")) throw new CodiceFiscaleNonValidoException();
 						for(int i = 0; i<table.getRowCount(); i++)
 							if(i!=table.getSelectedRow() && codiceFiscale.equals(model.getValueAt(i, 0))) throw new DuplicatoException();
 						if(nazionale.length()>0 && presenzeNazionaleTF.getText().length()==0) throw new PresenzeNazionaleMancantiException();
 						if(nazionale.length()>0 && presenzeNazionaleTF.getText().length()>0) presenzeNazionale = Integer.valueOf(presenzeNazionaleTF.getText()); 
-						if(presenzeNazionale<0) throw new PresenzeNazionaleNonValideException();
-						if(codiceFiscale.equals(procuratore)) throw new CodiciFiscaliUgualiException();
 						atleta = new Atleta(codiceFiscale, nome, cognome, dataNascita, presenzeNazionale, controller.cercaProcuratore(procuratore), controller.cercaNazionale(nazionale));
 						String vecchioCodiceFiscale = (String) model.getValueAt(table.getSelectedRow(), 0);
 						controller.modifica(atleta, vecchioCodiceFiscale);

@@ -1,5 +1,5 @@
-/gui/
-/daoImpl/
-/entity/
 /dao/
 /controller/
+/daoImpl/
+/gui/
+/entity/

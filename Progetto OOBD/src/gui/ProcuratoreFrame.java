@@ -1,7 +1,5 @@
 package gui;
 
-import java.awt.BorderLayout;
-import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -27,7 +25,6 @@ import controller.Controller;
 import entity.Procuratore;
 import exception.CodiceFiscaleNonValidoException;
 import exception.DuplicatoException;
-import exception.GettoneNonValidoException;
 import javax.swing.SwingConstants;
 
 public class ProcuratoreFrame extends JFrame {
@@ -141,7 +138,6 @@ public class ProcuratoreFrame extends JFrame {
 					String cognome = cognomeTF.getText();
 					LocalDate dataNascita = LocalDate.of((int) annoComboBox.getSelectedItem(), (int) meseComboBox.getSelectedItem(), (int) giornoComboBox.getSelectedItem());
 					try {
-						if(!codiceFiscale.matches("^[A-Z]{6}[0-9]{2}[A-Z][0-9]{2}[A-Z][0-9]{3}[A-Z]$")) throw new CodiceFiscaleNonValidoException();
 						for(int i = 0; i<table.getRowCount(); i++)
 							if(codiceFiscale.equals(model.getValueAt(i, 0))) throw new DuplicatoException();
 						procuratore = new Procuratore(codiceFiscale, nome, cognome, dataNascita);
@@ -170,9 +166,15 @@ public class ProcuratoreFrame extends JFrame {
 				String nome = nomeTF.getText();
 				String cognome = cognomeTF.getText();
 				LocalDate dataNascita = LocalDate.of((int) annoComboBox.getSelectedItem(), (int) meseComboBox.getSelectedItem(), (int) giornoComboBox.getSelectedItem());
-				Procuratore procuratore = new Procuratore(codiceFiscale, nome, cognome, dataNascita);
-				controller.rimuovi(procuratore);
-				ricaricaProcuratori();
+				Procuratore procuratore;
+				try {
+					procuratore = new Procuratore(codiceFiscale, nome, cognome, dataNascita);
+					controller.rimuovi(procuratore);
+					ricaricaProcuratori();
+				} 
+				catch (CodiceFiscaleNonValidoException exception) {
+					JOptionPane.showMessageDialog(ProcuratoreFrame.this, "Il codice fiscale non è valido", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
+				}
 			}
 		});
 		rimuoviButton.setFont(new Font("SansSerif", Font.PLAIN, 14));
@@ -190,7 +192,6 @@ public class ProcuratoreFrame extends JFrame {
 					String cognome = cognomeTF.getText();
 					LocalDate dataNascita = LocalDate.of((int) annoComboBox.getSelectedItem(), (int) meseComboBox.getSelectedItem(), (int) giornoComboBox.getSelectedItem());
 					try {
-						if(!codiceFiscale.matches("^[A-Z]{6}[0-9]{2}[A-Z][0-9]{2}[A-Z][0-9]{3}[A-Z]$")) throw new CodiceFiscaleNonValidoException();
 						for(int i = 0; i<table.getRowCount(); i++)
 							if(i!=table.getSelectedRow() && codiceFiscale.equals(model.getValueAt(i, 0))) throw new DuplicatoException();
 						procuratore = new Procuratore(codiceFiscale, nome, cognome, dataNascita);
