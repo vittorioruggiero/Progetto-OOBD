@@ -93,11 +93,12 @@ public class AtletaDAOPostgresImpl implements AtletaDAO {
 				if (resultSet.getString("nazionale")!=null) {
 					nazionale = controller.cercaNazionale(resultSet.getString("nazionale"));
 					int presenzeNazionale = resultSet.getInt("presenzeNazionale");
-					atleta = new Atleta(codiceFiscale, nome, cognome, dataNascita, presenzeNazionale, procuratore, nazionale);
+					if(procuratore!=null) atleta = new Atleta(codiceFiscale, nome, cognome, dataNascita, presenzeNazionale, procuratore, nazionale);
+					else atleta = new Atleta(codiceFiscale, nome, cognome, dataNascita, presenzeNazionale, nazionale);
 				}
 				else {
-					nazionale = null;
-					atleta = new Atleta(codiceFiscale, nome, cognome, dataNascita, procuratore);
+					if(procuratore!=null) atleta = new Atleta(codiceFiscale, nome, cognome, dataNascita, procuratore);
+					else atleta = new Atleta(codiceFiscale, nome, cognome, dataNascita);
 				}
 			}
 			resultSet.close();

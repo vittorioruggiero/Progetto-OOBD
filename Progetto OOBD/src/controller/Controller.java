@@ -31,9 +31,13 @@ import entity.Procuratore;
 import entity.Sponsor;
 import exception.CodiceFiscaleNonValidoException;
 import exception.CodiciFiscaliUgualiException;
+import exception.DateIncoerentiException;
+import exception.DurataContrattoInsufficienteException;
 import exception.GettoneNonValidoException;
 import exception.IncoerenzaAssociazioneProcuratoreException;
+import exception.PercentualeProcuratoreNonValidaException;
 import exception.PresenzeNazionaleNonValideException;
+import exception.RetribuzioneNonValidaException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -194,6 +198,14 @@ public class Controller {
 		}
 		catch (SQLException exception) {
 			System.out.println("SQLException: " + exception.getMessage());
+		} catch (RetribuzioneNonValidaException e) {
+			e.printStackTrace();
+		} catch (PercentualeProcuratoreNonValidaException e) {
+			e.printStackTrace();
+		} catch (DurataContrattoInsufficienteException e) {
+			e.printStackTrace();
+		} catch (DateIncoerentiException e) {
+			e.printStackTrace();
 		}
 	}
 	
@@ -362,6 +374,14 @@ public class Controller {
 		}
 		catch (SQLException exception) {
 			System.out.println("SQLException: " + exception.getMessage());
+		} catch (RetribuzioneNonValidaException e) {
+			e.printStackTrace();
+		} catch (PercentualeProcuratoreNonValidaException e) {
+			e.printStackTrace();
+		} catch (DurataContrattoInsufficienteException e) {
+			e.printStackTrace();
+		} catch (DateIncoerentiException e) {
+			e.printStackTrace();
 		}
 	}
 	

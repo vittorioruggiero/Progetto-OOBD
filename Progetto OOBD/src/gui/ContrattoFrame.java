@@ -6,7 +6,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 import javax.swing.JButton;
@@ -166,8 +165,6 @@ public class ContrattoFrame extends JFrame {
 					if(percentualeProcuratoreTF.getText().length()>0) percentualeProcuratore = Integer.valueOf(percentualeProcuratoreTF.getText());
 					String scelta = club_sponsorLabel.getText();
 					
-						if(dataInizio.isAfter(dataFine)) throw new DateIncoerentiException();
-						if(ChronoUnit.YEARS.between(dataInizio, dataFine)<1) throw new DurataContrattoInsufficienteException();
 						if (scelta.equals("Club"))
 							for (int i = 0; i < table.getRowCount(); i++)
 								if (atleta.equals(model.getValueAt(i, 0))
@@ -177,10 +174,14 @@ public class ContrattoFrame extends JFrame {
 										     )
 										)
 									throw new IntervalloDateOccupatoException();
-						if(retribuzione<=0) throw new RetribuzioneNonValidaException();
-						if(percentualeProcuratoreTF.getText().length()>0 && (percentualeProcuratore<=0 || percentualeProcuratore>=100)) throw new PercentualeProcuratoreNonValidaException();
-						if(scelta.equals("Club")) contratto = new Contratto(dataInizio, dataFine, retribuzione, percentualeProcuratore, controller.cercaAtleta(atleta), controller.cercaClub(club_sponsor));
-						else contratto = new Contratto(dataInizio, dataFine, retribuzione, percentualeProcuratore, controller.cercaAtleta(atleta), controller.cercaSponsor(club_sponsor));
+						if(scelta.equals("Club")) {
+							if(percentualeProcuratoreTF.getText().length()>0) contratto = new Contratto(dataInizio, dataFine, retribuzione, percentualeProcuratore, controller.cercaAtleta(atleta), controller.cercaClub(club_sponsor));
+							else contratto = new Contratto(dataInizio, dataFine, retribuzione, controller.cercaAtleta(atleta), controller.cercaClub(club_sponsor));
+						}
+						else {
+							if(percentualeProcuratoreTF.getText().length()>0) contratto = new Contratto(dataInizio, dataFine, retribuzione, percentualeProcuratore, controller.cercaAtleta(atleta), controller.cercaSponsor(club_sponsor));
+							else contratto = new Contratto(dataInizio, dataFine, retribuzione, controller.cercaAtleta(atleta), controller.cercaSponsor(club_sponsor));
+						}
 						controller.inserisci(contratto);
 						ricaricaContratti(scelta);
 					}
@@ -230,14 +231,32 @@ public class ContrattoFrame extends JFrame {
 					if(percentualeProcuratoreTF.getText().length()>0) percentualeProcuratore = Integer.valueOf(percentualeProcuratoreTF.getText());
 					Contratto contratto;
 					scelta = club_sponsorLabel.getText();
-					if(scelta.equals("Club")) contratto = new Contratto(dataInizio, dataFine, retribuzione, percentualeProcuratore, controller.cercaAtleta(atleta), controller.cercaClub(club_sponsor));
-					else contratto = new Contratto(dataInizio, dataFine, retribuzione, percentualeProcuratore, controller.cercaAtleta(atleta), controller.cercaSponsor(club_sponsor));
+					if(scelta.equals("Club")) {
+						if(percentualeProcuratoreTF.getText().length()>0) contratto = new Contratto(dataInizio, dataFine, retribuzione, percentualeProcuratore, controller.cercaAtleta(atleta), controller.cercaClub(club_sponsor));
+						else contratto = new Contratto(dataInizio, dataFine, retribuzione, controller.cercaAtleta(atleta), controller.cercaClub(club_sponsor));
+					}
+					else {
+						if(percentualeProcuratoreTF.getText().length()>0) contratto = new Contratto(dataInizio, dataFine, retribuzione, percentualeProcuratore, controller.cercaAtleta(atleta), controller.cercaSponsor(club_sponsor));
+						else contratto = new Contratto(dataInizio, dataFine, retribuzione, controller.cercaAtleta(atleta), controller.cercaSponsor(club_sponsor));
+					}
 					controller.rimuovi(contratto);
 					ricaricaContratti(scelta);
+					}
+					catch (DateIncoerentiException exception) {
+						JOptionPane.showMessageDialog(ContrattoFrame.this, "La data di inizio deve essere precedente alla data di fine", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
+					}
+					catch (DurataContrattoInsufficienteException exception) {
+						JOptionPane.showMessageDialog(ContrattoFrame.this, "La data finale deve essere distante almeno un anno da quella iniziale", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
 					}
 					catch (NumberFormatException exception) {
 						if(retribuzione==0) JOptionPane.showMessageDialog(ContrattoFrame.this, "Il valore della retribuzione deve essere un numero", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
 						else if(percentualeProcuratore==0) JOptionPane.showMessageDialog(ContrattoFrame.this, "Il valore della percentuale del procuratore deve essere un numero intero", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
+					}
+					catch (RetribuzioneNonValidaException exception) {
+						JOptionPane.showMessageDialog(ContrattoFrame.this, "Il valore della retribuzione deve essere maggiore di 0", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
+					}
+					catch (PercentualeProcuratoreNonValidaException exception) {
+						JOptionPane.showMessageDialog(ContrattoFrame.this, "La percentuale del procuratore deve essere maggiore di 0 e minore di 100", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
 					}
 				}
 			}
@@ -273,8 +292,6 @@ public class ContrattoFrame extends JFrame {
 					try {
 						retribuzione = Double.valueOf(retribuzioneTF.getText());
 						if(percentualeProcuratoreTF.getText().length()>0) percentualeProcuratore = Integer.valueOf(percentualeProcuratoreTF.getText());
-						if(dataInizio.isAfter(dataFine)) throw new DateIncoerentiException();
-						if(ChronoUnit.YEARS.between(dataInizio, dataFine)<1) throw new DurataContrattoInsufficienteException();
 						if (scelta.equals("Club"))
 							for (int i = 0; i < table.getRowCount(); i++)
 								if (i!=table.getSelectedRow() && atleta.equals(model.getValueAt(i, 0))
@@ -284,15 +301,17 @@ public class ContrattoFrame extends JFrame {
 										     )
 										)
 									throw new IntervalloDateOccupatoException();
-						if(retribuzione<=0) throw new RetribuzioneNonValidaException();
-						if(percentualeProcuratoreTF.getText().length()>0 && (percentualeProcuratore<=0 || percentualeProcuratore>=100)) throw new PercentualeProcuratoreNonValidaException();
 						if(scelta.equals("Club")) {
-							nuovoContratto = new Contratto(dataInizio, dataFine, retribuzione, percentualeProcuratore, controller.cercaAtleta(atleta), controller.cercaClub(club_sponsor));
-							vecchioContratto = new Contratto(vecchiaDataInizio, vecchiaDataFine, vecchiaRetribuzione, vecchiaPercentualeProcuratore, controller.cercaAtleta(vecchioAtleta), controller.cercaClub(vecchioClub_Sponsor));
+							if(percentualeProcuratoreTF.getText().length()>0) nuovoContratto = new Contratto(dataInizio, dataFine, retribuzione, percentualeProcuratore, controller.cercaAtleta(atleta), controller.cercaClub(club_sponsor));
+							else nuovoContratto = new Contratto(dataInizio, dataFine, retribuzione, controller.cercaAtleta(atleta), controller.cercaClub(club_sponsor));
+							if(!model.getValueAt(table.getSelectedRow(), 5).equals("")) vecchioContratto = new Contratto(vecchiaDataInizio, vecchiaDataFine, vecchiaRetribuzione, vecchiaPercentualeProcuratore, controller.cercaAtleta(vecchioAtleta), controller.cercaClub(vecchioClub_Sponsor));
+							else vecchioContratto = new Contratto(vecchiaDataInizio, vecchiaDataFine, vecchiaRetribuzione, controller.cercaAtleta(vecchioAtleta), controller.cercaClub(vecchioClub_Sponsor));
 						}
 						else {
-							nuovoContratto = new Contratto(dataInizio, dataFine, retribuzione, percentualeProcuratore, controller.cercaAtleta(atleta), controller.cercaSponsor(club_sponsor));
-							vecchioContratto = new Contratto(vecchiaDataInizio, vecchiaDataFine, vecchiaRetribuzione, vecchiaPercentualeProcuratore, controller.cercaAtleta(vecchioAtleta), controller.cercaSponsor(vecchioClub_Sponsor));
+							if(percentualeProcuratoreTF.getText().length()>0) nuovoContratto = new Contratto(dataInizio, dataFine, retribuzione, percentualeProcuratore, controller.cercaAtleta(atleta), controller.cercaSponsor(club_sponsor));
+							else nuovoContratto = new Contratto(dataInizio, dataFine, retribuzione, controller.cercaAtleta(atleta), controller.cercaSponsor(club_sponsor));
+							if(!model.getValueAt(table.getSelectedRow(), 5).equals("")) vecchioContratto = new Contratto(vecchiaDataInizio, vecchiaDataFine, vecchiaRetribuzione, vecchiaPercentualeProcuratore, controller.cercaAtleta(vecchioAtleta), controller.cercaSponsor(vecchioClub_Sponsor));
+							else vecchioContratto = new Contratto(vecchiaDataInizio, vecchiaDataFine, vecchiaRetribuzione, controller.cercaAtleta(vecchioAtleta), controller.cercaSponsor(vecchioClub_Sponsor));
 						}
 						controller.modifica(nuovoContratto, vecchioContratto);
 						ricaricaContratti(scelta);
@@ -535,8 +554,10 @@ public class ContrattoFrame extends JFrame {
 		
 		if(listaCodiciFiscaliAtleti!=null)
 			for(int j=0; j<listaCodiciFiscaliAtleti.size(); j++) atletaComboBox.addItem(listaCodiciFiscaliAtleti.get(j));
-		if(listaNomiClub!=null)
+		club_sponsorComboBox.removeAllItems();
+		if(listaNomiClub!=null) {
 		    for(int j=0; j<listaNomiClub.size(); j++) club_sponsorComboBox.addItem(listaNomiClub.get(j));
+		}
 		if(listaNomiSponsor!=null)
 		   for(int j=0; j<listaNomiSponsor.size(); j++) club_sponsorComboBox.addItem(listaNomiSponsor.get(j));
 	}

@@ -15,7 +15,11 @@ import entity.Atleta;
 import entity.Club;
 import entity.Contratto;
 import entity.Sponsor;
+import exception.DateIncoerentiException;
+import exception.DurataContrattoInsufficienteException;
 import exception.IncoerenzaAssociazioneProcuratoreException;
+import exception.PercentualeProcuratoreNonValidaException;
+import exception.RetribuzioneNonValidaException;
 
 public class ContrattoDAOPostgresImpl implements ContrattoDAO {
 	private Connection connection;
@@ -33,7 +37,7 @@ public class ContrattoDAOPostgresImpl implements ContrattoDAO {
 	}
 	
 	@Override
-	public List<Contratto> getAllContratti(String nomeColonna, String scelta) {
+	public List<Contratto> getAllContratti(String nomeColonna, String scelta) throws RetribuzioneNonValidaException, PercentualeProcuratoreNonValidaException, DurataContrattoInsufficienteException, DateIncoerentiException {
 		List<Contratto> listaContratti = new ArrayList<Contratto>();
 		try {
 			this.statement = this.connection.createStatement();
@@ -52,11 +56,13 @@ public class ContrattoDAOPostgresImpl implements ContrattoDAO {
 				Contratto contratto;
 				if (scelta.equals("Club")) {
 					Club club = controller.cercaClub(resultSet.getString("club"));
-					contratto = new Contratto(dataInizio, dataFine, retribuzione, percentualeProcuratore, atleta, club);
+					if(percentualeProcuratore!=0) contratto = new Contratto(dataInizio, dataFine, retribuzione, percentualeProcuratore, atleta, club);
+					else contratto = new Contratto(dataInizio, dataFine, retribuzione, atleta, club);
 				}
 				else {
 					Sponsor sponsor = controller.cercaSponsor(resultSet.getString("sponsor"));
-					contratto = new Contratto(dataInizio, dataFine, retribuzione, percentualeProcuratore, atleta, sponsor);
+					if(percentualeProcuratore!=0) contratto = new Contratto(dataInizio, dataFine, retribuzione, percentualeProcuratore, atleta, sponsor);
+					else contratto = new Contratto(dataInizio, dataFine, retribuzione, atleta, sponsor);
 				}
 				listaContratti.add(contratto);
 			}
