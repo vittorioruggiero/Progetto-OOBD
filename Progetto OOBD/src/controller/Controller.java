@@ -32,6 +32,7 @@ import entity.Sponsor;
 import exception.CodiceFiscaleNonValidoException;
 import exception.CodiciFiscaliUgualiException;
 import exception.DateIncoerentiException;
+import exception.DuplicatoException;
 import exception.DurataContrattoInsufficienteException;
 import exception.GettoneNonValidoException;
 import exception.IncoerenzaAssociazioneProcuratoreException;
@@ -247,8 +248,15 @@ public class Controller {
 		atletaDAO.insertAtleta(atleta);
 	}
 	
-	public void inserisci(Club club) {
-		clubDAO.insertClub(club);
+	public void inserisciClub() {
+		Club club = null;
+		try {
+			club = clubFrame.getClubFromFields();
+			clubFrame.controllaDuplicato();
+			clubDAO.insertClub(club);
+		} catch (DuplicatoException exception) {
+			JOptionPane.showMessageDialog(clubFrame, "Il club " + club.getNome() + " è già presente", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
+		}
 	}
 	
 	public void inserisci(Sponsor sponsor) {
@@ -275,7 +283,8 @@ public class Controller {
 		atletaDAO.deleteAtleta(atleta);
 	}
 	
-	public void rimuovi(Club club) {
+	public void rimuoviClub() {
+		Club club = clubFrame.getClubFromFields();
 		clubDAO.deleteClub(club);
 	}
 	
@@ -299,8 +308,16 @@ public class Controller {
 		atletaDAO.updateAtleta(atleta, vecchioCodiceFiscale);
 	}
 	
-	public void modifica(Club club, String vecchioNome) {
-		clubDAO.updateClub(club, vecchioNome);
+	public void modificaClub() {
+		Club club = null;
+		try {
+			club = clubFrame.getClubFromFields();
+			clubFrame.controllaDuplicatoModifica();
+			String vecchioNome = clubFrame.getClubFromSelectedRow().getNome();
+			clubDAO.updateClub(club, vecchioNome);
+		} catch (DuplicatoException exception) {
+			JOptionPane.showMessageDialog(clubFrame, "Il club " + club.getNome() + " è già presente", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
+		}
 	}
 	
 	public void modifica(Sponsor sponsor, String vecchioNome) {

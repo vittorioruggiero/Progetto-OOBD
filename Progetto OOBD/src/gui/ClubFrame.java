@@ -86,8 +86,7 @@ public class ClubFrame extends JFrame {
 		table.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				nomeTF.setText((String) model.getValueAt(table.getSelectedRow(), 0));
-				cittaTF.setText((String) model.getValueAt(table.getSelectedRow(), 1));
+				setFields();
 			}
 		});
 		
@@ -121,19 +120,8 @@ public class ClubFrame extends JFrame {
 		inserisciButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if(nomeTF.getText().length()>0 && cittaTF.getText().length()>0) {
-					Club club;
-					String nome = nomeTF.getText();
-					String citta = cittaTF.getText();
-					try {
-						for(int i = 0; i<table.getRowCount(); i++)
-							if(nome.equals(model.getValueAt(i, 0))) throw new DuplicatoException();
-						club = new Club(nome, citta);
-						controller.inserisci(club);
-						ricaricaClub();
-					}
-					catch (DuplicatoException exception) {
-						JOptionPane.showMessageDialog(ClubFrame.this, "Il club " +nome+ " è già presente", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
-					}
+					controller.inserisciClub();
+					ricaricaClub();
 				}
 			}
 		});
@@ -146,10 +134,7 @@ public class ClubFrame extends JFrame {
 		JButton rimuoviButton = new JButton("Rimuovi");
 		rimuoviButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				String nome = nomeTF.getText();
-				String citta = cittaTF.getText();
-				Club club = new Club(nome, citta);
-				controller.rimuovi(club);
+				controller.rimuoviClub();
 				ricaricaClub();
 			}
 		});
@@ -162,20 +147,8 @@ public class ClubFrame extends JFrame {
 		modificaButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if(table.getSelectedRow()!=-1 && nomeTF.getText().length()>0 && cittaTF.getText().length()>0) {
-					Club club;
-					String nome = nomeTF.getText();
-					String citta = cittaTF.getText();
-					try {
-						for(int i = 0; i<table.getRowCount(); i++) 
-							if(i!=table.getSelectedRow() && nome.equals(model.getValueAt(i, 0))) throw new DuplicatoException();
-						club = new Club(nome, citta);
-						String vecchioNome = (String) model.getValueAt(table.getSelectedRow(), 0);
-						controller.modifica(club, vecchioNome);
-						ricaricaClub();
-					}
-					catch (DuplicatoException exception) {
-						JOptionPane.showMessageDialog(ClubFrame.this, "Il club " +nome+ " è già presente", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
-					}
+					controller.modificaClub();
+					ricaricaClub();
 				}
 			}
 		});
@@ -207,6 +180,35 @@ public class ClubFrame extends JFrame {
 		model.addColumn("Nome");
 		model.addColumn("Città");
 		for(int i=0; i<listaClub.size(); i++) model.addRow(new Object[] {listaClub.get(i).getNome(), listaClub.get(i).getCitta()});
+	}
+	
+	public Club getClubFromFields() {
+		String nome = nomeTF.getText();
+		String citta = cittaTF.getText();
+		return new Club(nome, citta);
+	}
+	
+	public Club getClubFromSelectedRow() {
+		DefaultTableModel model = (DefaultTableModel) table.getModel();
+		String nome = (String) model.getValueAt(table.getSelectedRow(), 0);
+		String citta = (String) model.getValueAt(table.getSelectedRow(), 1);
+		return new Club(nome, citta);
+	}
+	
+	public void controllaDuplicato() throws DuplicatoException {
+		for(int i = 0; i<table.getRowCount(); i++)
+			if(nomeTF.getText().equals(table.getModel().getValueAt(i, 0))) throw new DuplicatoException();
+	}
+	
+	public void controllaDuplicatoModifica() throws DuplicatoException {
+		for(int i = 0; i<table.getRowCount(); i++)
+			if(i!=table.getSelectedRow() && nomeTF.getText().equals(table.getModel().getValueAt(i, 0))) throw new DuplicatoException();
+	}
+	
+	public void setFields() {
+		DefaultTableModel model = (DefaultTableModel) table.getModel();
+		nomeTF.setText((String) model.getValueAt(table.getSelectedRow(), 0));
+		cittaTF.setText((String) model.getValueAt(table.getSelectedRow(), 1));
 	}
 	
 	public void ricaricaClub() {
