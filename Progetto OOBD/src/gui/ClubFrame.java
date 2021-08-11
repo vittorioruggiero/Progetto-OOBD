@@ -134,8 +134,10 @@ public class ClubFrame extends JFrame {
 		JButton rimuoviButton = new JButton("Rimuovi");
 		rimuoviButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				controller.rimuoviClub();
-				ricaricaClub();
+				if(nomeTF.getText().length()>0 && cittaTF.getText().length()>0) {
+					controller.rimuoviClub();
+					ricaricaClub();
+				}
 			}
 		});
 		rimuoviButton.setFont(new Font("SansSerif", Font.PLAIN, 14));

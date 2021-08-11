@@ -88,8 +88,7 @@ public class NazionaleFrame extends JFrame {
 		table.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				nomeTF.setText((String) model.getValueAt(table.getSelectedRow(), 0));
-				valoreGettoneTF.setText(String.valueOf(model.getValueAt(table.getSelectedRow(), 1)));
+				setFields();
 			}
 		});
 		
@@ -123,25 +122,8 @@ public class NazionaleFrame extends JFrame {
 		inserisciButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if(nomeTF.getText().length()>0 && valoreGettoneTF.getText().length()>0) {
-					Nazionale nazionale;
-					String nome = nomeTF.getText();
-					try {
-						double valoreGettone = Double.parseDouble(valoreGettoneTF.getText());
-						for(int i = 0; i<table.getRowCount(); i++)
-							if(nome.equals(model.getValueAt(i, 0))) throw new DuplicatoException();
-						nazionale = new Nazionale(nome, valoreGettone);
-						controller.inserisci(nazionale);
-						ricaricaNazionali();
-					}
-					catch (NumberFormatException exception) {
-						JOptionPane.showMessageDialog(NazionaleFrame.this, "Il valore del gettone deve essere un numero", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
-					}
-					catch (GettoneNonValidoException exception) {
-						JOptionPane.showMessageDialog(NazionaleFrame.this, "Il valore del gettone deve essere maggiore di 0", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
-					}
-					catch (DuplicatoException exception) {
-						JOptionPane.showMessageDialog(NazionaleFrame.this, "La nazionale " +nome+ " è già presente", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
-					}
+					controller.inserisciNazionale();
+					ricaricaNazionali();
 				}
 			}
 		});
@@ -154,18 +136,9 @@ public class NazionaleFrame extends JFrame {
 		JButton rimuoviButton = new JButton("Rimuovi");
 		rimuoviButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				String nome = nomeTF.getText();
-				try {
-					double valoreGettone = Double.parseDouble(valoreGettoneTF.getText());
-					Nazionale nazionale = new Nazionale(nome, valoreGettone);
-					controller.rimuovi(nazionale);
+				if(nomeTF.getText().length()>0 && valoreGettoneTF.getText().length()>0) {
+					controller.rimuoviNazionale();
 					ricaricaNazionali();
-				}
-				catch (NumberFormatException exception) {
-					JOptionPane.showMessageDialog(NazionaleFrame.this, "Il valore del gettone deve essere un numero", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
-				}
-				catch (GettoneNonValidoException exception) {
-					JOptionPane.showMessageDialog(NazionaleFrame.this, "Il valore del gettone deve essere maggiore di 0", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
 				}
 			}
 		});
@@ -178,26 +151,8 @@ public class NazionaleFrame extends JFrame {
 		modificaButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if(table.getSelectedRow()!=-1 && nomeTF.getText().length()>0 && valoreGettoneTF.getText().length()>0) {
-					Nazionale nazionale;
-					String nome = nomeTF.getText();
-					try {
-						double valoreGettone = Double.parseDouble(valoreGettoneTF.getText());
-						for(int i = 0; i<table.getRowCount(); i++) 
-							if(i!=table.getSelectedRow() && nome.equals(model.getValueAt(i, 0))) throw new DuplicatoException();
-						nazionale = new Nazionale(nome, valoreGettone);
-						String vecchioNome = (String) model.getValueAt(table.getSelectedRow(), 0);
-						controller.modifica(nazionale, vecchioNome);
-						ricaricaNazionali();
-					}
-					catch (NumberFormatException exception) {
-						JOptionPane.showMessageDialog(NazionaleFrame.this, "Il valore del gettone deve essere un numero", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
-					}
-					catch (GettoneNonValidoException exception) {
-						JOptionPane.showMessageDialog(NazionaleFrame.this, "Il valore del gettone deve essere maggiore di 0", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
-					}
-					catch (DuplicatoException exception) {
-						JOptionPane.showMessageDialog(NazionaleFrame.this, "La nazionale " +nome+ " è già presente", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
-					}
+					controller.modificaNazionale();
+					ricaricaNazionali();
 				}
 			}
 		});
@@ -229,6 +184,35 @@ public class NazionaleFrame extends JFrame {
 		model.addColumn("Nome");
 		model.addColumn("Valore gettone");
 		for(int i=0; i<listaNazionali.size(); i++) model.addRow(new Object[] {listaNazionali.get(i).getNome(), listaNazionali.get(i).getValoreGettone()});
+	}
+	
+	public Nazionale getNazionaleFromFields() throws GettoneNonValidoException {
+		String nome = nomeTF.getText();
+		double valoreGettone = Double.parseDouble(valoreGettoneTF.getText());
+		return new Nazionale(nome, valoreGettone);
+	}
+	
+	public Nazionale getNazionaleFromSelectedRow() throws GettoneNonValidoException {
+		DefaultTableModel model = (DefaultTableModel) table.getModel();
+		String nome = (String) model.getValueAt(table.getSelectedRow(), 0);
+		double valoreGettone = (double) model.getValueAt(table.getSelectedRow(), 1);
+		return new Nazionale(nome, valoreGettone);
+	}
+	
+	public void controllaDuplicato() throws DuplicatoException {
+		for(int i = 0; i<table.getRowCount(); i++)
+			if(nomeTF.getText().equals(table.getModel().getValueAt(i, 0))) throw new DuplicatoException();
+	}
+	
+	public void controllaDuplicatoModifica() throws DuplicatoException {
+		for(int i = 0; i<table.getRowCount(); i++)
+			if(i!=table.getSelectedRow() && nomeTF.getText().equals(table.getModel().getValueAt(i, 0))) throw new DuplicatoException();
+	}
+	
+	public void setFields() {
+		DefaultTableModel model = (DefaultTableModel) this.table.getModel();
+		nomeTF.setText((String) model.getValueAt(table.getSelectedRow(), 0));
+		valoreGettoneTF.setText(String.valueOf(model.getValueAt(table.getSelectedRow(), 1)));
 	}
 	
 	public void ricaricaNazionali() {

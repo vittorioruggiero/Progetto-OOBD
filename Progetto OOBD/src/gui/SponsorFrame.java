@@ -86,8 +86,7 @@ public class SponsorFrame extends JFrame {
 		table.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				nomeTF.setText((String) model.getValueAt(table.getSelectedRow(), 0));
-				statoTF.setText((String) model.getValueAt(table.getSelectedRow(), 1));
+				setFields();
 			}
 		});
 		
@@ -121,20 +120,8 @@ public class SponsorFrame extends JFrame {
 		inserisciButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if(nomeTF.getText().length()>0 && statoTF.getText().length()>0) {
-					Sponsor sponsor;
-					String nome = nomeTF.getText();
-					String stato = statoTF.getText();
-					
-					try {
-						for(int i = 0; i<table.getRowCount(); i++)
-							if(nome.equals(model.getValueAt(i, 0))) throw new DuplicatoException();
-						sponsor = new Sponsor(nome, stato);
-						controller.inserisci(sponsor);
-						ricaricaSponsor();
-					}
-					catch (DuplicatoException exception) {
-						JOptionPane.showMessageDialog(SponsorFrame.this, "Lo sponsor " +nome+ " è già presente", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
-					}
+					controller.inserisciSponsor();
+					ricaricaSponsor();
 				}
 			}
 		});
@@ -147,11 +134,10 @@ public class SponsorFrame extends JFrame {
 		JButton rimuoviButton = new JButton("Rimuovi");
 		rimuoviButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				String nome = nomeTF.getText();
-				String stato = statoTF.getText();
-				Sponsor sponsor = new Sponsor(nome, stato);
-				controller.rimuovi(sponsor);
-				ricaricaSponsor();
+				if(nomeTF.getText().length()>0 && statoTF.getText().length()>0) {
+					controller.rimuoviSponsor();
+					ricaricaSponsor();
+				}
 			}
 		});
 		rimuoviButton.setFont(new Font("SansSerif", Font.PLAIN, 14));
@@ -163,20 +149,8 @@ public class SponsorFrame extends JFrame {
 		modificaButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if(table.getSelectedRow()!=-1 && nomeTF.getText().length()>0 && statoTF.getText().length()>0) {
-					Sponsor sponsor;
-					String nome = nomeTF.getText();
-					String stato = statoTF.getText();
-					try {
-						for(int i = 0; i<table.getRowCount(); i++) 
-							if(i!=table.getSelectedRow() && nome.equals(model.getValueAt(i, 0))) throw new DuplicatoException();
-						sponsor = new Sponsor(nome, stato);
-						String vecchioNome = (String) model.getValueAt(table.getSelectedRow(), 0);
-						controller.modifica(sponsor, vecchioNome);
-						ricaricaSponsor();
-					}
-					catch (DuplicatoException exception) {
-						JOptionPane.showMessageDialog(SponsorFrame.this, "Lo sponsor " +nome+ " è già presente", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
-					}
+					controller.modificaSponsor();
+					ricaricaSponsor();
 				}
 			}
 		});
@@ -208,6 +182,35 @@ public class SponsorFrame extends JFrame {
 		model.addColumn("Nome");
 		model.addColumn("Stato");
 		for(int i=0; i<listaSponsor.size(); i++) model.addRow(new Object[] {listaSponsor.get(i).getNome(), listaSponsor.get(i).getStato()});
+	}
+	
+	public Sponsor getSponsorFromFields() {
+		String nome = nomeTF.getText();
+		String stato = statoTF.getText();
+		return new Sponsor(nome, stato);
+	}
+	
+	public Sponsor getSponsorFromSelectedRow() {
+		DefaultTableModel model = (DefaultTableModel) table.getModel();
+		String nome = (String) model.getValueAt(table.getSelectedRow(), 0);
+		String stato = (String) model.getValueAt(table.getSelectedRow(), 1);
+		return new Sponsor(nome, stato);
+	}
+	
+	public void controllaDuplicato() throws DuplicatoException {
+		for(int i = 0; i<table.getRowCount(); i++)
+			if(nomeTF.getText().equals(table.getModel().getValueAt(i, 0))) throw new DuplicatoException();
+	}
+	
+	public void controllaDuplicatoModifica() throws DuplicatoException {
+		for(int i = 0; i<table.getRowCount(); i++)
+			if(i!=table.getSelectedRow() && nomeTF.getText().equals(table.getModel().getValueAt(i, 0))) throw new DuplicatoException();
+	}
+	
+	public void setFields() {
+		DefaultTableModel model = (DefaultTableModel) table.getModel();
+		nomeTF.setText((String) model.getValueAt(table.getSelectedRow(), 0));
+		statoTF.setText((String) model.getValueAt(table.getSelectedRow(), 1));
 	}
 	
 	public void ricaricaSponsor() {

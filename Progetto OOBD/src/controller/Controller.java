@@ -236,12 +236,37 @@ public class Controller {
 		procuratoreFrame.setVisible(true);
 	}
 	
-	public void inserisci(Nazionale nazionale) {
-		nazionaleDAO.insertNazionale(nazionale);
+	public void inserisciNazionale() {
+		Nazionale nazionale = null;
+		try {
+			nazionale = nazionaleFrame.getNazionaleFromFields();
+			nazionaleFrame.controllaDuplicato();
+			nazionaleDAO.insertNazionale(nazionale);
+		}
+		catch (NumberFormatException exception) {
+			JOptionPane.showMessageDialog(nazionaleFrame, "Il valore del gettone deve essere un numero", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
+		}
+		catch (GettoneNonValidoException exception) {
+			JOptionPane.showMessageDialog(nazionaleFrame, "Il valore del gettone deve essere maggiore di 0", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
+		}
+		catch (DuplicatoException exception) {
+			JOptionPane.showMessageDialog(nazionaleFrame, "La nazionale " +nazionale.getNome()+ " è già presente", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
+		}
 	}
 	
-	public void inserisci(Procuratore procuratore) {
-		procuratoreDAO.insertProcuratore(procuratore);
+	public void inserisciProcuratore() {
+		Procuratore procuratore = null;
+		try {
+			procuratore = procuratoreFrame.getProcuratoreFromFields();
+			procuratoreFrame.controllaDuplicato();
+			procuratoreDAO.insertProcuratore(procuratore);
+		}
+		catch (CodiceFiscaleNonValidoException exception) {
+			JOptionPane.showMessageDialog(procuratoreFrame, "Il codice fiscale non è valido", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
+		}
+		catch (DuplicatoException exception) {
+			JOptionPane.showMessageDialog(procuratoreFrame, "Il procuratore " +procuratore.getCodiceFiscale()+ " è già presente", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
+		}
 	}
 	
 	public void inserisci(Atleta atleta) {
@@ -254,13 +279,22 @@ public class Controller {
 			club = clubFrame.getClubFromFields();
 			clubFrame.controllaDuplicato();
 			clubDAO.insertClub(club);
-		} catch (DuplicatoException exception) {
+		}
+		catch (DuplicatoException exception) {
 			JOptionPane.showMessageDialog(clubFrame, "Il club " + club.getNome() + " è già presente", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
 		}
 	}
 	
-	public void inserisci(Sponsor sponsor) {
-		sponsorDAO.insertSponsor(sponsor);
+	public void inserisciSponsor() {
+		Sponsor sponsor = null;
+		try {
+			sponsor = sponsorFrame.getSponsorFromFields();
+			sponsorFrame.controllaDuplicato();
+			sponsorDAO.insertSponsor(sponsor);
+		}
+		catch (DuplicatoException exception) {
+			JOptionPane.showMessageDialog(sponsorFrame, "Lo sponsor " +sponsor.getNome()+ " è già presente", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
+		}
 	}
 	
 	public void inserisci(Contratto contratto) {
@@ -271,12 +305,27 @@ public class Controller {
 		}
 	}
 	
-	public void rimuovi(Nazionale nazionale) {
-		nazionaleDAO.deleteNazionale(nazionale);
+	public void rimuoviNazionale() {
+		try {
+			Nazionale nazionale = nazionaleFrame.getNazionaleFromFields();
+			nazionaleDAO.deleteNazionale(nazionale);
+		}
+		catch (NumberFormatException exception) {
+			JOptionPane.showMessageDialog(nazionaleFrame, "Il valore del gettone deve essere un numero", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
+		}
+		catch (GettoneNonValidoException exception) {
+			JOptionPane.showMessageDialog(nazionaleFrame, "Il valore del gettone deve essere maggiore di 0", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
+		}
 	}
 	
-	public void rimuovi(Procuratore procuratore) {
-		procuratoreDAO.deleteProcuratore(procuratore);
+	public void rimuoviProcuratore() {
+		try {
+			Procuratore procuratore = procuratoreFrame.getProcuratoreFromFields();
+			procuratoreDAO.deleteProcuratore(procuratore);
+		}
+		catch (CodiceFiscaleNonValidoException exception) {
+			JOptionPane.showMessageDialog(procuratoreFrame, "Il codice fiscale non è valido", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
+		}
 	}
 	
 	public void rimuovi(Atleta atleta) {
@@ -288,7 +337,8 @@ public class Controller {
 		clubDAO.deleteClub(club);
 	}
 	
-	public void rimuovi(Sponsor sponsor) {
+	public void rimuoviSponsor() {
+		Sponsor sponsor = sponsorFrame.getSponsorFromFields();
 		sponsorDAO.deleteSponsor(sponsor);
 	}
 	
@@ -296,12 +346,39 @@ public class Controller {
 		contrattoDAO.deleteContratto(contratto);
 	}
 	
-	public void modifica(Nazionale nazionale, String vecchioNome) {
-		nazionaleDAO.updateNazionale(nazionale, vecchioNome);
+	public void modificaNazionale() {
+		Nazionale nazionale = null;
+		try {
+			nazionale = nazionaleFrame.getNazionaleFromFields();
+			nazionaleFrame.controllaDuplicatoModifica();
+			String vecchioNome = nazionaleFrame.getNazionaleFromSelectedRow().getNome();
+			nazionaleDAO.updateNazionale(nazionale, vecchioNome);
+		}
+		catch (NumberFormatException exception) {
+			JOptionPane.showMessageDialog(nazionaleFrame, "Il valore del gettone deve essere un numero", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
+		}
+		catch (GettoneNonValidoException exception) {
+			JOptionPane.showMessageDialog(nazionaleFrame, "Il valore del gettone deve essere maggiore di 0", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
+		}
+		catch (DuplicatoException exception) {
+			JOptionPane.showMessageDialog(nazionaleFrame, "La nazionale " +nazionale.getNome()+ " è già presente", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
+		}
 	}
 	
-	public void modifica(Procuratore procuratore, String vecchioCodiceFiscale) {
-		procuratoreDAO.updateProcuratore(procuratore, vecchioCodiceFiscale);
+	public void modificaProcuratore() {
+		Procuratore procuratore = null;
+		try {
+			procuratore = procuratoreFrame.getProcuratoreFromFields();
+			procuratoreFrame.controllaDuplicatoModifica();
+			String vecchioCodiceFiscale = procuratoreFrame.getProcuratoreFromSelectedRow().getCodiceFiscale();
+			procuratoreDAO.updateProcuratore(procuratore, vecchioCodiceFiscale);
+		}
+		catch (CodiceFiscaleNonValidoException exception) {
+			JOptionPane.showMessageDialog(procuratoreFrame, "Il codice fiscale non è valido", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
+		}
+		catch (DuplicatoException exception) {
+			JOptionPane.showMessageDialog(procuratoreFrame, "Il procuratore " +procuratore.getCodiceFiscale()+ " è già presente", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
+		}
 	}
 	
 	public void modifica(Atleta atleta, String vecchioCodiceFiscale) {
@@ -320,8 +397,17 @@ public class Controller {
 		}
 	}
 	
-	public void modifica(Sponsor sponsor, String vecchioNome) {
-		sponsorDAO.updateSponsor(sponsor, vecchioNome);
+	public void modificaSponsor() {
+		Sponsor sponsor = null;
+		try {
+			sponsor = sponsorFrame.getSponsorFromFields();
+			sponsorFrame.controllaDuplicatoModifica();
+			String vecchioNome = sponsorFrame.getSponsorFromSelectedRow().getNome();
+			sponsorDAO.updateSponsor(sponsor, vecchioNome);
+		}
+		catch (DuplicatoException exception) {
+			JOptionPane.showMessageDialog(sponsorFrame, "Lo sponsor " +sponsor.getNome()+ " è già presente", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
+		}
 	}
 	
 	public void modifica(Contratto contratto, Contratto vecchioContratto) {

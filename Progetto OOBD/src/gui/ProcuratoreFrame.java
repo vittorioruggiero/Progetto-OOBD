@@ -131,25 +131,10 @@ public class ProcuratoreFrame extends JFrame {
 		//GESTIONE DELL'INSERIMENTO DELLE RIGHE
 		inserisciButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if(codiceFiscaleTF.getText().length()>0 && nomeTF.getText().length()>0 && cognomeTF.getText().length()>0 && annoComboBox.getSelectedIndex()!=-1 && meseComboBox.getSelectedIndex()!=-1 && giornoComboBox.getSelectedIndex()!=-1) {
-					Procuratore procuratore;
-					String codiceFiscale = codiceFiscaleTF.getText();
-					String nome = nomeTF.getText();
-					String cognome = cognomeTF.getText();
-					LocalDate dataNascita = LocalDate.of((int) annoComboBox.getSelectedItem(), (int) meseComboBox.getSelectedItem(), (int) giornoComboBox.getSelectedItem());
-					try {
-						for(int i = 0; i<table.getRowCount(); i++)
-							if(codiceFiscale.equals(model.getValueAt(i, 0))) throw new DuplicatoException();
-						procuratore = new Procuratore(codiceFiscale, nome, cognome, dataNascita);
-						controller.inserisci(procuratore);
-						ricaricaProcuratori();
-					}
-					catch (CodiceFiscaleNonValidoException exception) {
-						JOptionPane.showMessageDialog(ProcuratoreFrame.this, "Il codice fiscale non è valido", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
-					}
-					catch (DuplicatoException exception) {
-						JOptionPane.showMessageDialog(ProcuratoreFrame.this, "Il procuratore " +codiceFiscale+ " è già presente", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
-					}
+				if(codiceFiscaleTF.getText().length()>0 && nomeTF.getText().length()>0 && cognomeTF.getText().length()>0
+						&& annoComboBox.getSelectedIndex()!=-1 && meseComboBox.getSelectedIndex()!=-1 && giornoComboBox.getSelectedIndex()!=-1) {
+					controller.inserisciProcuratore();
+					ricaricaProcuratori();
 				}
 			}
 		});
@@ -162,18 +147,10 @@ public class ProcuratoreFrame extends JFrame {
 		JButton rimuoviButton = new JButton("Rimuovi");
 		rimuoviButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				String codiceFiscale = codiceFiscaleTF.getText();
-				String nome = nomeTF.getText();
-				String cognome = cognomeTF.getText();
-				LocalDate dataNascita = LocalDate.of((int) annoComboBox.getSelectedItem(), (int) meseComboBox.getSelectedItem(), (int) giornoComboBox.getSelectedItem());
-				Procuratore procuratore;
-				try {
-					procuratore = new Procuratore(codiceFiscale, nome, cognome, dataNascita);
-					controller.rimuovi(procuratore);
+				if(codiceFiscaleTF.getText().length()>0 && nomeTF.getText().length()>0 && cognomeTF.getText().length()>0
+						&& annoComboBox.getSelectedIndex()!=-1 && meseComboBox.getSelectedIndex()!=-1 && giornoComboBox.getSelectedIndex()!=-1) {
+					controller.rimuoviProcuratore();
 					ricaricaProcuratori();
-				} 
-				catch (CodiceFiscaleNonValidoException exception) {
-					JOptionPane.showMessageDialog(ProcuratoreFrame.this, "Il codice fiscale non è valido", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
 				}
 			}
 		});
@@ -185,26 +162,10 @@ public class ProcuratoreFrame extends JFrame {
 		JButton modificaButton = new JButton("Modifica");
 		modificaButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if(table.getSelectedRow()!=-1 && codiceFiscaleTF.getText().length()>0 && nomeTF.getText().length()>0 && cognomeTF.getText().length()>0 && annoComboBox.getSelectedIndex()!=-1 && meseComboBox.getSelectedIndex()!=-1 && giornoComboBox.getSelectedIndex()!=-1) {
-					Procuratore procuratore;
-					String codiceFiscale = codiceFiscaleTF.getText();
-					String nome = nomeTF.getText();
-					String cognome = cognomeTF.getText();
-					LocalDate dataNascita = LocalDate.of((int) annoComboBox.getSelectedItem(), (int) meseComboBox.getSelectedItem(), (int) giornoComboBox.getSelectedItem());
-					try {
-						for(int i = 0; i<table.getRowCount(); i++)
-							if(i!=table.getSelectedRow() && codiceFiscale.equals(model.getValueAt(i, 0))) throw new DuplicatoException();
-						procuratore = new Procuratore(codiceFiscale, nome, cognome, dataNascita);
-						String vecchioCodiceFiscale = (String) model.getValueAt(table.getSelectedRow(), 0);
-						controller.modifica(procuratore, vecchioCodiceFiscale);
-						ricaricaProcuratori();
-					}
-					catch (CodiceFiscaleNonValidoException exception) {
-						JOptionPane.showMessageDialog(ProcuratoreFrame.this, "Il codice fiscale non è valido", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
-					}
-					catch (DuplicatoException exception) {
-						JOptionPane.showMessageDialog(ProcuratoreFrame.this, "Il procuratore " +codiceFiscale+ " è già presente", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
-					}
+				if(table.getSelectedRow()!=-1 && codiceFiscaleTF.getText().length()>0 && nomeTF.getText().length()>0 && cognomeTF.getText().length()>0
+						&& annoComboBox.getSelectedIndex()!=-1 && meseComboBox.getSelectedIndex()!=-1 && giornoComboBox.getSelectedIndex()!=-1) {
+					controller.modificaProcuratore();
+					ricaricaProcuratori();
 				}
 			}
 		});
@@ -327,6 +288,43 @@ public class ProcuratoreFrame extends JFrame {
 				listaProcuratori.get(i).getCognome(),
 				listaProcuratori.get(i).getDataNascita()
 				});
+	}
+	
+	public Procuratore getProcuratoreFromFields() throws CodiceFiscaleNonValidoException {
+		String codiceFiscale = codiceFiscaleTF.getText();
+		String nome = nomeTF.getText();
+		String cognome = cognomeTF.getText();
+		LocalDate dataNascita = LocalDate.of((int) annoComboBox.getSelectedItem(), (int) meseComboBox.getSelectedItem(), (int) giornoComboBox.getSelectedItem());
+		return new Procuratore(codiceFiscale, nome, cognome, dataNascita);
+	}
+	
+	public Procuratore getProcuratoreFromSelectedRow() throws CodiceFiscaleNonValidoException {
+		DefaultTableModel model = (DefaultTableModel) table.getModel();
+		String codiceFiscale = (String) model.getValueAt(table.getSelectedRow(), 0);
+		String nome = (String) model.getValueAt(table.getSelectedRow(), 1);
+		String cognome = (String) model.getValueAt(table.getSelectedRow(), 2);
+		LocalDate dataNascita = (LocalDate) model.getValueAt(table.getSelectedRow(), 3);
+		return new Procuratore(codiceFiscale, nome, cognome, dataNascita);
+	}
+	
+	public void controllaDuplicato() throws DuplicatoException {
+		for(int i = 0; i<table.getRowCount(); i++)
+			if(codiceFiscaleTF.getText().equals(table.getModel().getValueAt(i, 0))) throw new DuplicatoException();
+	}
+	
+	public void controllaDuplicatoModifica() throws DuplicatoException {
+		for(int i = 0; i<table.getRowCount(); i++)
+			if(i!=table.getSelectedRow() && codiceFiscaleTF.getText().equals(table.getModel().getValueAt(i, 0))) throw new DuplicatoException();
+	}
+	
+	public void setFields() {
+		DefaultTableModel model = (DefaultTableModel) this.table.getModel();
+		codiceFiscaleTF.setText((String) model.getValueAt(table.getSelectedRow(), 0));
+		nomeTF.setText(String.valueOf(model.getValueAt(table.getSelectedRow(), 1)));
+		cognomeTF.setText(String.valueOf(model.getValueAt(table.getSelectedRow(), 2)));
+		annoComboBox.setSelectedItem((Integer) ((LocalDate) model.getValueAt(table.getSelectedRow(), 3)).getYear());
+		meseComboBox.setSelectedItem((Integer) ((LocalDate) model.getValueAt(table.getSelectedRow(), 3)).getMonthValue());
+		giornoComboBox.setSelectedItem((Integer) ((LocalDate) model.getValueAt(table.getSelectedRow(), 3)).getDayOfMonth());
 	}
 	
 	public void ricaricaProcuratori() {
