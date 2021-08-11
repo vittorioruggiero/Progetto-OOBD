@@ -1,7 +1,5 @@
 package gui;
 
-import java.awt.BorderLayout;
-import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -26,12 +24,9 @@ import javax.swing.table.DefaultTableModel;
 
 import controller.Controller;
 import entity.Atleta;
-import entity.Nazionale;
-import entity.Procuratore;
 import exception.CodiceFiscaleNonValidoException;
 import exception.CodiciFiscaliUgualiException;
 import exception.DuplicatoException;
-import exception.PresenzeNazionaleMancantiException;
 import exception.PresenzeNazionaleNonValideException;
 
 public class AtletaFrame extends JFrame {
@@ -103,15 +98,7 @@ public class AtletaFrame extends JFrame {
 		table.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				codiceFiscaleTF.setText((String) model.getValueAt(table.getSelectedRow(), 0));
-				nomeTF.setText(String.valueOf(model.getValueAt(table.getSelectedRow(), 1)));
-				cognomeTF.setText(String.valueOf(model.getValueAt(table.getSelectedRow(), 2)));
-				annoComboBox.setSelectedItem((Integer) ((LocalDate) model.getValueAt(table.getSelectedRow(), 3)).getYear());
-				meseComboBox.setSelectedItem((Integer) ((LocalDate) model.getValueAt(table.getSelectedRow(), 3)).getMonthValue());
-				giornoComboBox.setSelectedItem((Integer) ((LocalDate) model.getValueAt(table.getSelectedRow(), 3)).getDayOfMonth());
-				nazionaleComboBox.setSelectedItem(String.valueOf(model.getValueAt(table.getSelectedRow(), 4)));
-				presenzeNazionaleTF.setText(String.valueOf(model.getValueAt(table.getSelectedRow(), 5)));
-				procuratoreComboBox.setSelectedItem(String.valueOf(model.getValueAt(table.getSelectedRow(), 6)));
+				setFields();
 			}
 		});
 		
@@ -144,43 +131,10 @@ public class AtletaFrame extends JFrame {
 		//GESTIONE DELL'INSERIMENTO DELLE RIGHE
 		inserisciButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if(codiceFiscaleTF.getText().length()>0 && nomeTF.getText().length()>0 && cognomeTF.getText().length()>0 && annoComboBox.getSelectedIndex()!=-1 && meseComboBox.getSelectedIndex()!=-1 && giornoComboBox.getSelectedIndex()!=-1) {
-					Atleta atleta;
-					String codiceFiscale = codiceFiscaleTF.getText();
-					String nome = nomeTF.getText();
-					String cognome = cognomeTF.getText();
-					LocalDate dataNascita = LocalDate.of((int) annoComboBox.getSelectedItem(), (int) meseComboBox.getSelectedItem(), (int) giornoComboBox.getSelectedItem());
-					String nazionale = (String) nazionaleComboBox.getSelectedItem();
-					int presenzeNazionale = 0;
-					String procuratore = (String) procuratoreComboBox.getSelectedItem();
-					
-					try {
-						for(int i = 0; i<table.getRowCount(); i++)
-							if(codiceFiscale.equals(model.getValueAt(i, 0))) throw new DuplicatoException();
-						if(nazionale.length()>0 && presenzeNazionaleTF.getText().length()==0) throw new PresenzeNazionaleMancantiException();
-						if(nazionale.length()>0 && presenzeNazionaleTF.getText().length()>0) presenzeNazionale = Integer.valueOf(presenzeNazionaleTF.getText());
-						atleta = new Atleta(codiceFiscale, nome, cognome, dataNascita, presenzeNazionale, controller.cercaProcuratore(procuratore), controller.cercaNazionale(nazionale));
-						controller.inserisci(atleta);
-						ricaricaAtleti();
-					}
-					catch (CodiceFiscaleNonValidoException exception) {
-						JOptionPane.showMessageDialog(AtletaFrame.this, "Il codice fiscale non è valido", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
-					}
-					catch (DuplicatoException exception) {
-						JOptionPane.showMessageDialog(AtletaFrame.this, "L'atleta " +codiceFiscale+ " è già presente", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
-					}
-					catch (PresenzeNazionaleMancantiException exception) {
-						JOptionPane.showMessageDialog(AtletaFrame.this, "Specificare il numero di presenze nella nazionale scelta", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
-					}
-					catch (NumberFormatException exception) {
-						JOptionPane.showMessageDialog(AtletaFrame.this, "Il valore delle presenze in nazionale deve essere un numero intero", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
-					}
-					catch (PresenzeNazionaleNonValideException exception) {
-						JOptionPane.showMessageDialog(AtletaFrame.this, "Il numero di presenze in nazionale deve essere maggiore o uguale a 0", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
-					}
-					catch (CodiciFiscaliUgualiException exception) {
-						JOptionPane.showMessageDialog(AtletaFrame.this, "Il codice fiscale del procuratore deve essere diverso da quello dell'atleta", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
-					}
+				if(codiceFiscaleTF.getText().length()>0 && nomeTF.getText().length()>0 && cognomeTF.getText().length()>0
+						&& annoComboBox.getSelectedIndex()!=-1 && meseComboBox.getSelectedIndex()!=-1 && giornoComboBox.getSelectedIndex()!=-1) {
+					controller.inserisciAtleta();
+					ricaricaAtleti();
 				}
 			}
 		});
@@ -193,31 +147,10 @@ public class AtletaFrame extends JFrame {
 		JButton rimuoviButton = new JButton("Rimuovi");
 		rimuoviButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				String codiceFiscale = codiceFiscaleTF.getText();
-				String nome = nomeTF.getText();
-				String cognome = cognomeTF.getText();
-				LocalDate dataNascita = LocalDate.of((int) annoComboBox.getSelectedItem(), (int) meseComboBox.getSelectedItem(), (int) giornoComboBox.getSelectedItem());
-				String nazionale = (String) nazionaleComboBox.getSelectedItem();
-				try {
-				int presenzeNazionale;
-				if(nazionale.length()>0 && presenzeNazionaleTF.getText().length()>0) presenzeNazionale = Integer.valueOf(presenzeNazionaleTF.getText());
-				else presenzeNazionale = 0;
-				String procuratore = (String) procuratoreComboBox.getSelectedItem();
-				Atleta atleta = new Atleta(codiceFiscale, nome, cognome, dataNascita, presenzeNazionale, controller.cercaProcuratore(procuratore), controller.cercaNazionale(nazionale));
-				controller.rimuovi(atleta);
-				ricaricaAtleti();
-				}
-				catch (CodiceFiscaleNonValidoException exception) {
-					JOptionPane.showMessageDialog(AtletaFrame.this, "Il codice fiscale non è valido", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
-				}
-				catch (NumberFormatException exception) {
-					JOptionPane.showMessageDialog(AtletaFrame.this, "Il valore delle presenze in nazionale deve essere un numero intero", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
-				}
-				catch (PresenzeNazionaleNonValideException exception) {
-					JOptionPane.showMessageDialog(AtletaFrame.this, "Il numero di presenze in nazionale deve essere maggiore o uguale a 0", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
-				}
-				catch (CodiciFiscaliUgualiException exception) {
-					JOptionPane.showMessageDialog(AtletaFrame.this, "Il codice fiscale del procuratore deve essere diverso da quello dell'atleta", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
+				if(codiceFiscaleTF.getText().length()>0 && nomeTF.getText().length()>0 && cognomeTF.getText().length()>0
+						&& annoComboBox.getSelectedIndex()!=-1 && meseComboBox.getSelectedIndex()!=-1 && giornoComboBox.getSelectedIndex()!=-1) {
+					controller.rimuoviAtleta();
+					ricaricaAtleti();
 				}
 			}
 		});
@@ -229,44 +162,10 @@ public class AtletaFrame extends JFrame {
 		JButton modificaButton = new JButton("Modifica");
 		modificaButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if(table.getSelectedRow()!=-1 && codiceFiscaleTF.getText().length()>0 && nomeTF.getText().length()>0 && cognomeTF.getText().length()>0 && annoComboBox.getSelectedIndex()!=-1 && meseComboBox.getSelectedIndex()!=-1 && giornoComboBox.getSelectedIndex()!=-1) {
-					Atleta atleta;
-					String codiceFiscale = codiceFiscaleTF.getText();
-					String nome = nomeTF.getText();
-					String cognome = cognomeTF.getText();
-					LocalDate dataNascita = LocalDate.of((int) annoComboBox.getSelectedItem(), (int) meseComboBox.getSelectedItem(), (int) giornoComboBox.getSelectedItem());
-					String nazionale = (String) nazionaleComboBox.getSelectedItem();
-					int presenzeNazionale = 0;
-					String procuratore = (String) procuratoreComboBox.getSelectedItem();
-					
-					try {
-						for(int i = 0; i<table.getRowCount(); i++)
-							if(i!=table.getSelectedRow() && codiceFiscale.equals(model.getValueAt(i, 0))) throw new DuplicatoException();
-						if(nazionale.length()>0 && presenzeNazionaleTF.getText().length()==0) throw new PresenzeNazionaleMancantiException();
-						if(nazionale.length()>0 && presenzeNazionaleTF.getText().length()>0) presenzeNazionale = Integer.valueOf(presenzeNazionaleTF.getText()); 
-						atleta = new Atleta(codiceFiscale, nome, cognome, dataNascita, presenzeNazionale, controller.cercaProcuratore(procuratore), controller.cercaNazionale(nazionale));
-						String vecchioCodiceFiscale = (String) model.getValueAt(table.getSelectedRow(), 0);
-						controller.modifica(atleta, vecchioCodiceFiscale);
-						ricaricaAtleti();
-					}
-					catch (CodiceFiscaleNonValidoException exception) {
-						JOptionPane.showMessageDialog(AtletaFrame.this, "Il codice fiscale non è valido", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
-					}
-					catch (DuplicatoException exception) {
-						JOptionPane.showMessageDialog(AtletaFrame.this, "L'atleta " +codiceFiscale+ " è già presente", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
-					}
-					catch (PresenzeNazionaleMancantiException exception) {
-						JOptionPane.showMessageDialog(AtletaFrame.this, "Specificare il numero di presenze nella nazionale scelta", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
-					}
-					catch (PresenzeNazionaleNonValideException exception) {
-						JOptionPane.showMessageDialog(AtletaFrame.this, "Il numero di presenze in nazionale deve essere maggiore o uguale a 0", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
-					}
-					catch (NumberFormatException exception) {
-						JOptionPane.showMessageDialog(AtletaFrame.this, "Il valore delle presenze in nazionale deve essere un numero intero", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
-					}
-					catch (CodiciFiscaliUgualiException exception) {
-						JOptionPane.showMessageDialog(AtletaFrame.this, "Il codice fiscale del procuratore deve essere diverso da quello dell'atleta", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
-					}
+				if(table.getSelectedRow()!=-1 && codiceFiscaleTF.getText().length()>0 && nomeTF.getText().length()>0 && cognomeTF.getText().length()>0
+						&& annoComboBox.getSelectedIndex()!=-1 && meseComboBox.getSelectedIndex()!=-1 && giornoComboBox.getSelectedIndex()!=-1) {
+					controller.modificaAtleta();
+					ricaricaAtleti();
 				}
 			}
 		});
@@ -484,6 +383,68 @@ public class AtletaFrame extends JFrame {
 		    for(int j=0; j<listaNomiNazionali.size(); j++) nazionaleComboBox.addItem(listaNomiNazionali.get(j));
 		if(listaCodiciFiscaliProcuratori!=null)
 		   for(int j=0; j<listaCodiciFiscaliProcuratori.size(); j++) procuratoreComboBox.addItem(listaCodiciFiscaliProcuratori.get(j));
+	}
+	
+	public Atleta getAtletaFromFields() throws CodiceFiscaleNonValidoException, PresenzeNazionaleNonValideException, CodiciFiscaliUgualiException {
+		Atleta atleta;
+		String codiceFiscale = codiceFiscaleTF.getText();
+		String nome = nomeTF.getText();
+		String cognome = cognomeTF.getText();
+		LocalDate dataNascita = LocalDate.of((int) annoComboBox.getSelectedItem(), (int) meseComboBox.getSelectedItem(), (int) giornoComboBox.getSelectedItem());
+		String nazionale = (String) nazionaleComboBox.getSelectedItem();
+		int presenzeNazionale;
+		String procuratore = (String) procuratoreComboBox.getSelectedItem();
+		atleta = new Atleta(codiceFiscale, nome, cognome, dataNascita);
+		if(!nazionale.equals("")) {
+			atleta.setNazionale(controller.cercaNazionale(nazionale));
+			presenzeNazionale = Integer.valueOf(presenzeNazionaleTF.getText());
+			atleta.setPresenzeNazionale(presenzeNazionale);
+		}
+		if(!procuratore.equals("")) atleta.setProcuratore(controller.cercaProcuratore(procuratore));
+		return atleta;
+	}
+	
+	public Atleta getAtletaFromSelectedRow() throws CodiceFiscaleNonValidoException, PresenzeNazionaleNonValideException, CodiciFiscaliUgualiException {
+		Atleta atleta;
+		DefaultTableModel model = (DefaultTableModel) table.getModel();
+		String codiceFiscale = (String) model.getValueAt(table.getSelectedRow(), 0);
+		String nome = (String) model.getValueAt(table.getSelectedRow(), 1);
+		String cognome = (String) model.getValueAt(table.getSelectedRow(), 2);
+		LocalDate dataNascita = (LocalDate) model.getValueAt(table.getSelectedRow(), 3);
+		String nazionale = (String) model.getValueAt(table.getSelectedRow(), 4);
+		int presenzeNazionale;
+		String procuratore = (String) model.getValueAt(table.getSelectedRow(), 6);
+		atleta = new Atleta(codiceFiscale, nome, cognome, dataNascita);
+		if(!nazionale.equals("")) {
+			atleta.setNazionale(controller.cercaNazionale(nazionale));
+			presenzeNazionale = (int) model.getValueAt(table.getSelectedRow(), 5);
+			atleta.setPresenzeNazionale(presenzeNazionale);
+		}
+		if(!procuratore.equals("")) atleta.setProcuratore(controller.cercaProcuratore(procuratore));
+		return atleta;
+	}
+	
+	public void controllaDuplicato() throws DuplicatoException {
+		for(int i = 0; i<table.getRowCount(); i++)
+			if(codiceFiscaleTF.getText().equals(table.getModel().getValueAt(i, 0))) throw new DuplicatoException();
+	}
+	
+	public void controllaDuplicatoModifica() throws DuplicatoException {
+		for(int i = 0; i<table.getRowCount(); i++)
+			if(i!=table.getSelectedRow() && codiceFiscaleTF.getText().equals(table.getModel().getValueAt(i, 0))) throw new DuplicatoException();
+	}
+	
+	public void setFields() {
+		DefaultTableModel model = (DefaultTableModel) this.table.getModel();
+		codiceFiscaleTF.setText((String) model.getValueAt(table.getSelectedRow(), 0));
+		nomeTF.setText(String.valueOf(model.getValueAt(table.getSelectedRow(), 1)));
+		cognomeTF.setText(String.valueOf(model.getValueAt(table.getSelectedRow(), 2)));
+		annoComboBox.setSelectedItem((Integer) ((LocalDate) model.getValueAt(table.getSelectedRow(), 3)).getYear());
+		meseComboBox.setSelectedItem((Integer) ((LocalDate) model.getValueAt(table.getSelectedRow(), 3)).getMonthValue());
+		giornoComboBox.setSelectedItem((Integer) ((LocalDate) model.getValueAt(table.getSelectedRow(), 3)).getDayOfMonth());
+		nazionaleComboBox.setSelectedItem(String.valueOf(model.getValueAt(table.getSelectedRow(), 4)));
+		presenzeNazionaleTF.setText(String.valueOf(model.getValueAt(table.getSelectedRow(), 5)));
+		procuratoreComboBox.setSelectedItem(String.valueOf(model.getValueAt(table.getSelectedRow(), 6)));
 	}
 	
 	public void ricaricaAtleti() {

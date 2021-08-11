@@ -269,8 +269,28 @@ public class Controller {
 		}
 	}
 	
-	public void inserisci(Atleta atleta) {
-		atletaDAO.insertAtleta(atleta);
+	public void inserisciAtleta() {
+		Atleta atleta = null;
+		try {
+			atleta = atletaFrame.getAtletaFromFields();
+			atletaFrame.controllaDuplicato();
+			atletaDAO.insertAtleta(atleta);
+		}
+		catch (CodiceFiscaleNonValidoException exception) {
+			JOptionPane.showMessageDialog(atletaFrame, "Il codice fiscale non è valido", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
+		}
+		catch (DuplicatoException exception) {
+			JOptionPane.showMessageDialog(atletaFrame, "L'atleta " +atleta.getCodiceFiscale()+ " è già presente", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
+		}
+		catch (PresenzeNazionaleNonValideException exception) {
+			JOptionPane.showMessageDialog(atletaFrame, "Il numero di presenze in nazionale deve essere maggiore o uguale a 0", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
+		}
+		catch (NumberFormatException exception) {
+			JOptionPane.showMessageDialog(atletaFrame, "Il valore delle presenze in nazionale deve essere un numero intero", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
+		}
+		catch (CodiciFiscaliUgualiException exception) {
+			JOptionPane.showMessageDialog(atletaFrame, "Il codice fiscale del procuratore deve essere diverso da quello dell'atleta", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
+		}
 	}
 	
 	public void inserisciClub() {
@@ -328,8 +348,23 @@ public class Controller {
 		}
 	}
 	
-	public void rimuovi(Atleta atleta) {
-		atletaDAO.deleteAtleta(atleta);
+	public void rimuoviAtleta() {
+		try {
+			Atleta atleta = atletaFrame.getAtletaFromFields();
+			atletaDAO.deleteAtleta(atleta);
+		}
+		catch (CodiceFiscaleNonValidoException exception) {
+			JOptionPane.showMessageDialog(atletaFrame, "Il codice fiscale non è valido", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
+		}
+		catch (NumberFormatException exception) {
+			JOptionPane.showMessageDialog(atletaFrame, "Il valore delle presenze in nazionale deve essere un numero intero", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
+		}
+		catch (PresenzeNazionaleNonValideException exception) {
+			JOptionPane.showMessageDialog(atletaFrame, "Il numero di presenze in nazionale deve essere maggiore o uguale a 0", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
+		}
+		catch (CodiciFiscaliUgualiException exception) {
+			JOptionPane.showMessageDialog(atletaFrame, "Il codice fiscale del procuratore deve essere diverso da quello dell'atleta", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
+		}
 	}
 	
 	public void rimuoviClub() {
@@ -381,8 +416,29 @@ public class Controller {
 		}
 	}
 	
-	public void modifica(Atleta atleta, String vecchioCodiceFiscale) {
-		atletaDAO.updateAtleta(atleta, vecchioCodiceFiscale);
+	public void modificaAtleta() {
+		Atleta atleta = null;
+		try {
+			atleta = atletaFrame.getAtletaFromFields();
+			atletaFrame.controllaDuplicatoModifica();
+			String vecchioCodiceFiscale = atletaFrame.getAtletaFromSelectedRow().getCodiceFiscale();
+			atletaDAO.updateAtleta(atleta, vecchioCodiceFiscale);
+		}
+		catch (CodiceFiscaleNonValidoException exception) {
+			JOptionPane.showMessageDialog(atletaFrame, "Il codice fiscale non è valido", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
+		}
+		catch (DuplicatoException exception) {
+			JOptionPane.showMessageDialog(atletaFrame, "L'atleta " +atleta.getCodiceFiscale()+ " è già presente", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
+		}
+		catch (PresenzeNazionaleNonValideException exception) {
+			JOptionPane.showMessageDialog(atletaFrame, "Il numero di presenze in nazionale deve essere maggiore o uguale a 0", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
+		}
+		catch (NumberFormatException exception) {
+			JOptionPane.showMessageDialog(atletaFrame, "Il valore delle presenze in nazionale deve essere un numero intero", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
+		}
+		catch (CodiciFiscaliUgualiException exception) {
+			JOptionPane.showMessageDialog(atletaFrame, "Il codice fiscale del procuratore deve essere diverso da quello dell'atleta", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
+		}
 	}
 	
 	public void modificaClub() {
