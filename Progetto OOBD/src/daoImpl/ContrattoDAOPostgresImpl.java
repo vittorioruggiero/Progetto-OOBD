@@ -149,7 +149,7 @@ public class ContrattoDAOPostgresImpl implements ContrattoDAO {
 			updateContrattoPS.executeUpdate();
 		}
 		catch (SQLException exception) {
-			if(exception.getMessage().startsWith("ERRORE: Incoerenza associazione procuratore")) throw new IncoerenzaAssociazioneProcuratoreException();
+			if(exception.getMessage().contains("Incoerenza associazione procuratore")) throw new IncoerenzaAssociazioneProcuratoreException();
 			else System.out.println("SQLException: " + exception.getMessage());
         }
 	}

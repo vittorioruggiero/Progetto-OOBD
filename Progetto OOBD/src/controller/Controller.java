@@ -36,6 +36,7 @@ import exception.DuplicatoException;
 import exception.DurataContrattoInsufficienteException;
 import exception.GettoneNonValidoException;
 import exception.IncoerenzaAssociazioneProcuratoreException;
+import exception.IntervalloDateOccupatoException;
 import exception.PercentualeProcuratoreNonValidaException;
 import exception.PresenzeNazionaleNonValideException;
 import exception.RetribuzioneNonValidaException;
@@ -317,11 +318,33 @@ public class Controller {
 		}
 	}
 	
-	public void inserisci(Contratto contratto) {
+	public void inserisciContratto() {
+		Contratto contratto = null;
 		try {
+			contratto = contrattoFrame.getContrattoFromFields();
+			contrattoFrame.controllaIntervalloDate();
 			contrattoDAO.insertContratto(contratto);
-		} catch (IncoerenzaAssociazioneProcuratoreException exception) {
+		}
+		catch (IncoerenzaAssociazioneProcuratoreException exception) {
 			JOptionPane.showMessageDialog(contrattoFrame, "La percentuale del procuratore deve essere presente se l'atleta è associato ad esso, non presente altrimenti", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
+		}
+		catch (DateIncoerentiException exception) {
+			JOptionPane.showMessageDialog(contrattoFrame, "La data di inizio deve essere precedente alla data di fine", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
+		}
+		catch (DurataContrattoInsufficienteException exception) {
+			JOptionPane.showMessageDialog(contrattoFrame, "La data finale deve essere distante almeno un anno da quella iniziale", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
+		}
+		catch (IntervalloDateOccupatoException exception) {
+			JOptionPane.showMessageDialog(contrattoFrame, "Un atleta può avere un solo contratto con club in un intervallo di date e un solo contratto con uno stesso sponsor in un intervallo di date", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
+		}
+		catch (NumberFormatException exception) {
+			JOptionPane.showMessageDialog(contrattoFrame, "Il valore della retribuzione deve essere un numero.\nIl valore della percentuale del procuratore deve essere un numero intero", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
+		}
+		catch (RetribuzioneNonValidaException exception) {
+			JOptionPane.showMessageDialog(contrattoFrame, "Il valore della retribuzione deve essere maggiore di 0", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
+		}
+		catch (PercentualeProcuratoreNonValidaException exception) {
+			JOptionPane.showMessageDialog(contrattoFrame, "La percentuale del procuratore deve essere maggiore di 0 e minore di 100", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
 		}
 	}
 	
@@ -377,8 +400,26 @@ public class Controller {
 		sponsorDAO.deleteSponsor(sponsor);
 	}
 	
-	public void rimuovi(Contratto contratto) {
-		contrattoDAO.deleteContratto(contratto);
+	public void rimuoviContratto() {
+		try {
+			Contratto contratto = contrattoFrame.getContrattoFromFields();
+			contrattoDAO.deleteContratto(contratto);
+		}
+		catch (DateIncoerentiException exception) {
+			JOptionPane.showMessageDialog(contrattoFrame, "La data di inizio deve essere precedente alla data di fine", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
+		}
+		catch (DurataContrattoInsufficienteException exception) {
+			JOptionPane.showMessageDialog(contrattoFrame, "La data finale deve essere distante almeno un anno da quella iniziale", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
+		}
+		catch (NumberFormatException exception) {
+			JOptionPane.showMessageDialog(contrattoFrame, "Il valore della retribuzione deve essere un numero.\nIl valore della percentuale del procuratore deve essere un numero intero", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
+		}
+		catch (RetribuzioneNonValidaException exception) {
+			JOptionPane.showMessageDialog(contrattoFrame, "Il valore della retribuzione deve essere maggiore di 0", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
+		}
+		catch (PercentualeProcuratoreNonValidaException exception) {
+			JOptionPane.showMessageDialog(contrattoFrame, "La percentuale del procuratore deve essere maggiore di 0 e minore di 100", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
+		}
 	}
 	
 	public void modificaNazionale() {
@@ -466,11 +507,34 @@ public class Controller {
 		}
 	}
 	
-	public void modifica(Contratto contratto, Contratto vecchioContratto) {
+	public void modificaContratto() {
+		Contratto contratto = null;
 		try {
+			contratto = contrattoFrame.getContrattoFromFields();
+			contrattoFrame.controllaIntervalloDateModifica();
+			Contratto vecchioContratto = contrattoFrame.getContrattoFromSelectedRow();
 			contrattoDAO.updateContratto(contratto, vecchioContratto);
-		} catch (IncoerenzaAssociazioneProcuratoreException exception) {
+		}
+		catch (IncoerenzaAssociazioneProcuratoreException exception) {
 			JOptionPane.showMessageDialog(contrattoFrame, "La percentuale del procuratore deve essere presente se l'atleta è associato ad esso, non presente altrimenti", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
+		}
+		catch (DateIncoerentiException exception) {
+			JOptionPane.showMessageDialog(contrattoFrame, "La data di inizio deve essere precedente alla data di fine", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
+		}
+		catch (DurataContrattoInsufficienteException exception) {
+			JOptionPane.showMessageDialog(contrattoFrame, "La data finale deve essere distante almeno un anno da quella iniziale", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
+		}
+		catch (IntervalloDateOccupatoException exception) {
+			JOptionPane.showMessageDialog(contrattoFrame, "Un atleta può avere un solo contratto con club in un intervallo di date e un solo contratto con uno stesso sponsor in un intervallo di date", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
+		}
+		catch (NumberFormatException exception) {
+			JOptionPane.showMessageDialog(contrattoFrame, "Il valore della retribuzione deve essere un numero.\nIl valore della percentuale del procuratore deve essere un numero intero", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
+		}
+		catch (RetribuzioneNonValidaException exception) {
+			JOptionPane.showMessageDialog(contrattoFrame, "Il valore della retribuzione deve essere maggiore di 0", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
+		}
+		catch (PercentualeProcuratoreNonValidaException exception) {
+			JOptionPane.showMessageDialog(contrattoFrame, "La percentuale del procuratore deve essere maggiore di 0 e minore di 100", "ATTENZIONE", JOptionPane.ERROR_MESSAGE);
 		}
 	}
 	
